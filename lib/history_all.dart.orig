@@ -1,0 +1,431 @@
+import 'package:flutter/material.dart';
+<<<<<<< HEAD
+import 'package:wagon_client/web_history.dart';
+import 'package:wagon_client/web_preorders.dart';
+import 'package:wagon_client/history_list.dart';
+import 'package:wagon_client/history_order.dart';
+import 'package:wagon_client/history_preorder.dart';
+import 'package:wagon_client/web_deletepreorder.dart';
+import 'package:wagon_client/consts.dart';
+import 'package:wagon_client/dlg.dart';
+=======
+import 'package:flutter/services.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:get/state_manager.dart';
+import 'package:wagon_client/preorders.dart';
+import 'package:wagon_client/web_history.dart';
+import 'package:wagon_client/web_preorders.dart';
+import 'history_list.dart';
+import 'history_order.dart';
+import 'consts.dart';
+import 'package:wagon_client/web_parent.dart';
+import "dlg.dart";
+>>>>>>> 5672ba346f9a89b97ebe42bc5cfcb526964ed12b
+
+class HistoryAll extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return HistoryAllState();
+  }
+
+}
+
+class HistoryAllState extends State<HistoryAll> with TickerProviderStateMixin {
+
+  int _skipHistory = 0;
+  int _takeHistory = 10;
+  int _skipPreorders = 0;
+  int _takePreorders = 10;
+  HistoryList _historyList = HistoryList([]);
+  PreordersList _preordersList = PreordersList([]);
+  bool _btnEnabled = true;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _historyList.mode = 0;
+    _skipHistory = 0;
+    _historyList.list.clear();
+    loadHistory();
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    _tabController.addListener(() {
+      switch (_tabController.index) {
+        case 0:
+          loadHistory();
+        break;
+        case 1:
+          loadPreorders();
+          break;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+          child: Container(
+        color: Colors.white,
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+            children: [
+              Column(
+                children: [
+                  Divider(color: Colors.transparent, height: 5,),
+                  Row(
+                      children: [
+                        IconButton(icon: Image.asset("images/back.png", height: 20, width: 20,), onPressed: (){Navigator.pop(context);}),
+                        Text("ИСТОРИЯ ЗАКАЗОВ")
+                      ]
+                  ),
+                  Container(
+                    height: 5,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xffcccccc), Colors.white]
+                      )
+                    )
+                  ),
+                ]
+              ),
+              Container(
+                child: DefaultTabController (
+                    length: 2,
+                    child: TabBar (
+                    controller: _tabController,
+                    indicatorColor: Consts.colorFiolet ,
+                    tabs: [
+                      Tab(child: Text("Заказы", style: TextStyle(color: Consts.colorFiolet ))),
+                      Tab(child: Text("Предварительные", style: TextStyle(color: Consts.colorFiolet )))
+                    ],
+                ))
+              ),
+              Expanded(
+<<<<<<< HEAD
+                child: _tabController.index == 0 ? _allHistory() : _preordersListW()
+=======
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _historyList.list.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      Widget w;
+                      if (index < _historyList.list.length) {
+                        w = GestureDetector(
+                            onTap: (){_callHistoryDetails(_historyList.list[index].order_id);},
+                            child: Wrap (
+                              children: [
+                                Container(
+                                    color: Colors.white,
+                                    margin: EdgeInsets.only(left: 10, right: 10, top: 20),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(right: 5),
+                                          child: Image.asset("images/calendar.png", width: 20, height: 20,),
+                                        ),
+                                        Text(_historyList.list[index].started),
+                                      Expanded(
+                                          child: Container()
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(right: 5),
+                                      ),
+                                      Text(_historyList.list[index].cost.toString(), style: Consts.textStyle22)
+                                    ],
+                                  )
+                              ),
+                              Divider(color: Colors.black26),
+                              Container(
+                                  color: Colors.white,
+                                  margin: EdgeInsets.only(left: 10, right: 10),
+                                  child: Row (
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Image.asset("images/od_black.png", width: 15, height: 15,),
+                                          Divider(height: 2, color: Colors.transparent),
+                                          Image.asset("images/line.png",width: 10, height: 30,),
+                                          Divider(height: 2, color: Colors.transparent),
+                                          Image.asset("images/od_red.png", width: 15, height: 15,)
+                                        ],
+                                      ),
+                                      Expanded(child: Container(
+                                          margin: EdgeInsets.only(top: 5, bottom: 5, left: 2),
+                                          child:  Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                                            children: [
+                                              Text(_historyList.list[index].ordered_from, overflow: TextOverflow.ellipsis,),
+                                                Divider(color: Colors.black26, height: 30,),
+                                              Text(_historyList.list[index].ordered_to, overflow: TextOverflow.ellipsis,)
+                                            ]
+                                          ))
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Divider(color: Colors.black26, thickness: 1,)
+                            ],
+                          )
+                      );} else {
+                        w = Visibility(
+                            visible: _btnEnabled,
+                            child: TextButton(onPressed: (){loadHistory();}, child: Text("Загрузить ещё", style: TextStyle(color: Consts.colorFiolet )))
+                        );
+                      }
+                      return w;
+                    }
+                )
+>>>>>>> 5672ba346f9a89b97ebe42bc5cfcb526964ed12b
+              )
+              ,
+              ]
+            )
+          )
+      )
+    );
+  }
+
+  void loadHistory() {
+    WebHistory webHistory = WebHistory(_skipHistory, _takeHistory);
+    webHistory.request((mp) {
+      setState(() {
+        _btnEnabled = false;
+        Map<String, dynamic> d = Map();
+        d["list"] = mp;
+        HistoryList l = HistoryList.fromJson(d);
+        _preordersList.list.clear();
+        //if (_historyList.mode == 1) {
+          _historyList.list.clear();
+        //}
+        _historyList.list.addAll(l.list);
+        _historyList.mode = 0;
+        _skipHistory += l.list.length;
+        _btnEnabled = _historyList.list.length % 10 == 0;
+      });
+    }, (c, s){
+      Dlg.show(context, s);
+      _btnEnabled = true;
+    });
+  }
+
+  void loadPreorders() {
+    WebPreorders.get(_skipPreorders, _takePreorders, (mp){
+      setState(() {
+<<<<<<< HEAD
+        _btnEnabled = false;
+        Map<String, dynamic> d = Map();
+        d["list"] = mp;
+        PreordersList p = PreordersList.fromJson(d);
+        _preordersList.list.clear();
+        _preordersList.list.addAll(p.list);
+
+=======
+        Map<String, dynamic> d = Map();
+        d["list"] = mp;
+        PreordersList preordersList = PreordersList.fromJson(d);
+        _historyList.list.clear();
+        _preordersList.list.clear();
+        _preordersList.list.addAll(preordersList.list);
+        for (Preorder p in preordersList.list) {
+          History h = History(p.order_id, p.addresses.from, p.addresses.to, 0, p.time.start);
+          h.cost = p.price;
+          _historyList.list.add(h);
+        }
+        _historyList.mode = 1;
+        _skipHistory = 0;
+        _btnEnabled = false;
+>>>>>>> 5672ba346f9a89b97ebe42bc5cfcb526964ed12b
+      });
+      },
+      (c,s){
+        Dlg.show(context, s);
+        _btnEnabled = true;
+      });
+  }
+
+  void _callHistoryDetails(int id) {
+    if (_historyList.mode == 0) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => HistoryOrder(orderId: id)));
+    } else {
+      Dlg.question(context, "Подтвердите удаление предварительного заказа").then((value){
+        if (value) {
+          WebParent wp = WebParent("/app/mobile/preorder/" + id.toString(), HttpMethod.DELE);
+          wp.request((mp) {
+            loadPreorders();
+          },  (c, s) {
+            Dlg.show(context, s);
+          });
+        }
+      });
+    }
+  }
+
+  void _cancelPreorder(int? id) {
+    Dlg.question(context, "Вы уверены в том, что хотите отменить предварительный заказ?").then((value){
+      if (value) {
+        WebDeletePreorder(id!).request((mp){
+          loadPreorders();
+        }, (c,s) {
+          Dlg.show(context, s);
+        });
+      }
+    });
+  }
+
+  Widget _allHistory() {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: _historyList.list.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          Widget w;
+          if (index < _historyList.list.length) {
+            w = GestureDetector(
+                onTap: (){_callHistoryDetails(_historyList.list[index].order_id);},
+                child: Wrap (
+                  children: [
+                    Container(
+                        color: Colors.white,
+                        margin: EdgeInsets.only(left: 10, right: 10, top: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
+                              child: Image.asset("images/calendar.png", width: 20, height: 20,),
+                            ),
+                            Text(_historyList.list[index].started),
+                            Expanded(
+                                child: Container()
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
+                            ),
+                            Text(_historyList.list[index].cost.toString(), style: Consts.textStyle22)
+                          ],
+                        )
+                    ),
+                    Divider(color: Colors.black26),
+                    Container(
+                        color: Colors.white,
+                        margin: EdgeInsets.only(left: 10, right: 10),
+                        child: Row (
+                          children: [
+                            Column(
+                              children: [
+                                Image.asset("images/od_black.png", width: 15, height: 15,),
+                                Divider(height: 2, color: Colors.transparent),
+                                Image.asset("images/line.png",width: 10, height: 30,),
+                                Divider(height: 2, color: Colors.transparent),
+                                Image.asset("images/od_red.png", width: 15, height: 15,)
+                              ],
+                            ),
+                            Expanded(child: Container(
+                                margin: EdgeInsets.only(top: 5, bottom: 5, left: 2),
+                                child:  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                    children: [
+                                      Text(_historyList.list[index].ordered_from, overflow: TextOverflow.ellipsis,),
+                                      Divider(color: Colors.black26, height: 30,),
+                                      Text(_historyList.list[index].ordered_to, overflow: TextOverflow.ellipsis,)
+                                    ]
+                                ))
+                            ),
+                          ],
+                        )
+                    ),
+                    Divider(color: Colors.black26, thickness: 1,)
+                  ],
+                )
+            );} else {
+            w = Visibility(
+                visible: _btnEnabled,
+                child: TextButton(onPressed: (){loadHistory();}, child: Text("Загрузить ещё"))
+            );
+          }
+          return w;
+        }
+    );
+  }
+
+  Widget _preordersListW() {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: _preordersList.list.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          Widget w;
+          if (index < _preordersList.list.length) {
+            w = GestureDetector(
+                onTap: (){_cancelPreorder(_preordersList.list[index].order_id);},
+                child: Wrap (
+                  children: [
+                    Container(
+                        color: Colors.white,
+                        margin: EdgeInsets.only(left: 10, right: 10, top: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
+                              child: Image.asset("images/calendar.png", width: 20, height: 20,),
+                            ),
+                            Text(_preordersList.list[index].time!.start!),
+                            Expanded(
+                                child: Container()
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
+                            ),
+                            Text("0руб", style: Consts.textStyle22)
+                          ],
+                        )
+                    ),
+                    Divider(color: Colors.black26),
+                    Container(
+                        color: Colors.white,
+                        margin: EdgeInsets.only(left: 10, right: 10),
+                        child: Row (
+                          children: [
+                            Column(
+                              children: [
+                                Image.asset("images/od_black.png", width: 15, height: 15,),
+                                Divider(height: 2, color: Colors.transparent),
+                                Image.asset("images/line.png",width: 10, height: 30,),
+                                Divider(height: 2, color: Colors.transparent),
+                                Image.asset("images/od_red.png", width: 15, height: 15,)
+                              ],
+                            ),
+                            Expanded(child: Container(
+                                margin: EdgeInsets.only(top: 5, bottom: 5, left: 2),
+                                child:  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                    children: [
+                                      Text(_preordersList.list[index].addresses!.from!, overflow: TextOverflow.ellipsis,),
+                                      Divider(color: Colors.black26, height: 30,),
+                                      Text(_preordersList.list[index].addresses!.to!, overflow: TextOverflow.ellipsis,)
+                                    ]
+                                ))
+                            ),
+                          ],
+                        )
+                    ),
+                    Divider(color: Colors.black26, thickness: 1,)
+                  ],
+                )
+            );} else {
+            w = Visibility(
+                visible: _btnEnabled,
+                child: TextButton(onPressed: (){loadHistory();}, child: Text("Загрузить ещё"))
+            );
+          }
+          return w;
+        }
+    );
+  }
+  
+}
