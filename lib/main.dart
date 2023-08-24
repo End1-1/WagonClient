@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/enter_phone.dart';
 import 'package:wagon_client/main_window.dart';
+import 'package:wagon_client/screens/login/screen.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -56,7 +57,7 @@ class TaxoApp extends StatelessWidget {
     ]);
     Widget home;
     if (Consts.getString("bearer").isEmpty) {
-      home = WEnterPhone();
+      home = LoginScreen();
     } else {
       home = WMainWindow();
     }

@@ -72,6 +72,7 @@ const trConfirmToRemoveAccount = 69;
 const trRemovingAccount = 70;
 const trRemoveAccount = 71;
 const trLanguage = 72;
+const trEnter = 73;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
@@ -144,7 +145,8 @@ const Map<int, String> ru = {
   trConfirmToRemoveAccount: 'Подтвердите удаление учетной записи',
   trRemovingAccount: 'Подождите, идет удаление',
   trRemoveAccount: "Удалить учетную запись",
-  trLanguage: "Язык"
+  trLanguage: "Язык",
+  trEnter: "Вход"
 };
 
 String tr(int key) {
