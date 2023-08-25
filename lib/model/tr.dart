@@ -165,7 +165,7 @@ class TrLang {
 }
 
 final List<TrLang> trLangList = [
-  TrLang('ՀԱՅ', 'Հայերեն', 'images/home.png'),
-  TrLang('РУС', 'Русский', 'images/mapdraw.png'),
-  TrLang('ENG', 'English', 'images/driver.png'),
+  TrLang('ՀԱՅ', 'Հայերեն', 'images/login/am.png'),
+  TrLang('РУС', 'Русский', 'images/login/ru.png'),
+  TrLang('ENG', 'English', 'images/login/us.png'),
 ];
