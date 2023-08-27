@@ -7,12 +7,14 @@ class STextEditingController extends TextEditingController {
   Function? l;
 
   STextEditingController({this.l}) {
-    addListener(() {
-      backPressed = oldValue.length <= text.length;
-      if (oldValue != text) {
-        l;
-      }
-      oldValue = text;
-    });
+    // addListener(() {
+    //   backPressed = oldValue.length <= text.length;
+    //   if (oldValue != text) {
+    //     if (l != null) {
+    //       l!();
+    //     }
+    //   }
+    //   oldValue = text;
+    // });
   }
 }

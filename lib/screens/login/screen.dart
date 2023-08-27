@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/enter_sms.dart';
 import 'package:wagon_client/model/tr.dart';
+import 'package:wagon_client/screens/login/smsscreen.dart';
 import 'package:wagon_client/select_server.dart';
 import 'package:wagon_client/web/web_enterphone.dart';
 import 'package:wagon_client/widget/stexteditingcontroller.dart';
@@ -21,6 +23,7 @@ class _LoginScreen extends State<LoginScreen>
   final carouselController = CarouselController();
   var _currentPage = 0;
 
+  final _rawFocus = FocusNode();
   final _focus1 = FocusNode();
   final _focus2 = FocusNode();
   final _focus3 = FocusNode();
@@ -37,7 +40,6 @@ class _LoginScreen extends State<LoginScreen>
   final _t6 = STextEditingController();
   final _t7 = STextEditingController();
   final _t8 = STextEditingController();
-
 
   late Animation<Color?> background;
   Animation<double?>? langPos;
@@ -60,14 +62,6 @@ class _LoginScreen extends State<LoginScreen>
       ],
     ).animate(_backgrounController);
 
-    _t1.l = (){
-      _focus2.requestFocus();
-    };
-    _t2.l = () {
-      if (_t2.backPressed) {
-        _focus1.requestFocus();
-      }
-    };
   }
 
   @override
@@ -133,6 +127,9 @@ class _LoginScreen extends State<LoginScreen>
                                 setState(() {
                                   _enterTitle =
                                       i == 7 ? tr(trNEXT) : tr(trEnter);
+                                  if (i == 7) {
+                                    _focus1.requestFocus();
+                                  }
                                 });
                               },
                               height: MediaQuery.sizeOf(context).height - 290,
@@ -521,10 +518,66 @@ class _LoginScreen extends State<LoginScreen>
   }
 
   Widget _phoneNumber(BuildContext context) {
-    return Row(children: [
-      const SizedBox(
-        width: 5,
-      ),
+    return RawKeyboardListener(
+        onKey: (v) {
+          if (v is RawKeyUpEvent) {
+            if (v.logicalKey.keyLabel != 'Backspace') {
+              if (v.logicalKey.keyLabel != '0'
+              && v.logicalKey.keyLabel != '1'
+                  && v.logicalKey.keyLabel != '2'
+                  && v.logicalKey.keyLabel != '3'
+                  && v.logicalKey.keyLabel != '4'
+                  && v.logicalKey.keyLabel != '5'
+                  && v.logicalKey.keyLabel != '6'
+                  && v.logicalKey.keyLabel != '7'
+                  && v.logicalKey.keyLabel != '8'
+                  && v.logicalKey.keyLabel != '9'
+              ) {
+                return;
+              }
+              if (_focus1.hasFocus) {
+                _t1.text = v.logicalKey.keyLabel;
+              } else if (_focus2.hasFocus) {
+                _t2.text = v.logicalKey.keyLabel;
+              } else if (_focus3.hasFocus) {
+                _t3.text = v.logicalKey.keyLabel;
+              } else if (_focus4.hasFocus) {
+                _t4.text = v.logicalKey.keyLabel;
+              } else if (_focus5.hasFocus) {
+                _t5.text = v.logicalKey.keyLabel;
+              } else if (_focus6.hasFocus) {
+                _t6.text = v.logicalKey.keyLabel;
+              } else if (_focus7.hasFocus) {
+                _t7.text = v.logicalKey.keyLabel;
+              } else if (_focus8.hasFocus) {
+                _t8.text = v.logicalKey.keyLabel;
+              }
+              _rawFocus.nextFocus();
+            } else {
+              _rawFocus.previousFocus();
+              // if (_focus1.hasFocus) {
+              //   _t1.clear();
+              // } else if (_focus2.hasFocus) {
+              //   _t2.clear();
+              // } else if (_focus3.hasFocus) {
+              //   _t3.clear();
+              // } else if (_focus4.hasFocus) {
+              //   _t4.clear();
+              // } else if (_focus5.hasFocus) {
+              //   _t5.clear();
+              // } else if (_focus6.hasFocus) {
+              //   _t6.clear();
+              // } else if (_focus7.hasFocus) {
+              //   _t7.clear();
+              // } else if (_focus8.hasFocus) {
+              //   _t8.clear();
+              // }
+            }
+          }
+        },
+        autofocus: true,
+        focusNode: _rawFocus, child: Row(children: [
+      Expanded(child: Container()),
       Image.asset(
         'images/login/am.png',
         height: 25,
@@ -543,42 +596,58 @@ class _LoginScreen extends State<LoginScreen>
       ),
       Container(
           width: 25,
-          child: TextFormField(
-            focusNode: _focus1,
-              controller: _t1,
-              style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
-              maxLength: 1,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                counterText: '',
-                contentPadding: EdgeInsets.all(0),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 2.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 2.0)),
-              ))),
-      const SizedBox(width: 5,),
+              child: TextField(
+                  controller: _t1,
+                  focusNode: _focus1,
+                  textAlign: TextAlign.center,
+                  style:
+                      const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
+                  maxLength: 1,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    counterText: '',
+                    contentPadding: EdgeInsets.all(0),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black12, width: 2.0)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black12, width: 2.0)),
+                  ))),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
-          child: TextFormField(
+          child: TextField(
+                  controller: _t2,
               focusNode: _focus2,
-              controller: _t2,
-              style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),maxLength: 1,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                counterText: '',
-                contentPadding: EdgeInsets.all(0),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 2.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 2.0)),
-              ))),
-      const SizedBox(width: 15,),
+              textAlign: TextAlign.center,
+                  style:
+                      const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
+                  maxLength: 1,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    counterText: '',
+                    contentPadding: EdgeInsets.all(0),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black12, width: 2.0)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black12, width: 2.0)),
+                  ))),
+      const SizedBox(
+        width: 15,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t3,
-              style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),maxLength: 1,
+              focusNode: _focus3,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
+              maxLength: 1,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 counterText: '',
@@ -588,11 +657,15 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t4,
+              focusNode: _focus4,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
               maxLength: 1,
               keyboardType: TextInputType.number,
@@ -604,11 +677,15 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t5,
+              focusNode: _focus5,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
               maxLength: 1,
               keyboardType: TextInputType.number,
@@ -620,11 +697,15 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t6,
+              focusNode: _focus6,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
               maxLength: 1,
               keyboardType: TextInputType.number,
@@ -636,11 +717,15 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t7,
+              focusNode: _focus7,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
               maxLength: 1,
               keyboardType: TextInputType.number,
@@ -652,11 +737,15 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
+      const SizedBox(
+        width: 5,
+      ),
       Container(
           width: 25,
           child: TextFormField(
               controller: _t8,
+              focusNode: _focus8,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 25, color: Color(0xffBE2A60)),
               maxLength: 1,
               keyboardType: TextInputType.number,
@@ -668,12 +757,8 @@ class _LoginScreen extends State<LoginScreen>
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2.0)),
               ))),
-      const SizedBox(width: 5,),
-      const SizedBox(
-        width: 10,
-      ),
-      const SizedBox(width: 40),
-    ]);
+      Expanded(child: Container()),
+    ]));
   }
 
   void _nextPressed() async {
@@ -682,14 +767,22 @@ class _LoginScreen extends State<LoginScreen>
       return;
     }
 
-    String s = '+374' + _t1.text;
+    String s = '+374' + _t1.text
+    +_t2.text
+    +_t3.text
+    +_t4.text
+    +_t5.text
+    +_t6.text
+    +_t7.text
+    +_t8.text
+    ;
 
-    if (s.contains("9999999999")) {
+    if (s.contains("99999999")) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SelectServer()));
       return;
     }
-    if (s.length < 8) {
+    if (s.length < 12) {
       Dlg.show(context, tr(trIncorrectPhoneNumber));
       return;
     }
@@ -700,7 +793,7 @@ class _LoginScreen extends State<LoginScreen>
     webEnterPhone.request((mp) {
       Consts.setString("sms_message", mp['message']);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => WEnterSMS()));
+          context, MaterialPageRoute(builder: (context) => SmsScreen()));
     }, (c, s) {
       Dlg.show(context, s);
     });
