@@ -121,7 +121,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
                                   Expanded(child: Container(margin: const EdgeInsets.all(00),
                                   child: PinInputTextField(
                                     onChanged: (v) {
-                                      if (v.length == 4) {
+                                      if (v.length == 6) {
                                         _focus.unfocus();
 
                                       }
@@ -129,7 +129,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
                                     autoFocus: true,
                                     focusNode: _focus,
                                     controller: _pinController,
-                                    pinLength: 4,
+                                    pinLength: 6,
                                     keyboardType: TextInputType.number,
                                     decoration: UnderlineDecoration(
                                       gapSpace: 30,

@@ -24,6 +24,7 @@ import 'package:wagon_client/order_cancel_options.dart';
 import 'package:wagon_client/payment_type.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
 import 'package:wagon_client/screens/iphonedatepicker.dart';
+import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/screens/multiaddress_to_screen/screen.dart';
 import 'package:wagon_client/screens/options_screen.dart';
 import 'package:wagon_client/screens/single_address/screen.dart';
@@ -1491,7 +1492,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WEnterPhone()));
+                                    builder: (context) => LoginScreen()));
                           },
                           child:
                               Text(tr(trEXIT), style: Consts.textStyleMenu)))),

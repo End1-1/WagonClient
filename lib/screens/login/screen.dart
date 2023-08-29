@@ -173,7 +173,7 @@ class _LoginScreen extends State<LoginScreen>
   }
 
   List<Widget> _pages(BuildContext context) {
-    List<RichText> texts = [
+    Map<String, List<RichText>> texts = {'ՀԱՅ': [
       RichText(
           textAlign: TextAlign.center,
           maxLines: 3,
@@ -344,7 +344,351 @@ class _LoginScreen extends State<LoginScreen>
                         fontSize: 20,
                         fontWeight: FontWeight.normal))
               ])),
-    ];
+    ],
+      'ENG': [
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'All ',
+                style: TextStyle(color: Color(0xffBE2A60), fontSize: 20),
+                children: [
+                  TextSpan(
+                      text: 'kinds\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'mobile services\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'in your pocket',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold))
+                ])),
+        //2
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Premium ',
+                style: TextStyle(color: Color(0xffBE2A60), fontSize: 20),
+                children: [
+                  TextSpan(
+                      text: 'taxi services\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'NEW\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'Hourly taxi services',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold))
+                ])),
+        //3
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Transportation\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'high class\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'services',
+                      style: TextStyle(color: Color(0xffBE2A60), fontSize: 20))
+                ])),
+        //44
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Personal driver\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'high class\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'services',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //5
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Car towing\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'high class\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'services',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //6
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Any kind of Bus\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'providing\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'services',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //7
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Mobile car\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'maintenance\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'services',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+      ],
+      'РУС': [
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Все  ',
+                style: TextStyle(color: Color(0xffBE2A60), fontSize: 20),
+                children: [
+                  TextSpan(
+                      text: 'виды\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'транспортных средств\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'в твоём кармане',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold))
+                ])),
+        //2
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Комфортабельное ',
+                style: TextStyle(color: Color(0xffBE2A60), fontSize: 20),
+                children: [
+                  TextSpan(
+                      text: 'такси\n',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'новинка\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'аренда такси',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold))
+                ])),
+        //3
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Перевозка\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'грузов\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'профессионалами',
+                      style: TextStyle(color: Color(0xffBE2A60), fontSize: 20))
+                ])),
+        //44
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Услуга\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'трезвый водитель\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'высшего класса',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //5
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Эвакуация \n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'автомобиля\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'по высшему разряду',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //6
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Предоставляем\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'автобусные\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'перевозки',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+        //7
+        RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                text: 'Услуги\n',
+                style: TextStyle(
+                    color: Color(0xffBE2A60),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: 'передвижного\n',
+                      style: TextStyle(
+                          color: Color(0xffF1A648),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: 'автосервиса',
+                      style: TextStyle(
+                          color: Color(0xffBE2A60),
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal))
+                ])),
+      ]};
 
     List<String> images = [
       'images/login/wp1.png',
@@ -358,7 +702,7 @@ class _LoginScreen extends State<LoginScreen>
 
     return [
       for (int i = 0; i < images.length; i++) ...[
-        _page(context, images[i], i, texts[i])
+        _page(context, images[i], i, texts[currentLanguage()]![i])
       ],
       _lastPage(context)
     ];
