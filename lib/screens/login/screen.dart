@@ -132,12 +132,17 @@ class _LoginScreen extends State<LoginScreen>
                                   }
                                 });
                               },
-                              height: MediaQuery.sizeOf(context).height - 290,
+                              height: MediaQuery.sizeOf(context).height - 390,
                               viewportFraction: 1.0,
                               enlargeCenterPage: true,
                               autoPlay: false,
                               enableInfiniteScroll: false,
                             )),
+                        if (_currentPage < 7)
+                          _pageNum(7, _currentPage)
+                        else
+                          const SizedBox(height: 20),
+                        const SizedBox(height: 50),
                         //ENTER BUTTON
                         Row(
                           children: [
@@ -724,7 +729,6 @@ class _LoginScreen extends State<LoginScreen>
           const SizedBox(height: 40),
           r,
           const SizedBox(height: 60),
-          _pageNum(7, pagenum),
         ],
       ),
     );

@@ -1628,7 +1628,6 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
 
   void _getLocation() async {
     bool _serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    ;
     LocationPermission permission = await Geolocator.checkPermission();
 
     if (!_serviceEnabled) {
@@ -1637,7 +1636,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse ||
+      if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
         return;
       }
