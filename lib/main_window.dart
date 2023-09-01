@@ -1649,11 +1649,11 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
   void _mapReady(YandexMapController controller) async {
     model.mapController = controller;
     model.enableTrackingPlace();
-    _getLocation();
+    await _getLocation();
     _authSocket();
   }
 
-  void _getLocation() async {
+  Future<void> _getLocation() async {
     bool _serviceEnabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
 

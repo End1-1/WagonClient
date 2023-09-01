@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wagon_client/main_window_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screens/payment/bankwebview.dart';
+import 'package:wagon_client/web/web_parent.dart';
 
 class PaymentWidget extends StatefulWidget {
   late final MainWindowModel model;
@@ -17,6 +17,8 @@ class PaymentWidget extends StatefulWidget {
 class _PaymentWidget extends State<PaymentWidget> {
   var cashChecked = true;
   var companyChecked = false;
+  var addingCard = false;
+  var errorStr = '';
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +80,32 @@ class _PaymentWidget extends State<PaymentWidget> {
             const SizedBox(height: 10,),
             Text('Платить картой пиздец как удобно, Вам не нужно каждый раз доставать кошелек и ждать сдачи, которых у таксиста может и не быть.'),
             Expanded(child: Container()),
-            OutlinedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (builder) => BankWebView())).then((value) {
-                print('FINITA LA WEBVIEW');
-              });
-            }, child: Text(tr(trAddCard).toUpperCase())),
+            if (addingCard)
+              SizedBox(height: 30, width: 30, child: CircularProgressIndicator())
+              else
+
+                OutlinedButton(onPressed: () {
+                  setState(() {
+                    errorStr = '';
+                    addingCard = true;
+                  });
+                  final wp = WebParent('/app/mobile/transactions/make-binding-payment', HttpMethod.GET);
+                  wp.request((s){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => BankWebView()))
+                        .then((value) {
+                      print('FINITA LA WEBVIEW');
+                    });
+                  }, (c, s){
+                    setState(() {
+                      addingCard = false;
+                      errorStr = s;
+                    });
+                  });
+
+                }, child: Text(tr(trAddCard).toUpperCase())),
+            if (errorStr.isNotEmpty)
+              Text(errorStr),
             const SizedBox(height: 50),
           ],
         ));
