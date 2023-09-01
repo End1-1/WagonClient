@@ -16,7 +16,6 @@ import 'package:wagon_client/car.dart';
 import 'package:wagon_client/company.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
-import 'package:wagon_client/enter_phone.dart';
 import 'package:wagon_client/freezed/chat_message.dart';
 import 'package:wagon_client/history_all.dart';
 import 'package:wagon_client/information.dart';
@@ -27,6 +26,7 @@ import 'package:wagon_client/screens/iphonedatepicker.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/screens/multiaddress_to_screen/screen.dart';
 import 'package:wagon_client/screens/options_screen.dart';
+import 'package:wagon_client/screens/payment/screen.dart';
 import 'package:wagon_client/screens/single_address/screen.dart';
 import 'package:wagon_client/screens/support/screen.dart';
 import 'package:wagon_client/settings.dart';
@@ -80,35 +80,55 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
     super.initState();
 
     ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Taxi', selected: true)..types.addAll([
-      CarSubtypeStruct('images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-      CarSubtypeStruct('images/car2.png', 'Econome plus', 'Up to 3 person and one dog', 400),
-      CarSubtypeStruct('images/car2.png', 'Business', 'Up to 14 person and one eliphant', 600),
-    ]));
+        .add(CarTypeStruct('images/car.png', 'Taxi', selected: true)
+          ..types.addAll([
+            CarSubtypeStruct('images/car2.png', 'Comfort',
+                'Up to 4 person and one cat', 300),
+            CarSubtypeStruct('images/car2.png', 'Econome plus',
+                'Up to 3 person and one dog', 400),
+            CarSubtypeStruct('images/car2.png', 'Business',
+                'Up to 14 person and one eliphant', 600),
+          ]));
 
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Eaculator')..types.addAll([
-      CarSubtypeStruct('images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-      CarSubtypeStruct('images/car2.png', 'Econome plus', 'Up to 3 person and one dog', 400),
-      CarSubtypeStruct('images/car2.png', 'Business', 'Up to 14 person and one eliphant', 600),
-    ]));
+    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Eaculator')
+      ..types.addAll([
+        CarSubtypeStruct(
+            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
+        CarSubtypeStruct('images/car2.png', 'Econome plus',
+            'Up to 3 person and one dog', 400),
+        CarSubtypeStruct('images/car2.png', 'Business',
+            'Up to 14 person and one eliphant', 600),
+      ]));
 
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Navigator')..types.addAll([
-      CarSubtypeStruct('images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-      CarSubtypeStruct('images/car2.png', 'Econome plus', 'Up to 3 person and one dog', 400),
-      CarSubtypeStruct('images/car2.png', 'Business', 'Up to 14 person and one eliphant', 600),
-    ]));
+    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Navigator')
+      ..types.addAll([
+        CarSubtypeStruct(
+            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
+        CarSubtypeStruct('images/car2.png', 'Econome plus',
+            'Up to 3 person and one dog', 400),
+        CarSubtypeStruct('images/car2.png', 'Business',
+            'Up to 14 person and one eliphant', 600),
+      ]));
 
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Tractor')..types.addAll([
-      CarSubtypeStruct('images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-      CarSubtypeStruct('images/car2.png', 'Econome plus', 'Up to 3 person and one dog', 400),
-      CarSubtypeStruct('images/car2.png', 'Business', 'Up to 14 person and one eliphant', 600),
-    ]));
+    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Tractor')
+      ..types.addAll([
+        CarSubtypeStruct(
+            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
+        CarSubtypeStruct('images/car2.png', 'Econome plus',
+            'Up to 3 person and one dog', 400),
+        CarSubtypeStruct('images/car2.png', 'Business',
+            'Up to 14 person and one eliphant', 600),
+      ]));
 
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Kran')..types.addAll([
-      CarSubtypeStruct('images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-      CarSubtypeStruct('images/car2.png', 'Econome plus', 'Up to 3 person and one dog', 400),
-      CarSubtypeStruct('images/car2.png', 'Business', 'Up to 14 person and one eliphant', 600),
-    ]));
+    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Kran')
+      ..types.addAll([
+        CarSubtypeStruct(
+            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
+        CarSubtypeStruct('images/car2.png', 'Econome plus',
+            'Up to 3 person and one dog', 400),
+        CarSubtypeStruct('images/car2.png', 'Business',
+            'Up to 14 person and one eliphant', 600),
+      ]));
 
     WebYandexKey().request(() {}, null);
 
@@ -185,6 +205,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                                       fontWeight: FontWeight.w700)))))),
               _appendAddressToWidget(context),
               _multiAddressWiget(context),
+              _walletOptions(context),
             ]))));
   }
 
@@ -355,20 +376,20 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
               margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
               padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
               child: Center(
-                  child:
-                      Image.asset('images/arrow.backward.png', width: 30, height: 30)))),
-    Container(
-    width: 50,
-    height: 50,
-    decoration: const BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.all(Radius.circular(30)),
-    ),
-    margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-    child: Center(
-    child:
-    Image.asset(ResourceCarTypes.selected()!.imageName, width: 30, height: 30))),
+                  child: Image.asset('images/arrow.backward.png',
+                      width: 30, height: 30)))),
+      Container(
+          width: 50,
+          height: 50,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+          margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+          padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+          child: Center(
+              child: Image.asset(ResourceCarTypes.selected()!.imageName,
+                  width: 30, height: 30))),
       Container(
           decoration: Consts.boxDecoration,
           child: Column(children: [
@@ -530,19 +551,24 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                           },
                         ),
                     ]))),
-
             ListView.builder(
-              shrinkWrap: true,
-              itemCount: ResourceCarTypes.selected()?.types.length ?? 0,
+                shrinkWrap: true,
+                itemCount: ResourceCarTypes.selected()?.types.length ?? 0,
                 itemBuilder: (context, index) {
-                  return InkWell(onTap:(){
-                    setState(() {
-                      ResourceCarTypes.deselectSubType(ResourceCarTypes.selected());
-                      ResourceCarTypes.selected()?.selectSubtype(ResourceCarTypes.selected()?.types[index]);
-                    });
-                  },child: CarSubtypeWidget(ResourceCarTypes.selected()?.types[index] ?? CarSubtypeStruct('imageName', 'title', 'subTitle', 999)));
-            }),
-
+                  return InkWell(
+                      onTap: () {
+                        setState(() {
+                          ResourceCarTypes.deselectSubType(
+                              ResourceCarTypes.selected());
+                          ResourceCarTypes.selected()?.selectSubtype(
+                              ResourceCarTypes.selected()?.types[index]);
+                        });
+                      },
+                      child: CarSubtypeWidget(
+                          ResourceCarTypes.selected()?.types[index] ??
+                              CarSubtypeStruct(
+                                  'imageName', 'title', 'subTitle', 999)));
+                }),
             AnimatedContainer(
                 height: model.showOptions ? 160 : 0,
                 duration: Duration(milliseconds: 300),
@@ -654,7 +680,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                       OutlinedButton(
                           onPressed: () {
                             setState(() {
-                              model.showOptions = !model.showOptions;
+                              model.showWallet = !model.showWallet;
                             });
                           },
                           style: OutlinedButton.styleFrom(
@@ -666,7 +692,8 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                                       new BorderRadius.circular(5.0))),
                           child: Padding(
                               padding: EdgeInsets.only(top: 15, bottom: 15),
-                              child: Image.asset('images/wallet.png',
+                              child: Image.asset(
+                                'images/wallet.png',
                                 width: 25,
                                 height: 25,
                               ))),
@@ -1433,7 +1460,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => WEnterPhone()),
+                                          builder: (context) => LoginScreen()),
                                       (route) => false);
                                 }
                               }
@@ -1684,7 +1711,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
             if (c == 401) {
               Consts.setString("bearer", "");
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => WEnterPhone()));
+                  MaterialPageRoute(builder: (context) => LoginScreen()));
             } else {
               Dlg.show(context, "initCoin()\r\n" + s);
             }
@@ -1694,7 +1721,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
           if (c == 401) {
             Consts.setString("bearer", "");
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => WEnterPhone()));
+                MaterialPageRoute(builder: (context) => LoginScreen()));
           } else {
             Dlg.show(context, "initOpen()\r\n" + s);
           }
@@ -2199,7 +2226,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
       if (c == 401) {
         Consts.setString("bearer", "");
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => WEnterPhone()));
+            context, MaterialPageRoute(builder: (context) => LoginScreen()));
       } else {
         setState(() {
           model.currentPage = pageRealState;
@@ -2411,5 +2438,13 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
     } else {
       setState(() {});
     }
+  }
+
+  Widget _walletOptions(BuildContext context) {
+    return AnimatedPositioned(
+      top: model.showWallet ? 0 : MediaQuery.sizeOf(context).height,
+        child: PaymentWidget(model, (){setState(() {
+
+        });}), duration: const Duration(milliseconds: 300));
   }
 }
