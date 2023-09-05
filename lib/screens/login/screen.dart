@@ -56,16 +56,8 @@ class _LoginScreen extends State<LoginScreen>
           .animate(_backgrounController);
     }
     return Scaffold(
-        body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width,
-                  minHeight: MediaQuery.of(context).size.height,
-                ),
-                child: IntrinsicHeight(
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  SafeArea(
+        resizeToAvoidBottomInset: false,
+        body:SafeArea(
                       child: Stack(children: [
                     Column(
                       children: [
@@ -156,7 +148,7 @@ class _LoginScreen extends State<LoginScreen>
                     _dimWidget(context),
                     _langWidget(context),
                   ]))
-                ])))));
+                );
   }
 
   List<Widget> _pages(BuildContext context) {

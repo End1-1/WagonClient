@@ -42,16 +42,8 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width,
-                  minHeight: MediaQuery.of(context).size.height ,
-                ),
-                child: IntrinsicHeight(
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                  SafeArea(
+        resizeToAvoidBottomInset: false,
+        body:  SafeArea(
                     child: Stack(children:[ Column(
                       children: [
                         const SizedBox(height: 20),
@@ -110,7 +102,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
                                       style: const TextStyle(
                                           color: Color(0xffBE2A60),
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                          fontSize: 18)),
                                   Expanded(child: Container()),
                                 ],
                               ),
@@ -120,6 +112,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
                                   Container(width: 40),
                                   Expanded(child: Container(margin: const EdgeInsets.all(00),
                                   child: PinInputTextField(
+
                                     onChanged: (v) {
                                       if (v.length == 6) {
                                         _focus.unfocus();
@@ -179,7 +172,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
                       _langWidget(context)
                       ]),
                   )
-                ])))));
+                );
   }
 
   Widget _dimWidget(BuildContext context) {

@@ -31,16 +31,29 @@ class _PaymentWidget extends State<PaymentWidget> {
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
-            Row(children: [
-              InkWell(onTap: (){
-                widget.model.showWallet = false;
-                widget.stateCallback();
-              }, child: Image.asset('images/login/back.png', height: 40,))
-            ],),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+              IconButton(
+                  icon: Image.asset(
+                    "images/back.png",
+                    height: 20,
+                    width: 20,
+                  ),
+                  onPressed: () {
+                    widget.model.showWallet = false;
+                    widget.stateCallback();
+                  }),
+              Text(tr(trPaymentMethods).toUpperCase())
+            ]),
+            Container(
+                height: 5,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xffcccccc), Colors.white]))),
             const SizedBox(height: 10,),
-            Row(children: [
-              Text(tr(trPaymentMethods), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ],),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
