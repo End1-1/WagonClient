@@ -55,7 +55,7 @@ class WMainWindow extends StatefulWidget {
 }
 
 class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
-  late StreamSubscription<Position> _positionStream;
+
   final MainWindowModel model = MainWindowModel();
   final player = AudioPlayer();
   int _socketState = 0;
@@ -79,6 +79,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
+    ResourceCarTypes.res.clear();
     ResourceCarTypes.res
         .add(CarTypeStruct('images/car.png', 'Taxi', selected: true)
           ..types.addAll([
@@ -1516,6 +1517,14 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
                             Consts.setInt("client_id", 0);
                             Consts.setString("phone", "");
                             Consts.setString("bearer", "");
+                            if (_socket != null) {
+                              _socket!.close();
+                              _socket = null;
+                            }
+                            // if (model.mapController != null) {
+                            //   model.mapController!.dispose();
+                            //   model.mapController = null;
+                            // }
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -1673,22 +1682,28 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
       accuracy: LocationAccuracy.high,
       distanceFilter: 50,
     );
-    _positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((event) {
+
       if ((model.currentPage != pageSelectShortAddress) && model.init) {
         return;
       }
-      Point point =
-          Point(latitude: event.latitude!, longitude: event.longitude!);
+
+    Position p = await Geolocator.getCurrentPosition();
+    model.mapController!.moveCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(
+            target: Point(
+                latitude: p.latitude,
+                longitude: p.longitude),
+            zoom: 16)),
+        animation: MapAnimation(duration: 1));
+
       if (!model.init) {
         model.init = true;
-        RouteHandler.routeHandler.setPointFrom(event);
+        RouteHandler.routeHandler.setPointFrom(p);
         model.mapController?.moveCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: point, zoom: 16)));
+            CameraPosition(target: Point(latitude: p.latitude, longitude: p.longitude), zoom: 16)));
 
         WebInitOpen webInitOpen = new WebInitOpen(
-            latitude: event.latitude!, longitude: event.longitude!);
+            latitude: p.latitude!, longitude: p.longitude!);
         webInitOpen.request((mp) {
           model.paymentTypes = PaymentTypes.fromJson(mp['data']);
           for (var e in model.paymentTypes.payment_types) {
@@ -1728,7 +1743,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
           setState(() {});
         });
       }
-    });
+
   }
 
   void _geocodeResponse(AddressStruct ass) {

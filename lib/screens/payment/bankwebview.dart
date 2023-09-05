@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class BankWebView extends StatefulWidget {
+  final String url;
+
+  BankWebView(this.url);
+
   @override
   State<StatefulWidget> createState() => _BankWebView();
 }
@@ -12,7 +16,7 @@ class _BankWebView extends State<BankWebView> {
 
   @override
   void initState() {
-    webViewController.loadRequest(Uri.parse('https://mail.ru'));
+    webViewController.loadRequest(Uri.parse(widget.url));
   }
 
   @override

@@ -52,7 +52,7 @@ class _LoginScreen extends State<LoginScreen>
     if (langPos == null) {
       langPos = Tween<double?>(
               begin: MediaQuery.sizeOf(context).height,
-              end: MediaQuery.sizeOf(context).height - 170)
+              end: MediaQuery.sizeOf(context).height - 140)
           .animate(_backgrounController);
     }
     return Scaffold(
@@ -757,7 +757,7 @@ class _LoginScreen extends State<LoginScreen>
           animation: _backgrounController,
           builder: (BuildContext context, Widget? child) {
             return Positioned(
-                height: 160,
+                height: 150,
                 top: langPos!.value,
                 width: MediaQuery.sizeOf(context).width,
                 child: Container(

@@ -205,7 +205,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
           animation: _backgrounController,
           builder: (BuildContext context, Widget? child) {
             return Positioned(
-                height: 150,
+                height: 160,
                 top: langPos!.value,
                 width: MediaQuery.sizeOf(context).width,
                 child: Container(

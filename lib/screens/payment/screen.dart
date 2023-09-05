@@ -23,7 +23,7 @@ class _PaymentWidget extends State<PaymentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       decoration: const BoxDecoration(
         color: Colors.white
       ),
@@ -104,8 +104,12 @@ class _PaymentWidget extends State<PaymentWidget> {
                   });
                   final wp = WebParent('/app/mobile/transactions/make-binding-payment', HttpMethod.GET);
                   wp.request((s){
+                    setState(() {
+                      errorStr = '';
+                      addingCard = false;
+                    });
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => BankWebView()))
+                        MaterialPageRoute(builder: (builder) => BankWebView(s['url'])))
                         .then((value) {
                       print('FINITA LA WEBVIEW');
                     });
