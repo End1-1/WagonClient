@@ -54,7 +54,11 @@ class WMainWindow extends StatefulWidget {
   }
 }
 
-class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
+class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  late AnimationController _backgrounController;
+  late Animation<Color?> background;
+  Animation<double?>? langPos;
+  var _paymentVisible = false;
 
   final MainWindowModel model = MainWindowModel();
   final player = AudioPlayer();
@@ -135,6 +139,20 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     _restoreState();
+
+    _backgrounController = AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this);
+    background = TweenSequence<Color?>(
+      [
+        TweenSequenceItem(
+          weight: 1.0,
+          tween: ColorTween(
+            begin: Colors.transparent,
+            end: Colors.black54,
+          ),
+        ),
+      ],
+    ).animate(_backgrounController);
   }
 
   @override
@@ -169,6 +187,13 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    if (langPos == null) {
+      langPos = Tween<double?>(
+              begin: MediaQuery.sizeOf(context).height,
+              end: MediaQuery.sizeOf(context).height - 140)
+          .animate(_backgrounController);
+    }
+
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
@@ -1683,67 +1708,66 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver {
       distanceFilter: 50,
     );
 
-      if ((model.currentPage != pageSelectShortAddress) && model.init) {
-        return;
-      }
+    if ((model.currentPage != pageSelectShortAddress) && model.init) {
+      return;
+    }
 
     Position p = await Geolocator.getCurrentPosition();
     model.mapController!.moveCamera(
         CameraUpdate.newCameraPosition(CameraPosition(
-            target: Point(
-                latitude: p.latitude,
-                longitude: p.longitude),
+            target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: 16)),
         animation: MapAnimation(duration: 1));
 
-      if (!model.init) {
-        model.init = true;
-        RouteHandler.routeHandler.setPointFrom(p);
-        model.mapController?.moveCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(target: Point(latitude: p.latitude, longitude: p.longitude), zoom: 16)));
+    if (!model.init) {
+      model.init = true;
+      RouteHandler.routeHandler.setPointFrom(p);
+      model.mapController?.moveCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: Point(latitude: p.latitude, longitude: p.longitude),
+              zoom: 16)));
 
-        WebInitOpen webInitOpen = new WebInitOpen(
-            latitude: p.latitude!, longitude: p.longitude!);
-        webInitOpen.request((mp) {
-          model.paymentTypes = PaymentTypes.fromJson(mp['data']);
-          for (var e in model.paymentTypes.payment_types) {
-            if (e.name.toLowerCase() == 'наличными') {
-              e.name = 'Наличные';
-            } else if (e.name.toLowerCase() == 'безнал и кредитка') {
-              e.name = 'За счёт компании';
-            }
+      WebInitOpen webInitOpen =
+          new WebInitOpen(latitude: p.latitude!, longitude: p.longitude!);
+      webInitOpen.request((mp) {
+        model.paymentTypes = PaymentTypes.fromJson(mp['data']);
+        for (var e in model.paymentTypes.payment_types) {
+          if (e.name.toLowerCase() == 'наличными') {
+            e.name = 'Наличные';
+          } else if (e.name.toLowerCase() == 'безнал и кредитка') {
+            e.name = 'За счёт компании';
           }
-          model.companies = Companies.fromJson(mp['data']);
-          //TODO GET CAR CLASSES FROM HERE
-          //model.setCarClasses(CarClasses.fromJson(mp['data']));
-          for (int rt in mp["data"]["rent_times"]) {
-            model.rentTimes.add(rt);
-          }
-          if (model.paymentTypes.payment_types.length > 0) {
-            model.paymentTypes.payment_types[0].selected = true;
-          }
-          model.initCoin(context, () {}, (c, s) {
-            if (c == 401) {
-              Consts.setString("bearer", "");
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
-            } else {
-              Dlg.show(context, "initCoin()\r\n" + s);
-            }
-            setState(() {});
-          });
-        }, (c, s) {
+        }
+        model.companies = Companies.fromJson(mp['data']);
+        //TODO GET CAR CLASSES FROM HERE
+        //model.setCarClasses(CarClasses.fromJson(mp['data']));
+        for (int rt in mp["data"]["rent_times"]) {
+          model.rentTimes.add(rt);
+        }
+        if (model.paymentTypes.payment_types.length > 0) {
+          model.paymentTypes.payment_types[0].selected = true;
+        }
+        model.initCoin(context, () {}, (c, s) {
           if (c == 401) {
             Consts.setString("bearer", "");
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => LoginScreen()));
           } else {
-            Dlg.show(context, "initOpen()\r\n" + s);
+            Dlg.show(context, "initCoin()\r\n" + s);
           }
           setState(() {});
         });
-      }
-
+      }, (c, s) {
+        if (c == 401) {
+          Consts.setString("bearer", "");
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        } else {
+          Dlg.show(context, "initOpen()\r\n" + s);
+        }
+        setState(() {});
+      });
+    }
   }
 
   void _geocodeResponse(AddressStruct ass) {

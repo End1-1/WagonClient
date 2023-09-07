@@ -16,6 +16,7 @@ class _BankWebView extends State<BankWebView> {
 
   @override
   void initState() {
+    webViewController.setJavaScriptMode(JavaScriptMode.unrestricted);
     webViewController.loadRequest(Uri.parse(widget.url));
   }
 
@@ -23,7 +24,9 @@ class _BankWebView extends State<BankWebView> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.green,
-      child: WebViewWidget(controller: webViewController),
+      child: WebViewWidget(controller: webViewController
+
+      ),
     );
   }
 }

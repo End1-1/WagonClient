@@ -67,7 +67,7 @@ class Consts {
   static final DateFormat timeFormat = DateFormat("HH:mm");
 
   static Point userPosition() {
-    return Point(latitude: getDouble("last_lat")!, longitude: getDouble("last_lon")!);
+    return Point(latitude: getDouble("last_lat"), longitude: getDouble("last_lon"));
   }
   
   static late SharedPreferences _prefs;
