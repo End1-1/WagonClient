@@ -59,6 +59,7 @@ class MainWindowModel {
   int currentPage = 0;
   int currentState = 0;
   bool loadingData = false;
+  bool showWallet = false;
   bool tracking = false;
   bool showOptions = false;
   double rideZoom = 16;

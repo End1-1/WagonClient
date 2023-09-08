@@ -40,18 +40,17 @@ class Consts {
   static final BoxDecoration boxDecoration = BoxDecoration(color: Colors.white,border: Border.all(color: Consts.colorGray) ,borderRadius: BorderRadius.all(Radius.circular(5)));
 
   static List<String> hosts = [
+    "wagon.am",
     "newyellowtaxi.com",
     "ayction.ru",
     "test.nyt.ru",
     "192.168.0.110",
     "192.168.0.112",
     "192.168.0.106",
-    "wagon.am"
   ];
 
 
   static String host () {
-    return "wagon.am";
     String r = getString("host");
     if (r.isEmpty) {
       r = hosts.elementAt(0);
@@ -68,7 +67,7 @@ class Consts {
   static final DateFormat timeFormat = DateFormat("HH:mm");
 
   static Point userPosition() {
-    return Point(latitude: getDouble("last_lat")!, longitude: getDouble("last_lon")!);
+    return Point(latitude: getDouble("last_lat"), longitude: getDouble("last_lon"));
   }
   
   static late SharedPreferences _prefs;

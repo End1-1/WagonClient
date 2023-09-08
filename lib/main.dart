@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
-import 'package:wagon_client/enter_phone.dart';
 import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 

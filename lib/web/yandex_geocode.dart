@@ -33,7 +33,9 @@ class YandexGeocodeHandler {
       YandexGeocoder yg = YandexGeocoder(apiKey: Consts.yandexGeocodeKey);
       GeocodeRequest geocodeRequest = GeocodeRequest(
           results: 10,
-          ll: SearchAreaLL(latitude: _lastLat, longitude: _lastLon),
+          kind: KindRequest.house ,
+          // spn: SearchAreaSPN(differenceLatitude: 3.552069, differenceLongitude: 2.400552),
+          // ll: SearchAreaLL(latitude: _lastLat, longitude: _lastLon),
           geocode: PointGeocode(latitude: latitude, longitude: longitude));
       GeocodeResponse geocodeResponse = await yg.getGeocode(geocodeRequest);
 
