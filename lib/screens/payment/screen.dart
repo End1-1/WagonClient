@@ -23,17 +23,13 @@ class _PaymentWidget extends State<PaymentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      decoration: const BoxDecoration(
-        color: Colors.white
-      ),
-        height: MediaQuery.sizeOf(context).height,
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        decoration: const BoxDecoration(color: Colors.white),
+        height: MediaQuery.sizeOf(context).height * 0.5,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               IconButton(
                   icon: Image.asset(
                     "images/back.png",
@@ -53,12 +49,19 @@ class _PaymentWidget extends State<PaymentWidget> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [Color(0xffcccccc), Colors.white]))),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('images/cash.png', height: 30,),
-                const SizedBox(width: 10,),
+                Image.asset(
+                  'images/cash.png',
+                  height: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
                 Text(tr(trCash)),
                 Expanded(child: Container()),
                 Checkbox(
@@ -75,8 +78,13 @@ class _PaymentWidget extends State<PaymentWidget> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('images/cash.png', height: 30,),
-                const SizedBox(width: 10,),
+                Image.asset(
+                  'images/cash.png',
+                  height: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
                 Text(tr(trPayByCompany)),
                 Expanded(child: Container()),
                 Checkbox(
@@ -90,39 +98,46 @@ class _PaymentWidget extends State<PaymentWidget> {
                 )
               ],
             ),
-            const SizedBox(height: 10,),
-            Text('Платить картой пиздец как удобно, Вам не нужно каждый раз доставать кошелек и ждать сдачи, которых у таксиста может и не быть.'),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+                'Платить картой пиздец как удобно, Вам не нужно каждый раз доставать кошелек и ждать сдачи, которых у таксиста может и не быть.'),
             Expanded(child: Container()),
             if (addingCard)
-              SizedBox(height: 30, width: 30, child: CircularProgressIndicator())
-              else
-
-                OutlinedButton(onPressed: () {
-                  setState(() {
-                    errorStr = '';
-                    addingCard = true;
-                  });
-                  final wp = WebParent('/app/mobile/transactions/make-binding-payment', HttpMethod.GET);
-                  wp.request((s){
+              SizedBox(
+                  height: 30, width: 30, child: CircularProgressIndicator())
+            else
+              OutlinedButton(
+                  onPressed: () {
                     setState(() {
                       errorStr = '';
-                      addingCard = false;
+                      addingCard = true;
                     });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => BankWebView(s['url'])))
-                        .then((value) {
-                      print('FINITA LA WEBVIEW');
+                    final wp = WebParent(
+                        '/app/mobile/transactions/make-binding-payment',
+                        HttpMethod.GET);
+                    wp.request((s) {
+                      setState(() {
+                        errorStr = '';
+                        addingCard = false;
+                      });
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => BankWebView(s['url'])))
+                          .then((value) {
+                        print('FINITA LA WEBVIEW');
+                      });
+                    }, (c, s) {
+                      setState(() {
+                        addingCard = false;
+                        errorStr = s;
+                      });
                     });
-                  }, (c, s){
-                    setState(() {
-                      addingCard = false;
-                      errorStr = s;
-                    });
-                  });
-
-                }, child: Text(tr(trAddCard).toUpperCase())),
-            if (errorStr.isNotEmpty)
-              Text(errorStr),
+                  },
+                  child: Text(tr(trAddCard).toUpperCase())),
+            if (errorStr.isNotEmpty) Text(errorStr),
             const SizedBox(height: 50),
           ],
         ));

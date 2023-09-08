@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/screens/login/screen.dart';
+import 'package:wagon_client/web/web_yandexkey.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -32,6 +33,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Consts.init();
+
+  await WebYandexKey().request(() {}, null);
   // Firebase.initializeApp().then((value) {
   //   if (Consts.getString("firebase_token").isEmpty) {
   //     FirebaseMessaging.instance.getToken().then((value) {

@@ -135,8 +135,6 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
             'Up to 14 person and one eliphant', 600),
       ]));
 
-    WebYandexKey().request(() {}, null);
-
     WidgetsBinding.instance.addObserver(this);
     _restoreState();
 

@@ -7,9 +7,10 @@ class WebYandexKey extends WebParent {
 
   @override
   Future<void> request(Function done, Function? fail) async {
-      super.request((mp) {
+      return await super.request((mp) {
         print(mp);
         Consts.yandexGeocodeKey = mp["_payload"]["key"];
+        print('YANDEX KEY ${Consts.yandexGeocodeKey}');
       }, (c, s) {
         if (fail != null) {
           fail(c, s);
