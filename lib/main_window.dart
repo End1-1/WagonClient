@@ -38,7 +38,6 @@ import 'package:wagon_client/web/web_cancelsearchtaxi.dart';
 import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_initorder.dart';
 import 'package:wagon_client/web/web_realstate.dart';
-import 'package:wagon_client/web/web_yandexkey.dart';
 import 'package:wagon_client/widget/car_type.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -54,11 +53,13 @@ class WMainWindow extends StatefulWidget {
   }
 }
 
-class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+class WMainWidowState extends State<WMainWindow>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   late AnimationController _backgrounController;
   late Animation<Color?> background;
   Animation<double?>? langPos;
   var _paymentVisible = false;
+  var _dimvisible = false;
 
   final MainWindowModel model = MainWindowModel();
   final player = AudioPlayer();
@@ -146,6 +147,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
           weight: 1.0,
           tween: ColorTween(
             begin: Colors.transparent,
+            //begin: Colors.yellow,
             end: Colors.black54,
           ),
         ),
@@ -229,6 +231,7 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
                                       fontWeight: FontWeight.w700)))))),
               _appendAddressToWidget(context),
               _multiAddressWiget(context),
+              _dimWidget(context),
               _walletOptions(context),
             ]))));
   }
@@ -383,6 +386,9 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
       model.drawPoint();
     }
     _clearTaxiOnMap();
+    if (model.showWallet) {
+      return Container();
+    }
     Widget w1 = Wrap(children: [
       InkWell(
           onTap: () {
@@ -705,6 +711,9 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
                           onPressed: () {
                             setState(() {
                               model.showWallet = !model.showWallet;
+                              _backgrounController.reset();
+                              _backgrounController.forward();
+                              _dimvisible = true;
                             });
                           },
                           style: OutlinedButton.styleFrom(
@@ -2479,9 +2488,38 @@ class WMainWidowState extends State<WMainWindow> with WidgetsBindingObserver, Si
 
   Widget _walletOptions(BuildContext context) {
     return AnimatedPositioned(
-      top: model.showWallet ? 0 : MediaQuery.sizeOf(context).height,
-        child: PaymentWidget(model, (){setState(() {
+        top: model.showWallet
+            ? MediaQuery.sizeOf(context).height * 0.5
+            : MediaQuery.sizeOf(context).height,
+        child: PaymentWidget(model, () {
+          setState(() {
+            _dimvisible = false;
+          });
+        }),
+        duration: const Duration(milliseconds: 300));
+  }
 
-        });}), duration: const Duration(milliseconds: 300));
+  Widget _dimWidget(BuildContext context) {
+    return Visibility(
+        visible: _dimvisible,
+        child: AnimatedBuilder(
+          animation: _backgrounController,
+          builder: (BuildContext context, Widget? child) {
+            return GestureDetector(
+                onTap: () {
+                  _backgrounController.reverse().whenComplete(() {
+                    setState(() {
+                      _dimvisible = false;
+                      model.showWallet = false;
+                    });
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  color: background.value,
+                ));
+          },
+        ));
   }
 }

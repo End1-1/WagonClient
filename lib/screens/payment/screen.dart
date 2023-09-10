@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screens/payment/bankwebview.dart';
@@ -23,25 +24,20 @@ class _PaymentWidget extends State<PaymentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        decoration: const BoxDecoration(color: Colors.white),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40), topRight: Radius.circular(40))),
         height: MediaQuery.sizeOf(context).height * 0.5,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              IconButton(
-                  icon: Image.asset(
-                    "images/back.png",
-                    height: 20,
-                    width: 20,
-                  ),
-                  onPressed: () {
-                    widget.model.showWallet = false;
-                    widget.stateCallback();
-                  }),
-              Text(tr(trPaymentMethods).toUpperCase())
-            ]),
+        Container(height: 50, decoration: const BoxDecoration(color: Colors.black12), child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Expanded(child: Container()),
+              Text(tr(trPaymentMethods).toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+              Expanded(child: Container()),
+            ])),
             Container(
                 height: 5,
                 decoration: BoxDecoration(
@@ -55,6 +51,9 @@ class _PaymentWidget extends State<PaymentWidget> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(
+                  width: 10,
+                ),
                 Image.asset(
                   'images/cash.png',
                   height: 30,
@@ -64,7 +63,10 @@ class _PaymentWidget extends State<PaymentWidget> {
                 ),
                 Text(tr(trCash)),
                 Expanded(child: Container()),
-                Checkbox(
+                Transform.scale( scale: 2, child: Checkbox(
+                  checkColor: Colors.black,
+                  activeColor: Consts.colorOrange,
+                  shape: CircleBorder(),
                   value: cashChecked,
                   onChanged: (bool? value) {
                     setState(() {
@@ -72,12 +74,16 @@ class _PaymentWidget extends State<PaymentWidget> {
                       companyChecked = false;
                     });
                   },
-                )
+                ))
               ],
             ),
+            Divider(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(
+                  width: 10,
+                ),
                 Image.asset(
                   'images/cash.png',
                   height: 30,
@@ -87,7 +93,10 @@ class _PaymentWidget extends State<PaymentWidget> {
                 ),
                 Text(tr(trPayByCompany)),
                 Expanded(child: Container()),
-                Checkbox(
+                Transform.scale( scale: 2, child: Checkbox(
+                  checkColor: Colors.black,
+                  activeColor: Consts.colorOrange,
+                  shape: CircleBorder(),
                   value: companyChecked,
                   onChanged: (bool? value) {
                     setState(() {
@@ -95,9 +104,10 @@ class _PaymentWidget extends State<PaymentWidget> {
                       cashChecked = false;
                     });
                   },
-                )
+                ))
               ],
             ),
+            Divider(),
             const SizedBox(
               height: 10,
             ),
@@ -109,6 +119,11 @@ class _PaymentWidget extends State<PaymentWidget> {
                   height: 30, width: 30, child: CircularProgressIndicator())
             else
               OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      minimumSize:
+                          Size(MediaQuery.sizeOf(context).width * 0.9, 50),
+                      backgroundColor: Consts.colorOrange,
+                      textStyle: TextStyle(color: Colors.black)),
                   onPressed: () {
                     setState(() {
                       errorStr = '';
@@ -137,6 +152,19 @@ class _PaymentWidget extends State<PaymentWidget> {
                     });
                   },
                   child: Text(tr(trAddCard).toUpperCase())),
+            const SizedBox(height: 10),
+            if (!addingCard)
+              OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      minimumSize:
+                          Size(MediaQuery.sizeOf(context).width * 0.9, 50),
+                      backgroundColor: Consts.colorWhite,
+                      textStyle: TextStyle(color: Colors.black)),
+                  onPressed: () {
+                    widget.model.showWallet = false;
+                    widget.stateCallback();
+                  },
+                  child: Text(tr(trReady).toUpperCase())),
             if (errorStr.isNotEmpty) Text(errorStr),
             const SizedBox(height: 50),
           ],

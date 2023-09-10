@@ -13,6 +13,7 @@ class WebYandexKey extends WebParent {
         print('YANDEX KEY ${Consts.yandexGeocodeKey}');
       }, (c, s) {
         if (fail != null) {
+          print('YANDEX KEY FAILED');
           fail(c, s);
         }
       });

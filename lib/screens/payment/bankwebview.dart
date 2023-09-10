@@ -22,11 +22,11 @@ class _BankWebView extends State<BankWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(body: SafeArea(child: Container(
       color: Colors.green,
       child: WebViewWidget(controller: webViewController
 
       ),
-    );
+    )));
   }
 }
