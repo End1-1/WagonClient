@@ -171,3 +171,17 @@ class _PaymentWidget extends State<PaymentWidget> {
         ));
   }
 }
+
+class PaymentFullWindow extends StatelessWidget {
+  final MainWindowModel model;
+
+  PaymentFullWindow(this.model);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: SafeArea( child:  PaymentWidget(model, (){
+      Navigator.pop(context);
+    })));
+  }
+
+}

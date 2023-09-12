@@ -1452,6 +1452,23 @@ class WMainWidowState extends State<WMainWindow>
                 color: Colors.black38,
                 thickness: 1,
               ),
+
+              //PAYMENT
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 20, top: 10),
+                      child: GestureDetector(
+                          onTap: () {
+                            _hideMenu();
+                            Navigator.push(context, MaterialPageRoute(builder: (builder) => PaymentFullWindow(model)));},
+                          child: Text(tr(trPaymentMethods).toUpperCase(),
+                              style: Consts.textStyleMenu)))),
+              Divider(
+                color: Colors.black38,
+                thickness: 1,
+              ),
+
               // Align(
               //     alignment: Alignment.centerLeft,
               //     child: Padding(
@@ -1470,6 +1487,7 @@ class WMainWidowState extends State<WMainWindow>
               //   color: Colors.black38,
               //   thickness: 1,
               // ),
+              //SETTINGS
               Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
