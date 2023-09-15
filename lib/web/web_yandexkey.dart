@@ -10,6 +10,7 @@ class WebYandexKey extends WebParent {
       return await super.request((mp) {
         print(mp);
         Consts.yandexGeocodeKey = mp["_payload"]["key"];
+        Consts.setString("yandexkey", Consts.yandexGeocodeKey);
         print('YANDEX KEY ${Consts.yandexGeocodeKey}');
       }, (c, s) {
         if (fail != null) {

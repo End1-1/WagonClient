@@ -34,6 +34,7 @@ Future<void> main() async {
 
   await Consts.init();
 
+  Consts.yandexGeocodeKey = Consts.getString("yandexkey");
   await WebYandexKey().request(() {}, null);
   // Firebase.initializeApp().then((value) {
   //   if (Consts.getString("firebase_token").isEmpty) {
