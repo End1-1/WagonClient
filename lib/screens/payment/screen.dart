@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screens/payment/bankwebview.dart';
 import 'package:wagon_client/web/web_parent.dart';
+
+import 'card_info.dart';
 
 class PaymentWidget extends StatefulWidget {
   late final MainWindowModel model;
@@ -20,6 +25,8 @@ class _PaymentWidget extends State<PaymentWidget> {
   var companyChecked = false;
   var addingCard = false;
   var errorStr = '';
+  var loadingCards = false;
+  final List<CardInfo> cards = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class _PaymentWidget extends State<PaymentWidget> {
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-        height: MediaQuery.sizeOf(context).height * 0.5,
+        height: MediaQuery.sizeOf(context).height * Consts.sizeofPaymentWidget,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
@@ -70,6 +77,12 @@ class _PaymentWidget extends State<PaymentWidget> {
                   value: cashChecked,
                   onChanged: (bool? value) {
                     setState(() {
+                      final List<CardInfo> tempCards = [];
+                      for (final oldCard in cards) {
+                        tempCards.add(oldCard.copyWith(selected: false));
+                        }
+                            cards.clear();
+                        cards.addAll(tempCards);
                       cashChecked = true;
                       companyChecked = false;
                     });
@@ -100,11 +113,103 @@ class _PaymentWidget extends State<PaymentWidget> {
                   value: companyChecked,
                   onChanged: (bool? value) {
                     setState(() {
+                      final List<CardInfo> tempCards = [];
+                      for (final oldCard in cards) {
+                        tempCards.add(oldCard.copyWith(selected: false));
+                      }
+                      cards.clear();
+                      cards.addAll(tempCards);
                       companyChecked = true;
                       cashChecked = false;
                     });
                   },
                 ))
+              ],
+            ),
+            Divider(),
+            InkWell(onTap:(){
+              setState(() {
+                loadingCards = true;
+              });
+              cards.clear();
+              WebParent("/app/mobile/transactions/cards", HttpMethod.GET).request((s){
+                print(s);
+                s = '[{"name":"Card holdername","number":"480306****454680"},{"name":"Card holdername","number":"500306****454680"}]';
+                List<dynamic> cardsJson = jsonDecode(s);
+                for (final c in cardsJson) {
+                  cards.add(CardInfo.fromJson(c));
+                }
+                setState(() {
+                  loadingCards = false;
+                  Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget + (cards.length * 0.1);
+                  widget.stateCallback();
+                });
+              }, (c, s) {
+                print(s);
+                s = '[{"name":"Card holdername","number":"480306****454680"},{"name":"Card holdername","number":"500306****454680"}]';
+                List<dynamic> cardsJson = jsonDecode(s);
+                for (final c in cardsJson) {
+                  cards.add(CardInfo.fromJson(c));
+                }
+                setState(() {
+                  loadingCards = false;
+                  Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget + (cards.length * 0.1);
+                  widget.stateCallback();
+                });
+              });
+            }, child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                Image.asset(
+                  'images/wallet.png',
+                  height: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(tr(trBankCard)),
+                Expanded(child: Container()),
+                if (cards.length == 0)
+                  Image.asset('images/arrowcircleright.png', height: 40,)
+              ],
+            )),
+            for (final c in cards) ...[
+              Row(children: [
+                const SizedBox(width: 30),
+                Image.asset('images/wallet.png', height: 30, width: 30,),
+                const SizedBox(width: 10,),
+                Text(c.number, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Expanded(child: Container()),
+                Transform.scale( scale: 2, child: Checkbox(
+                  checkColor: Colors.black,
+                  activeColor: Consts.colorOrange,
+                  shape: CircleBorder(),
+                  value: c.selected ?? false,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      final List<CardInfo> tempCards = [];
+                      for (final oldCard in cards) {
+                        tempCards.add(oldCard == c ? c.copyWith(selected: value ?? false) : oldCard.copyWith(selected: false));
+                      }
+                      cards.clear();
+                      cards.addAll(tempCards);
+                      cashChecked = false;
+                      companyChecked = false;
+                    });
+                  },
+                ))
+              ],)
+            ],
+            Divider(),
+            Row(
+              children: [
+                Expanded(child: Container()),
+                if (loadingCards)
+                  const SizedBox(child: CircularProgressIndicator(), height: 30, width: 30,),
+                Expanded(child: Container()),
               ],
             ),
             Divider(),
@@ -142,7 +247,11 @@ class _PaymentWidget extends State<PaymentWidget> {
                               MaterialPageRoute(
                                   builder: (builder) => BankWebView(s['url'])))
                           .then((value) {
-                        print('FINITA LA WEBVIEW');
+                            if (value != null) {
+                              if (value) {
+                                FToast().showToast(child: Text('КАРТА ДОБАВЛЕНА, УРА!'), gravity: ToastGravity.CENTER);
+                              }
+                            }
                       });
                     }, (c, s) {
                       setState(() {
@@ -162,6 +271,8 @@ class _PaymentWidget extends State<PaymentWidget> {
                       textStyle: TextStyle(color: Colors.black)),
                   onPressed: () {
                     widget.model.showWallet = false;
+                    cards.clear();
+                    Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;
                     widget.stateCallback();
                   },
                   child: Text(tr(trReady).toUpperCase())),

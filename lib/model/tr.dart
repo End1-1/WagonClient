@@ -75,6 +75,7 @@ const trLanguage = 72;
 const trEnter = 73;
 const trPaymentMethods = 74;
 const trAddCard = 75;
+const trBankCard = 76;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
@@ -150,7 +151,8 @@ const Map<int, String> ru = {
   trLanguage: "Язык",
   trEnter: "Вход",
   trPaymentMethods: "Методы оплаты",
-  trAddCard:"Добавить карту"
+  trAddCard:"Добавить карту",
+  trBankCard:"Банковская карта"
 };
 
 String tr(int key) {

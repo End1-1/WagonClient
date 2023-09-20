@@ -2507,7 +2507,7 @@ class WMainWidowState extends State<WMainWindow>
   Widget _walletOptions(BuildContext context) {
     return AnimatedPositioned(
         top: model.showWallet
-            ? MediaQuery.sizeOf(context).height * 0.5
+            ? MediaQuery.sizeOf(context).height * (1 - Consts.sizeofPaymentWidget)
             : MediaQuery.sizeOf(context).height,
         child: PaymentWidget(model, () {
           setState(() {

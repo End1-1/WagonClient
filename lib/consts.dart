@@ -8,6 +8,9 @@ import 'package:sprintf/sprintf.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Consts {
+  static double sizeofPaymentWidget = 0.6;
+  static double defaultSizeofPaymentWidget = 0.6;
+
   static const Color colorOrange = Color(0xfff2a649);
   //static const Color colorWagonRed = Color(0xff)
   static const Color colorGreen = Color(0xff6ea868);
