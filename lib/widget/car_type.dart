@@ -48,7 +48,7 @@ class CarType extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.fromBorderSide(
               BorderSide(color: Colors.black12, width: 1)),
-          borderRadius: BorderRadius.all(Radius.circular(3)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           color: bgColor,
         ),
         child: Column(
@@ -80,7 +80,7 @@ class CarSubtypeWidget extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.fromBorderSide(BorderSide(color: Colors.black12)),
             color: css.selected ? const Color(0x40C02C63) : Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20))
+            borderRadius: BorderRadius.all(Radius.circular(5))
         ),
         width: MediaQuery.sizeOf(context).width,
         height: 80,

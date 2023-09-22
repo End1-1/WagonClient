@@ -83,7 +83,7 @@ class _LoginScreen extends State<LoginScreen>
                                   Text(currentLanguage(),
                                       style: const TextStyle(
                                           fontSize: 16,
-                                          color: Color(0xffBF2A61))),
+                                          color: Consts.colorRed)),
                                   const SizedBox(width: 20),
                                 ]))
                           ],

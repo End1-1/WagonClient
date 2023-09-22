@@ -38,6 +38,7 @@ import 'package:wagon_client/web/web_cancelsearchtaxi.dart';
 import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_initorder.dart';
 import 'package:wagon_client/web/web_realstate.dart';
+import 'package:wagon_client/web/web_yandexkey.dart';
 import 'package:wagon_client/widget/car_type.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -59,7 +60,6 @@ class WMainWidowState extends State<WMainWindow>
   late Animation<Color?> background;
   Animation<double?>? langPos;
   var _paymentVisible = false;
-  var _dimvisible = false;
 
   final MainWindowModel model = MainWindowModel();
   final player = AudioPlayer();
@@ -83,6 +83,8 @@ class WMainWidowState extends State<WMainWindow>
   @override
   void initState() {
     super.initState();
+
+    WebYandexKey().request(() {}, null);
 
     ResourceCarTypes.res.clear();
     ResourceCarTypes.res
@@ -713,22 +715,21 @@ class WMainWidowState extends State<WMainWindow>
                               model.showWallet = !model.showWallet;
                               _backgrounController.reset();
                               _backgrounController.forward();
-                              _dimvisible = true;
+                              model.dimvisible = true;
                             });
                           },
                           style: OutlinedButton.styleFrom(
-                              minimumSize: Size(10, 0),
                               shape: RoundedRectangleBorder(
                                   side: BorderSide(
                                       color: Colors.black26, width: 1),
                                   borderRadius:
                                       new BorderRadius.circular(5.0))),
                           child: Padding(
-                              padding: EdgeInsets.only(top: 15, bottom: 15),
+                              padding: EdgeInsets.only(top: 5, bottom: 5),
                               child: Image.asset(
                                 'images/wallet.png',
                                 width: 25,
-                                height: 25,
+                                height: 35,
                               ))),
                       //ORDERBUTTON BUTTON
                       VerticalDivider(width: 7, color: Colors.transparent),
@@ -771,20 +772,20 @@ class WMainWidowState extends State<WMainWindow>
                                 });
                               },
                               style: OutlinedButton.styleFrom(
-                                  minimumSize: Size(10, 0),
+
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                           color: Colors.black26, width: 1),
                                       borderRadius:
                                           new BorderRadius.circular(5.0))),
                               child: Padding(
-                                  padding: EdgeInsets.only(top: 15, bottom: 15),
+                                  padding: EdgeInsets.only(top: 5, bottom: 5),
                                   child: Image.asset(
                                     model.showOptions
                                         ? 'images/downarrow.png'
                                         : 'images/options.png',
                                     width: 25,
-                                    height: 25,
+                                    height: 35,
                                   ))))
                     ]))),
             Divider(height: 15, color: Colors.transparent),
@@ -2154,6 +2155,7 @@ class WMainWidowState extends State<WMainWindow>
   }
 
   void _openSocket() async {
+
     do {
       try {
         HttpClient client =
@@ -2511,7 +2513,7 @@ class WMainWidowState extends State<WMainWindow>
             : MediaQuery.sizeOf(context).height,
         child: PaymentWidget(model, () {
           setState(() {
-            _dimvisible = false;
+
           });
         }),
         duration: const Duration(milliseconds: 300));
@@ -2519,7 +2521,7 @@ class WMainWidowState extends State<WMainWindow>
 
   Widget _dimWidget(BuildContext context) {
     return Visibility(
-        visible: _dimvisible,
+        visible: model.dimvisible,
         child: AnimatedBuilder(
           animation: _backgrounController,
           builder: (BuildContext context, Widget? child) {
@@ -2527,7 +2529,7 @@ class WMainWidowState extends State<WMainWindow>
                 onTap: () {
                   _backgrounController.reverse().whenComplete(() {
                     setState(() {
-                      _dimvisible = false;
+                      model.dimvisible = false;
                       model.showWallet = false;
                     });
                   });

@@ -62,6 +62,7 @@ class MainWindowModel {
   bool showWallet = false;
   bool tracking = false;
   bool showOptions = false;
+  var dimvisible = false;
   double rideZoom = 16;
   final YandexGeocodeHandler geocode = YandexGeocodeHandler();
   YandexMap? yandexMap;
