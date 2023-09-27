@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,12 +11,14 @@ import 'package:wagon_client/screens/payment/bankwebview.dart';
 import 'package:wagon_client/web/web_parent.dart';
 
 import 'card_info.dart';
+import 'company_info.dart';
 
 class PaymentWidget extends StatefulWidget {
   late final MainWindowModel model;
   Function stateCallback;
+  bool widgetMode;
 
-  PaymentWidget(this.model, this.stateCallback);
+  PaymentWidget(this.model, this.stateCallback, this.widgetMode);
 
   @override
   State<StatefulWidget> createState() => _PaymentWidget();
@@ -23,11 +26,16 @@ class PaymentWidget extends StatefulWidget {
 
 class _PaymentWidget extends State<PaymentWidget> {
   var cashChecked = true;
-  var companyChecked = false;
   var addingCard = false;
   var errorStr = '';
   var loadingCards = false;
+  var openCompany = false;
+
   final List<CardInfo> cards = [];
+  final List<CompanyInfo> companies = [
+    CompanyInfo(id: 1, name: 'Ucom', car_classes: [1,2], checked: false),
+    CompanyInfo(id: 2, name: 'Jazzve', car_classes: [1,2,3], checked: true)
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +53,7 @@ class _PaymentWidget extends State<PaymentWidget> {
             .width,
         child: Column(
           children: [
+            if (widget.widgetMode)
             Container(height: 50,
                 decoration: const BoxDecoration(color: Colors.black12),
                 child: Row(
@@ -53,7 +62,20 @@ class _PaymentWidget extends State<PaymentWidget> {
                   Text(tr(trPaymentMethods).toUpperCase(),
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Expanded(child: Container()),
-                ])),
+                ]))
+            else
+              Row(children: [
+                IconButton(
+                    icon: Image.asset(
+                      "images/back.png",
+                      height: 20,
+                      width: 20,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+                Text(tr(trPaymentMethods).toUpperCase())
+              ]),
             Container(
                 height: 5,
                 decoration: BoxDecoration(
@@ -79,7 +101,7 @@ class _PaymentWidget extends State<PaymentWidget> {
                 ),
                 Text(tr(trCash)),
                 Expanded(child: Container()),
-                Transform.scale(scale: 2, child: Checkbox(
+                Transform.scale(scale: 1.5, child: Checkbox(
                   checkColor: Colors.black,
                   activeColor: Consts.colorOrange,
 
@@ -88,20 +110,17 @@ class _PaymentWidget extends State<PaymentWidget> {
                   value: cashChecked,
                   onChanged: (bool? value) {
                     setState(() {
-                      final List<CardInfo> tempCards = [];
-                      for (final oldCard in cards) {
-                        tempCards.add(oldCard.copyWith(selected: false));
-                      }
-                      cards.clear();
-                      cards.addAll(tempCards);
+                      uncheckCompanies();
+                      uncheckCards();
                       cashChecked = true;
-                      companyChecked = false;
                     });
                   },
                 ))
               ],
             ),
             Divider(),
+
+            //COMPANY MODE
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -117,27 +136,59 @@ class _PaymentWidget extends State<PaymentWidget> {
                 ),
                 Text(tr(trPayByCompany)),
                 Expanded(child: Container()),
-                Transform.scale(scale: 2, child: Checkbox(
-                  checkColor: Colors.black,
-                  activeColor: Consts.colorOrange,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  value: companyChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      final List<CardInfo> tempCards = [];
-                      for (final oldCard in cards) {
-                        tempCards.add(oldCard.copyWith(selected: false));
-                      }
-                      cards.clear();
-                      cards.addAll(tempCards);
-                      companyChecked = true;
-                      cashChecked = false;
-                    });
-                  },
-                ))
+
+                //COMPANY OPTIONS
+              InkWell(onTap: () {
+                setState(() {
+                  openCompany = !openCompany;
+                });
+                },
+                child: openCompany ?
+                Image.asset('images/uparrowc.png', height: 40,)
+              :
+                Image.asset('images/downarrowc.png', height: 40,),),
+                const SizedBox(width: 5,)
+
               ],
             ),
+
+
+            //COMPANY LIST
+            if (openCompany)
+              for (final co in companies) ... [
+                Row(children: [
+                  const SizedBox(width: 30),
+                  Image.asset('images/card.png', height: 30, width: 30,),
+                  const SizedBox(width: 10,),
+                  Text(co.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Expanded(child: Container()),
+                  Transform.scale(scale: 1.5, child: Checkbox(
+                    checkColor: Colors.black,
+                    activeColor: Consts.colorOrange,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    value: co.checked ?? false,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        final List<CompanyInfo> tempCards = [];
+                        for (final oldCard in companies) {
+                          tempCards.add(oldCard == co
+                              ? co.copyWith(checked: value ?? false)
+                              : oldCard.copyWith(checked: false));
+                        }
+                        companies.clear();
+                        companies.addAll(tempCards);
+                        cashChecked = false;
+                        uncheckCards();
+                      });
+                    },
+                  ))
+                ],),
+              ],
+
+
+            //CARD
             Divider(),
             InkWell(onTap: () {
               if (cards.length > 0) {
@@ -178,7 +229,9 @@ class _PaymentWidget extends State<PaymentWidget> {
                   loadingCards = false;
                   Consts.sizeofPaymentWidget =
                       Consts.defaultSizeofPaymentWidget + (cards.length * 0.1);
-                  widget.stateCallback();
+                  if (widget.widgetMode) {
+                    widget.stateCallback();
+                  }
                 });
               });
             }, child: Row(
@@ -211,7 +264,7 @@ class _PaymentWidget extends State<PaymentWidget> {
                 Text(c.number,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 Expanded(child: Container()),
-                Transform.scale(scale: 2, child: Checkbox(
+                Transform.scale(scale: 1.5, child: Checkbox(
                   checkColor: Colors.black,
                   activeColor: Consts.colorOrange,
                   shape: RoundedRectangleBorder(
@@ -228,7 +281,7 @@ class _PaymentWidget extends State<PaymentWidget> {
                       cards.clear();
                       cards.addAll(tempCards);
                       cashChecked = false;
-                      companyChecked = false;
+                      uncheckCompanies();
                     });
                   },
                 ))
@@ -311,6 +364,24 @@ class _PaymentWidget extends State<PaymentWidget> {
           ],
         ));
   }
+
+  void uncheckCompanies() {
+    final List<CompanyInfo> tempCards = [];
+    for (final co in companies) {
+      tempCards.add(co.copyWith(checked: false));
+    }
+    companies.clear();
+    companies.addAll(tempCards);
+  }
+
+  void uncheckCards() {
+    final List<CardInfo> tempCards = [];
+    for (final oldCard in cards) {
+      tempCards.add(oldCard.copyWith(selected: false));
+    }
+    cards.clear();
+    cards.addAll(tempCards);
+  }
 }
 
 class PaymentFullWindow extends StatelessWidget {
@@ -322,7 +393,7 @@ class PaymentFullWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(body: SafeArea(child: PaymentWidget(model, () {
       Navigator.pop(context);
-    })));
+    }, false)));
   }
 
 }

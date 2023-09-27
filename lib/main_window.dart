@@ -2515,7 +2515,7 @@ class WMainWidowState extends State<WMainWindow>
           setState(() {
 
           });
-        }),
+        }, true),
         duration: const Duration(milliseconds: 300));
   }
 

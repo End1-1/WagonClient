@@ -8,7 +8,7 @@ class IPhoneDatePicker {
         locale: LocaleType.ru,
         //currentTime: _orderDateTime.isBefore(DateTime.now()) ? DateTime.now() : _orderDateTime.add(Duration(minutes: 1)),
         minTime: DateTime.now(),
-        maxTime: DateTime.now().add(Duration(days: 5)),
+        maxTime: DateTime.now().add(Duration(days: 3)),
         onConfirm: (dt) {
             model.orderDateTime = dt;
             if (model.orderDateTime.isBefore(DateTime.now())) {
