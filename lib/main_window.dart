@@ -24,6 +24,7 @@ import 'package:wagon_client/payment_type.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
 import 'package:wagon_client/screens/iphonedatepicker.dart';
 import 'package:wagon_client/screens/login/screen.dart';
+import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:wagon_client/screens/multiaddress_to_screen/screen.dart';
 import 'package:wagon_client/screens/options_screen.dart';
 import 'package:wagon_client/screens/payment/screen.dart';
@@ -207,6 +208,7 @@ class WMainWidowState extends State<WMainWindow>
                 onMapCreated: _mapReady,
                 onCameraPositionChanged: _cameraPosition,
                 mapObjects: model.mapObjects,
+
               ),
               Visibility(visible: isMenuVisible(), child: _menuWidget()),
               _stepWidget(),
@@ -216,7 +218,7 @@ class WMainWidowState extends State<WMainWindow>
                           model.addressTo.text.isEmpty),
                   child: Align(
                       alignment: Alignment.center,
-                      child: Image.asset("images/placemark.png", width: 50))),
+                      child: AnimPlaceMark(model.isMapPressed))),
               Visibility(
                   visible: !_socket_connected,
                   child: Align(
@@ -611,13 +613,16 @@ class WMainWidowState extends State<WMainWindow>
                         padding: EdgeInsets.only(left: 5),
                         alignment: Alignment.centerLeft,
                         height: 70,
+                        color: Colors.yellow,
                         child: InkWell(
                             onTap: () {
                               _setDriverComment();
                             },
-                            child: Row(children: [
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
                               Align(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: Alignment.centerRight,
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -625,21 +630,21 @@ class WMainWidowState extends State<WMainWindow>
                                         Text(tr(trDriverComment),
                                             style:
                                                 const TextStyle(fontSize: 16)),
-                                        model.commentFrom.text.isEmpty
-                                            ? Container()
-                                            : Text(model.commentFrom.text,
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black54,
-                                                    fontWeight:
-                                                        FontWeight.bold))
+                                        // model.commentFrom.text.isEmpty
+                                        //     ? Container(height: 0,)
+                                        //     : Text(model.commentFrom.text,
+                                        //         style: const TextStyle(
+                                        //             fontSize: 12,
+                                        //             color: Colors.black54,
+                                        //             fontWeight:
+                                        //                 FontWeight.bold))
                                       ])),
                               Expanded(child: Container()),
                               Align(
                                   alignment: Alignment.center,
                                   child: Image.asset(
                                       model.commentFrom.text.isEmpty
-                                          ? 'images/arrowright.png'
+                                          ? 'images/drivercomment.png'
                                           : 'images/check.png',
                                       height: 20,
                                       width: 20)),
@@ -683,7 +688,7 @@ class WMainWidowState extends State<WMainWindow>
                                   child: Image.asset(
                                       model.orderDateTime
                                               .isBefore(DateTime.now())
-                                          ? 'images/clock.png'
+                                          ? 'images/preordertime.png'
                                           : 'images/check.png',
                                       height: 20,
                                       width: 20)),
@@ -2343,7 +2348,18 @@ class WMainWidowState extends State<WMainWindow>
     if (model.currentPage != pageSelectShortAddress) {
       return;
     }
-    setState(() {});
+    if (finished) {
+      setState(() {
+        model.isMapPressed = false;
+      });
+    } else {
+      if (!model.isMapPressed) {
+        setState(() {
+          model.isMapPressed = true;
+        });
+      }
+    }
+
 
     if (RouteHandler.routeHandler.destinationDefined()) {
       setState(() {

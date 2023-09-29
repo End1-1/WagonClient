@@ -55,6 +55,7 @@ class MainWindowModel {
   DateTime orderDateTime = DateTime.now();
   Map<String, dynamic> timeline = Map();
   Map<String, dynamic> events = Map();
+  bool isMapPressed = false;
   int driverRating = 0;
   int currentPage = 0;
   int currentState = 0;
