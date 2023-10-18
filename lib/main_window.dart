@@ -13,14 +13,12 @@ import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wagon_client/assessments.dart';
 import 'package:wagon_client/car.dart';
-import 'package:wagon_client/company.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/freezed/chat_message.dart';
 import 'package:wagon_client/history_all.dart';
 import 'package:wagon_client/information.dart';
 import 'package:wagon_client/order_cancel_options.dart';
-import 'package:wagon_client/payment_type.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
 import 'package:wagon_client/screens/iphonedatepicker.dart';
 import 'package:wagon_client/screens/login/screen.dart';
@@ -365,9 +363,6 @@ class WMainWidowState extends State<WMainWindow>
         break;
       case pageMenu:
         _currentWidget = _stepMenuWidget();
-        break;
-      case pagePayment:
-        _currentWidget = _stepPaymentType();
         break;
     }
     if (model.currentPage != pageMenu) {
@@ -798,92 +793,6 @@ class WMainWidowState extends State<WMainWindow>
     ]);
 
     return w1;
-  }
-
-  Widget _stepPaymentType() {
-    return Wrap(
-      children: [
-        Container(
-            decoration: Consts.boxDecoration,
-            child: Wrap(children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: model.paymentTypes.payment_types.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(children: [
-                      GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              model.paymentTypes.uncheckAll();
-                              model.paymentTypes.payment_types[index].selected =
-                                  true;
-                            });
-                          },
-                          child: Row(children: [
-                            Checkbox(
-                              activeColor: Consts.colorTaxiBlue,
-                              value: model
-                                  .paymentTypes.payment_types[index].selected,
-                              onChanged: (bool? v) {
-                                setState(() {
-                                  model.paymentTypes.uncheckAll();
-                                  model.paymentTypes.payment_types[index]
-                                      .selected = true;
-                                });
-                              },
-                            ),
-                            Expanded(
-                                child: Text(model
-                                    .paymentTypes.payment_types[index].name)),
-                          ])),
-                      _paymentSubwidget(index)
-                    ]);
-                  }),
-              Container(
-                  height: 5,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Colors.white, Color(0xffcccccc)]))),
-              Container(
-                  margin:
-                      EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 15),
-                  width: double.infinity,
-                  child: OutlinedButton(
-                      onPressed: () {
-                        if (model.paymentTypes.getSelected()!.id == 2) {
-                          if (model.companies.getSelected() == null) {
-                            return;
-                          }
-                        }
-                        setState(() {
-                          model.currentPage = pageSelectCar;
-                          model.loadingData = true;
-                          model.initCoin(context, () {
-                            setState(() {
-                              model.loadingData = false;
-                            });
-                          }, () {
-                            setState(() {
-                              model.loadingData = false;
-                            });
-                          });
-                        });
-                      },
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: Consts.colorOrange,
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: Consts.colorWhite, width: 0),
-                              borderRadius: new BorderRadius.circular(5.0))),
-                      child: Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child:
-                              Text("ГОТОВО", style: Consts.textStyleButton))))
-            ]))
-      ],
-    );
   }
 
   Widget _stepSearchTaxi() {
@@ -1603,19 +1512,15 @@ class WMainWidowState extends State<WMainWindow>
   }
 
   void _searchTaxi() {
-    if (model.paymentTypes.payment_types.length > 0) {
       setState(() {
         model.loadingData = true;
       });
       WebInitOrder webInitOrder = WebInitOrder(
           RouteHandler.routeHandler.directionStruct.from!,
           model.currentCar,
-          model.paymentTypes.getSelected()!.id,
-          model.paymentTypes.getSelected()!.id == 2
-              ? (model.companies.getSelected() == null
-                  ? 0
-                  : model.companies.getSelected()!.id)
-              : 0,
+          model.paymentTypeId,
+          model.paymentTypeId == 2 ?
+              model.getSelectedCompanyInfo().id : 0,
           Consts.getString("driverComment"),
           model.selectedCarOptions,
           model.orderDateTime.add(Duration(
@@ -1646,7 +1551,6 @@ class WMainWidowState extends State<WMainWindow>
         });
         Dlg.show(context, s);
       });
-    }
   }
 
   void _cancelSearchTaxi() {
@@ -1761,23 +1665,7 @@ class WMainWidowState extends State<WMainWindow>
       WebInitOpen webInitOpen =
           new WebInitOpen(latitude: p.latitude!, longitude: p.longitude!);
       webInitOpen.request((mp) {
-        model.paymentTypes = PaymentTypes.fromJson(mp['data']);
-        for (var e in model.paymentTypes.payment_types) {
-          if (e.name.toLowerCase() == 'наличными') {
-            e.name = 'Наличные';
-          } else if (e.name.toLowerCase() == 'безнал и кредитка') {
-            e.name = 'За счёт компании';
-          }
-        }
-        model.companies = Companies.fromJson(mp['data']);
-        //TODO GET CAR CLASSES FROM HERE
-        //model.setCarClasses(CarClasses.fromJson(mp['data']));
-        for (int rt in mp["data"]["rent_times"]) {
-          model.rentTimes.add(rt);
-        }
-        if (model.paymentTypes.payment_types.length > 0) {
-          model.paymentTypes.payment_types[0].selected = true;
-        }
+        model.parseInitOpenData(mp);
         model.initCoin(context, () {}, (c, s) {
           if (c == 401) {
             Consts.setString("bearer", "");
@@ -2217,41 +2105,6 @@ class WMainWidowState extends State<WMainWindow>
       return;
     }
     _authSocket();
-  }
-
-  Widget _paymentSubwidget(int index) {
-    if (model.paymentTypes.payment_types[index].id != 2) {
-      return Container();
-    }
-    if (model.paymentTypes.getSelected()!.id != 2) {
-      return Container();
-    }
-    return ListView.builder(
-        itemCount: model.companies.companies.length,
-        //model.companies.companies.length,
-        shrinkWrap: true,
-        itemBuilder: (BuildContext context, int cidx) {
-          return GestureDetector(
-              onTap: () {
-                setState(() {
-                  model.companies.setChecked(cidx);
-                });
-              },
-              child: Row(children: [
-                VerticalDivider(width: 20, color: Colors.transparent),
-                Checkbox(
-                  tristate: true,
-                  activeColor: Consts.colorTaxiBlue,
-                  value: model.companies.companies[cidx].checked,
-                  onChanged: (bool? v) {
-                    setState(() {
-                      model.companies.setChecked(cidx);
-                    });
-                  },
-                ),
-                Expanded(child: Text(model.companies.companies[cidx].name)),
-              ]));
-        });
   }
 
   void _restoreState() {

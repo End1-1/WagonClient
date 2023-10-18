@@ -4,20 +4,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/io_client.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
-import 'package:wagon_client/payment_type.dart';
 import 'package:wagon_client/screens/find_address/find_address_screen.dart';
+import 'package:wagon_client/screens/payment/card_info.dart';
+import 'package:wagon_client/screens/payment/cashback_info.dart';
+import 'package:wagon_client/screens/payment/company_info.dart';
 import 'package:wagon_client/web/web_initcoin.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'addressonmap.dart';
 import 'cars.dart';
-import 'company.dart';
 import 'consts.dart';
 import 'dlg.dart';
 import 'freezed/chat_message.dart';
 import 'model/address_model.dart';
-import 'model/tr.dart';
 
 const int pageRealState = 0;
 const int pageSelectShortAddress = 1;
@@ -32,7 +32,6 @@ const int pageOrderStarted = 9;
 const int pageOrderEnd = 10;
 const int pageChat = 11;
 const int pageMenu = 12;
-const int pagePayment = 13;
 
 const state_none = 1;
 const state_pending_search = 2;
@@ -49,7 +48,6 @@ class MainWindowModel {
   final TextEditingController chatTextController = TextEditingController();
   final TextEditingController feedbackText = TextEditingController();
 
-  PaymentTypes paymentTypes = PaymentTypes([]);
   final List<MapObject> mapObjects = [];
   YandexMapController? mapController;
   DateTime orderDateTime = DateTime.now();
@@ -71,7 +69,12 @@ class MainWindowModel {
   bool isRent = false;
   String rentTime = "";
   List<int> rentTimes = [];
-  Companies companies = Companies([]);
+  var paymentTypeId = 1;
+  var paymentCompanyId = 0;
+  var paymentCardId = '';
+  final List<CompanyInfo> companies = [];
+  final List<CardInfo> paymentCards = [];
+  var cashbackInfo = CashbackInfo(client_id: 0, balance: '0', client_wallet_id: 0);
 
   int unreadChatMessagesCount = 0;
 
@@ -90,6 +93,34 @@ class MainWindowModel {
 
   bool showSingleAddress = false;
   bool showMultiAddress = false;
+
+  void parseInitOpenData(dynamic mp) {
+    companies.clear();
+    for (final e in mp['data']['companies']) {
+      CompanyInfo ci = CompanyInfo.fromJson(e);
+      companies.add(ci);
+    }
+    //TODO GET CAR CLASSES FROM HERE
+    //model.setCarClasses(CarClasses.fromJson(mp['data']));
+    rentTimes.clear();
+    for (int rt in mp["data"]["rent_times"]) {
+      rentTimes.add(rt);
+    }
+
+    paymentCards.clear();
+    for (final e in mp['data']['payment_cards']) {
+      if (e['payment_type_id'] == 3) {
+        for (final ee in e['cards']) {
+          if (e['selected']) {
+            paymentTypeId = 3;
+          }
+          CardInfo ci = CardInfo.fromJson(ee);
+            paymentCards.add(ci);
+        }
+      }
+    }
+    cashbackInfo = CashbackInfo.fromJson(mp['data']['wallet']);
+  }
 
   Future<void> enableTrackingPlace() async {
     if (tracking) {
@@ -138,13 +169,12 @@ class MainWindowModel {
       return;
     }
     //TODO THERE IS PREIVIOUSLY WAS USED CAR CLASS
-    if (paymentTypes.payment_types.length > 0 &&
-        RouteHandler.routeHandler.sourceDefined()) {
+    if (RouteHandler.routeHandler.sourceDefined()) {
       WebInitCoin initCoin = WebInitCoin(
           RouteHandler.routeHandler.directionStruct.from,
           currentCar,
-          paymentTypes.getSelected()!.id,
-          paymentTypes.getSelected()!.id == 2 ? companies.getSelected()!.id : 0,
+          paymentTypeId,
+          paymentTypeId == 2 ? getSelectedCompanyInfo().id : 0,
           Consts.getString("driverComment"),
           selectedCarOptions,
           isRent,
@@ -165,6 +195,15 @@ class MainWindowModel {
         fail();
       }
     }
+  }
+
+  CompanyInfo getSelectedCompanyInfo() {
+    for (final e in companies) {
+      if (e.checked ?? false) {
+        return e;
+      }
+    }
+    return CompanyInfo(id: 0, name: '', car_classes: [], checked: false);
   }
 
   String currentStateName() {

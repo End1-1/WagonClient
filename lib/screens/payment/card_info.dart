@@ -6,9 +6,10 @@ part 'card_info.g.dart';
 @freezed
 class CardInfo with _$CardInfo {
   const factory CardInfo({
+    required String id,
     required String name,
     required String number,
-    required bool? selected
+    required int selected
 }) = _CardInfo;
   factory CardInfo.fromJson(Map<String, dynamic> json) => _$CardInfoFromJson(json);
 }
