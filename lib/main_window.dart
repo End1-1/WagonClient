@@ -85,58 +85,6 @@ class WMainWidowState extends State<WMainWindow>
 
     WebYandexKey().request(() {}, null);
 
-    ResourceCarTypes.res.clear();
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Taxi', selected: true)
-          ..types.addAll([
-            CarSubtypeStruct('images/car2.png', 'Comfort',
-                'Up to 4 person and one cat', 300),
-            CarSubtypeStruct('images/car2.png', 'Econome plus',
-                'Up to 3 person and one dog', 400),
-            CarSubtypeStruct('images/car2.png', 'Business',
-                'Up to 14 person and one eliphant', 600),
-          ]));
-
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Eaculator')
-      ..types.addAll([
-        CarSubtypeStruct(
-            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-        CarSubtypeStruct('images/car2.png', 'Econome plus',
-            'Up to 3 person and one dog', 400),
-        CarSubtypeStruct('images/car2.png', 'Business',
-            'Up to 14 person and one eliphant', 600),
-      ]));
-
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Navigator')
-      ..types.addAll([
-        CarSubtypeStruct(
-            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-        CarSubtypeStruct('images/car2.png', 'Econome plus',
-            'Up to 3 person and one dog', 400),
-        CarSubtypeStruct('images/car2.png', 'Business',
-            'Up to 14 person and one eliphant', 600),
-      ]));
-
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Tractor')
-      ..types.addAll([
-        CarSubtypeStruct(
-            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-        CarSubtypeStruct('images/car2.png', 'Econome plus',
-            'Up to 3 person and one dog', 400),
-        CarSubtypeStruct('images/car2.png', 'Business',
-            'Up to 14 person and one eliphant', 600),
-      ]));
-
-    ResourceCarTypes.res.add(CarTypeStruct('images/car.png', 'Kran')
-      ..types.addAll([
-        CarSubtypeStruct(
-            'images/car2.png', 'Comfort', 'Up to 4 person and one cat', 300),
-        CarSubtypeStruct('images/car2.png', 'Econome plus',
-            'Up to 3 person and one dog', 400),
-        CarSubtypeStruct('images/car2.png', 'Business',
-            'Up to 14 person and one eliphant', 600),
-      ]));
-
     WidgetsBinding.instance.addObserver(this);
     _restoreState();
 
@@ -417,7 +365,7 @@ class WMainWidowState extends State<WMainWindow>
           margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
           padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
           child: Center(
-              child: Image.asset(ResourceCarTypes.selected()!.imageName,
+              child: Image.asset(ResourceCarTypes.selected()?.imageName ?? 'images/car.png',
                   width: 30, height: 30))),
       Container(
           decoration: Consts.boxDecoration,
@@ -591,12 +539,13 @@ class WMainWidowState extends State<WMainWindow>
                               ResourceCarTypes.selected());
                           ResourceCarTypes.selected()?.selectSubtype(
                               ResourceCarTypes.selected()?.types[index]);
+                          model.currentCar = ResourceCarTypes.selectedSubtype()!.id;
                         });
                       },
                       child: CarSubtypeWidget(
                           ResourceCarTypes.selected()?.types[index] ??
-                              CarSubtypeStruct(
-                                  'imageName', 'title', 'subTitle', 999)));
+                              CarSubtypeStruct(0,
+                                  'imageName', '', 'title', 'subTitle', 999)));
                 }),
             AnimatedContainer(
                 height: model.showOptions ? 160 : 0,
@@ -1528,7 +1477,10 @@ class WMainWidowState extends State<WMainWindow>
                       Duration(minutes: 60)
                   ? 15
                   : 0)),
-          model.commentFrom.text);
+          model.commentFrom.text,
+      cardId: model.paymentCardId,
+      using_cashback: model.using_cashback,
+      using_cashback_balance: model.using_cashback_balance);
 
       webInitOrder.request((mp) {
         if (mp.containsKey("message")) {
@@ -1618,6 +1570,7 @@ class WMainWidowState extends State<WMainWindow>
   void _mapReady(YandexMapController controller) async {
     model.mapController = controller;
     model.enableTrackingPlace();
+    model.mapController!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: Point(latitude: Consts.getDouble('last_lat'), longitude: Consts.getDouble('last_lon')))));
     await _getLocation();
     _authSocket();
   }

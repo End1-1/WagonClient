@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
@@ -87,7 +89,8 @@ class CarSubtypeWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(css.imageName, height: 70, width: 70,),
+            //Image.asset(css.imageName, height: 70, width: 70,),
+            Image.memory(base64Decode(css.image), height: 70, width: 70,),
             Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

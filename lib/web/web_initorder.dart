@@ -16,6 +16,9 @@ class WebInitOrder extends WebParent {
   List<int> carOptions;
   DateTime orderDateTime;
   String commentFrom;
+  final String cardId;
+  final int using_cashback;
+  final double using_cashback_balance;
 
   WebInitOrder(
       this.from,
@@ -25,7 +28,12 @@ class WebInitOrder extends WebParent {
       this.driverComment,
       this.carOptions,
       this.orderDateTime,
-      this.commentFrom
+      this.commentFrom,
+  {
+    required this.cardId,
+    required this.using_cashback,
+    required this.using_cashback_balance
+  }
       )
   : super("/app/mobile/init_order", HttpMethod.POST);
 
@@ -52,6 +60,7 @@ class WebInitOrder extends WebParent {
     Map<String, dynamic> jpayment = Map();
     jpayment["type"] = paymentType;
     jpayment["company"] = paymentCompany;
+    jpayment['card_id'] = cardId;
     Map<String, dynamic> jr = Map();
     List<double> jFromCoordinates =[];
     jFromCoordinates.add(from.point!.latitude);
@@ -59,17 +68,21 @@ class WebInitOrder extends WebParent {
     jr["from"] = jFromCoordinates;
     List<double> jToCoordinates = [];
 
-    jToCoordinates.add(RouteHandler.routeHandler.directionStruct.to.first.point!.latitude);
-    jToCoordinates.add(RouteHandler.routeHandler.directionStruct.to.first.point!.longitude);
+    jr["to_address"] = null;
+    if (RouteHandler.routeHandler.directionStruct.to.isNotEmpty) {
+      jToCoordinates.add(
+          RouteHandler.routeHandler.directionStruct.to.first.point!.latitude);
+      jToCoordinates.add(
+          RouteHandler.routeHandler.directionStruct.to.first.point!.longitude);
+      jr["to_address"] = RouteHandler.routeHandler.directionStruct.to.first.address;
+    }
 
+    jr["to"] = null;
     if (RouteHandler.routeHandler.directionStruct.to.isEmpty) {
-      jr["to"] = null;
     } else {
       jr["to"] = jToCoordinates;
     }
-    jr["to_address"] = RouteHandler.routeHandler.directionStruct.to.first.address;
     jr["from_address"] = from.address;
-
 
     orderDateTime = orderDateTime.isBefore(DateTime.now()) ? DateTime.now() : orderDateTime;
     Map<String, dynamic> jtime = Map();
@@ -135,6 +148,9 @@ class WebInitOrder extends WebParent {
       }
       jo["multi_addresses"] = ma;
     }
+
+    jo['using_cashback'] = using_cashback;
+    jo['using_cashback_balance'] = using_cashback_balance;
 
     String s = jsonEncode(jo);
     print(s);

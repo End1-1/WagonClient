@@ -19,13 +19,15 @@ class CarTypeStruct {
 }
 
 class CarSubtypeStruct {
+  final int id;
   final String imageName;
+  final String image;
   final String title;
   final String subTitle;
   final double price;
   var selected = false;
 
-  CarSubtypeStruct(this.imageName, this.title, this.subTitle, this.price,
+  CarSubtypeStruct(this.id, this.imageName, this.image, this.title, this.subTitle, this.price,
       {this.selected = false});
 }
 
@@ -54,5 +56,17 @@ class ResourceCarTypes {
       }
     }
     return null;
+  }
+
+  static CarSubtypeStruct? selectedSubtype() {
+    final cts = selected();
+    if (cts == null) {
+      return null;
+    }
+    for (final e in cts!.types) {
+      if (e.selected) {
+        return e;
+      }
+    }
   }
 }

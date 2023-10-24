@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/io_client.dart';
+import 'package:wagon_client/resources/resource_car_types.dart';
 import 'package:wagon_client/screens/find_address/find_address_screen.dart';
 import 'package:wagon_client/screens/payment/card_info.dart';
 import 'package:wagon_client/screens/payment/cashback_info.dart';
@@ -42,11 +43,12 @@ const state_driver_orderstarted = 6;
 const state_driver_orderend = 7;
 
 class MainWindowModel {
-  final TextEditingController commentFrom = TextEditingController();
-  final TextEditingController addressFrom = TextEditingController();
-  final TextEditingController addressTo = TextEditingController();
-  final TextEditingController chatTextController = TextEditingController();
-  final TextEditingController feedbackText = TextEditingController();
+  final commentFrom = TextEditingController();
+  final addressFrom = TextEditingController();
+  final addressTo = TextEditingController();
+  final chatTextController = TextEditingController();
+  final feedbackText = TextEditingController();
+  final cashbackController = TextEditingController();
 
   final List<MapObject> mapObjects = [];
   YandexMapController? mapController;
@@ -72,22 +74,38 @@ class MainWindowModel {
   var paymentTypeId = 1;
   var paymentCompanyId = 0;
   var paymentCardId = '';
+  int using_cashback = 0;
+  double using_cashback_balance = 0.0;
   final List<CompanyInfo> companies = [];
   final List<CardInfo> paymentCards = [];
-  var cashbackInfo = CashbackInfo(client_id: 0, balance: '0', client_wallet_id: 0);
+  var cashbackInfo =
+      CashbackInfo(client_id: 0, balance: '0', client_wallet_id: 0);
 
   int unreadChatMessagesCount = 0;
 
   int currentCar = 0;
   List<int> selectedCarOptions = [];
 
-  final List<MapObjectId> routePolylineId = [MapObjectId("_routePolylineId1"), MapObjectId("_routePolylineId2"),
-    MapObjectId("_routePolylineId3"), MapObjectId("_routePolylineId4")];
+  final List<MapObjectId> routePolylineId = [
+    MapObjectId("_routePolylineId1"),
+    MapObjectId("_routePolylineId2"),
+    MapObjectId("_routePolylineId3"),
+    MapObjectId("_routePolylineId4")
+  ];
   final MapObjectId carId = MapObjectId("_carId");
   final List<MapObjectId> pointBId = [
-    MapObjectId("_pointB1"), MapObjectId("_pointB2"), MapObjectId("_pointB3"), MapObjectId("_pointB4"),
-    MapObjectId("_pointB5"), MapObjectId("_pointB6"), MapObjectId("_pointB7"), MapObjectId("_pointB8"),
-    MapObjectId("_pointB9"), MapObjectId("_pointB10"), MapObjectId("_pointB11"), MapObjectId("_pointB12")
+    MapObjectId("_pointB1"),
+    MapObjectId("_pointB2"),
+    MapObjectId("_pointB3"),
+    MapObjectId("_pointB4"),
+    MapObjectId("_pointB5"),
+    MapObjectId("_pointB6"),
+    MapObjectId("_pointB7"),
+    MapObjectId("_pointB8"),
+    MapObjectId("_pointB9"),
+    MapObjectId("_pointB10"),
+    MapObjectId("_pointB11"),
+    MapObjectId("_pointB12")
   ];
   final MapObjectId myPlaceId = MapObjectId("_myPlace");
 
@@ -95,6 +113,21 @@ class MainWindowModel {
   bool showMultiAddress = false;
 
   void parseInitOpenData(dynamic mp) {
+    ResourceCarTypes.res.clear();
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Taxi', selected: true));
+    var first = true;
+    for (final e in mp['data']['car_classes']) {
+      ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
+          e['class_id'],
+          'images/car2.png',
+          e['image'],
+          e['name'],
+          'No comment for now',
+          double.tryParse(e['min_price'].toString()) ?? 0));
+      first = false;
+    }
+
     companies.clear();
     for (final e in mp['data']['companies']) {
       CompanyInfo ci = CompanyInfo.fromJson(e);
@@ -109,13 +142,18 @@ class MainWindowModel {
 
     paymentCards.clear();
     for (final e in mp['data']['payment_cards']) {
-      if (e['payment_type_id'] == 3) {
+      if (e['payment_type_id'] == 1) {
+        if (e['selected']) {
+          paymentTypeId = 1;
+        }
+      } else if (e['payment_type_id'] == 3) {
         for (final ee in e['cards']) {
           if (e['selected']) {
             paymentTypeId = 3;
+            paymentCardId = ee['id'];
           }
           CardInfo ci = CardInfo.fromJson(ee);
-            paymentCards.add(ci);
+          paymentCards.add(ci);
         }
       }
     }
@@ -144,9 +182,7 @@ class MainWindowModel {
     Position p = await Geolocator.getCurrentPosition();
     mapController!.moveCamera(
         CameraUpdate.newCameraPosition(CameraPosition(
-            target: Point(
-                latitude: p.latitude,
-                longitude: p.longitude),
+            target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: rideZoom)),
         animation: MapAnimation(duration: 1));
   }
@@ -264,77 +300,81 @@ class MainWindowModel {
     }
     var resultWithSession = YandexDriving.requestRoutes(
         points: [
-          RequestPoint(point: RouteHandler.routeHandler.directionStruct.from.point!, requestPointType: RequestPointType.wayPoint),
-          for (int i = 0; i < RouteHandler.routeHandler.directionStruct.to.length - 1; i++) ... [
-            RequestPoint(point: RouteHandler.routeHandler.directionStruct.to[i].point!, requestPointType: RequestPointType.viaPoint),
+          RequestPoint(
+              point: RouteHandler.routeHandler.directionStruct.from.point!,
+              requestPointType: RequestPointType.wayPoint),
+          for (int i = 0;
+              i < RouteHandler.routeHandler.directionStruct.to.length - 1;
+              i++) ...[
+            RequestPoint(
+                point: RouteHandler.routeHandler.directionStruct.to[i].point!,
+                requestPointType: RequestPointType.viaPoint),
           ],
-          RequestPoint(point: RouteHandler.routeHandler.directionStruct.to.last.point!, requestPointType: RequestPointType.wayPoint),
+          RequestPoint(
+              point: RouteHandler.routeHandler.directionStruct.to.last.point!,
+              requestPointType: RequestPointType.wayPoint),
         ],
         drivingOptions: const DrivingOptions(
-            initialAzimuth: 0,
-            routesCount: 1,
-            avoidTolls: true
-        )
-    );
+            initialAzimuth: 0, routesCount: 1, avoidTolls: true));
 
-    if (RouteHandler.routeHandler.sourceDefined() && RouteHandler.routeHandler.destinationDefined()) {
+    if (RouteHandler.routeHandler.sourceDefined() &&
+        RouteHandler.routeHandler.destinationDefined()) {
       tracking = false;
 
-    final value = await resultWithSession.result;
-        if (value.routes != null) {
-          if (value.routes!.isNotEmpty) {
-            DrivingRoute r = value.routes!.first;
+      final value = await resultWithSession.result;
+      if (value.routes != null) {
+        if (value.routes!.isNotEmpty) {
+          DrivingRoute r = value.routes!.first;
 
-            //Route
-            mapObjects.add(PolylineMapObject(
-              mapId: routePolylineId[0],
-              polyline: Polyline(points: r.geometry),
-              strokeColor: Colors.blue[700]!,
-              strokeWidth: 5,
-              // <- default value 5.0, this will be a little bold
-              outlineColor: Colors.yellow[200]!,
-              outlineWidth: 1.0,
-            ));
+          //Route
+          mapObjects.add(PolylineMapObject(
+            mapId: routePolylineId[0],
+            polyline: Polyline(points: r.geometry),
+            strokeColor: Colors.blue[700]!,
+            strokeWidth: 5,
+            // <- default value 5.0, this will be a little bold
+            outlineColor: Colors.yellow[200]!,
+            outlineWidth: 1.0,
+          ));
 
-            //Start point
-            PlacemarkMapObject point1 = PlacemarkMapObject(
-                mapId: MapObjectId('startpoint'),
-                direction: 0,
-                point: RouteHandler.routeHandler.directionStruct.from.point!,
-                icon: PlacemarkIcon.single(PlacemarkIconStyle(
-                image: BitmapDescriptor.fromAssetImage(
-                'images/circle_bold_black.png'),
-               rotationType: RotationType.rotate)));
-            mapObjects.add(point1);
+          //Start point
+          PlacemarkMapObject point1 = PlacemarkMapObject(
+              mapId: MapObjectId('startpoint'),
+              direction: 0,
+              point: RouteHandler.routeHandler.directionStruct.from.point!,
+              icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                      'images/circle_bold_black.png'),
+                  rotationType: RotationType.rotate)));
+          mapObjects.add(point1);
 
-            //Via point
-            for (int i = 0; i < RouteHandler.routeHandler.directionStruct.to.length - 1; i++) {
-              PlacemarkMapObject point = PlacemarkMapObject(
-                  mapId: MapObjectId('via${i}'),
-                  direction: 0,
-                  point: RouteHandler.routeHandler.directionStruct.to[i].point!,
-                  icon: PlacemarkIcon.single(PlacemarkIconStyle(
-                      image: BitmapDescriptor.fromAssetImage(
-                          'images/circle_bold_red.png'),
-                      rotationType: RotationType.rotate)));
-              mapObjects.add(point);
-            }
-
-            //End point
+          //Via point
+          for (int i = 0;
+              i < RouteHandler.routeHandler.directionStruct.to.length - 1;
+              i++) {
             PlacemarkMapObject point = PlacemarkMapObject(
-                mapId: MapObjectId('endpoint'),
+                mapId: MapObjectId('via${i}'),
                 direction: 0,
-                point: RouteHandler.routeHandler.directionStruct.to.last.point!,
+                point: RouteHandler.routeHandler.directionStruct.to[i].point!,
                 icon: PlacemarkIcon.single(PlacemarkIconStyle(
                     image: BitmapDescriptor.fromAssetImage(
-                        'images/circle_bold_black.png'),
+                        'images/circle_bold_red.png'),
                     rotationType: RotationType.rotate)));
             mapObjects.add(point);
-
-
           }
-        }
 
+          //End point
+          PlacemarkMapObject point = PlacemarkMapObject(
+              mapId: MapObjectId('endpoint'),
+              direction: 0,
+              point: RouteHandler.routeHandler.directionStruct.to.last.point!,
+              icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                      'images/circle_bold_black.png'),
+                  rotationType: RotationType.rotate)));
+          mapObjects.add(point);
+        }
+      }
     } else {
       await enableTrackingPlace();
     }
@@ -346,8 +386,8 @@ class MainWindowModel {
         mapId: pointBId.first,
         point: RouteHandler.routeHandler.lastPoint,
         icon: PlacemarkIcon.single(PlacemarkIconStyle(
-            image: BitmapDescriptor.fromAssetImage(
-                'images/circle_bold_black.png'),
+            image:
+                BitmapDescriptor.fromAssetImage('images/circle_bold_black.png'),
             rotationType: RotationType.rotate)),
         opacity: 1);
     mapObjects.add(point);

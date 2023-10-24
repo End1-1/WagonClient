@@ -5,6 +5,7 @@ import 'package:wagon_client/main_window_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/outlined_yellowbutton.dart';
 import 'package:wagon_client/screens/payment/bankwebview.dart';
+import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_parent.dart';
 
 import 'card_info.dart';
@@ -26,6 +27,7 @@ class _PaymentWidget extends State<PaymentWidget> {
   var errorStr = '';
   var loadingCards = false;
   var openCompany = false;
+  var closing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,9 @@ class _PaymentWidget extends State<PaymentWidget> {
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-        height: widget.widgetMode ?  MediaQuery.sizeOf(context).height * Consts.sizeofPaymentWidget : double.infinity,
+        height: widget.widgetMode
+            ? MediaQuery.sizeOf(context).height * Consts.sizeofPaymentWidget
+            : double.infinity,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           children: [
@@ -75,9 +79,8 @@ class _PaymentWidget extends State<PaymentWidget> {
             Expanded(
                 child: Container(
                     child: SingleChildScrollView(
-                    child:  Column(children: [
+                        child: Column(children: [
               //CASH METHOD
-
               const SizedBox(
                 height: 10,
               ),
@@ -114,6 +117,44 @@ class _PaymentWidget extends State<PaymentWidget> {
                           });
                         },
                       ))
+                ],
+              ),
+              Divider(),
+
+              //BONUSI MOMENT
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Image.asset(
+                    'images/wallet.png',
+                    height: 30,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text('${tr(trBonus)} ${widget.model.cashbackInfo.balance}'),
+                  Expanded(child: Container()),
+                  SizedBox(width: 150, height: 40, child: TextFormField(
+                    onChanged: (s) {
+                      double balance = double.tryParse(widget.model.cashbackInfo.balance) ?? 0;
+                      double input = double.tryParse(s) ?? 0;
+                      if (input > balance) {
+                        widget.model.cashbackController.text = widget.model.cashbackInfo.balance;
+                      }
+                    },
+                    controller: widget.model.cashbackController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+
+                      )
+                    ),
+                  )),
                 ],
               ),
               Divider(),
@@ -177,29 +218,33 @@ class _PaymentWidget extends State<PaymentWidget> {
                       Expanded(child: Container()),
                       Transform.scale(
                           scale: 1.5,
-                          child: widget.widgetMode ? Checkbox(
-                            checkColor: Colors.black,
-                            activeColor: Consts.colorOrange,
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            value: co.checked ?? false,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                final List<CompanyInfo> tempCards = [];
-                                for (final oldCard in widget.model.companies) {
-                                  tempCards.add(oldCard == co
-                                      ? co.copyWith(checked: value ?? false)
-                                      : oldCard.copyWith(checked: false));
-                                }
-                                widget.model.paymentTypeId = 2;
-                                widget.model.paymentCompanyId = co.id;
-                                widget.model.companies.clear();
-                                widget.model.companies.addAll(tempCards);
-                                uncheckCards();
-                              });
-                            },
-                          ): Container())
+                          child: widget.widgetMode
+                              ? Checkbox(
+                                  checkColor: Colors.black,
+                                  activeColor: Consts.colorOrange,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  value: co.checked ?? false,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      final List<CompanyInfo> tempCards = [];
+                                      for (final oldCard
+                                          in widget.model.companies) {
+                                        tempCards.add(oldCard == co
+                                            ? co.copyWith(
+                                                checked: value ?? false)
+                                            : oldCard.copyWith(checked: false));
+                                      }
+                                      widget.model.paymentTypeId = 2;
+                                      widget.model.paymentCompanyId = co.id;
+                                      widget.model.companies.clear();
+                                      widget.model.companies.addAll(tempCards);
+                                      uncheckCards();
+                                    });
+                                  },
+                                )
+                              : Container())
                     ],
                   ),
                 ],
@@ -299,16 +344,27 @@ class _PaymentWidget extends State<PaymentWidget> {
             const SizedBox(
               height: 10,
             ),
-            Row(children: [
-              Expanded(
-                  child: Container(
-                      margin: const EdgeInsets.only(left: 35, right: 35),
-                      child: Text(
-                        'Платить картой пиздец как удобно, Вам не нужно каждый раз доставать кошелек и ждать сдачи, которых у таксиста может и не быть.',
-                        textAlign: TextAlign.center,
-                        maxLines: 5,
-                      )))
-            ]),
+            if (closing)
+              Row(
+                children: [
+                  Expanded(
+                      child: Center(
+                          child: Container(
+                              margin: const EdgeInsets.all(10),
+                              child: CircularProgressIndicator())))
+                ],
+              ),
+            if (!closing)
+              Row(children: [
+                Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 35, right: 35),
+                        child: Text(
+                          'Платить картой пиздец как удобно, Вам не нужно каждый раз доставать кошелек и ждать сдачи, которых у таксиста может и не быть.',
+                          textAlign: TextAlign.center,
+                          maxLines: 5,
+                        )))
+              ]),
             // Expanded(child: Container()),
             if (addingCard)
               SizedBox(
@@ -364,22 +420,42 @@ class _PaymentWidget extends State<PaymentWidget> {
                           right: 60,
                           left: 60,
                         ),
-                        child: OutlinedYellowButton.createButtonText(() {
+                        child: OutlinedYellowButton.createButtonText(() async {
+                          setState(() {
+                            closing = true;
+                          });
                           if (widget.widgetMode) {
-
+                            _onlyClose();
                           } else {
-                          WebParent('/app/mobile/select-payment-type/${widget.model.paymentTypeId}', HttpMethod.GET).request((d) {
-                            if (widget.model.paymentTypeId == 2) {
-                              WebParent('/app/mobile/transactions/select-default-card/${widget.model.paymentCardId}', HttpMethod.GET).request((d) {}, (c,s) {
-                                _closeWidget();
+                            for (final card in widget.model.paymentCards) {
+                              await WebParent(
+                                      '/app/mobile/transactions/select-default-card/${card.id}/0',
+                                      HttpMethod.GET)
+                                  .request((d) {}, (c, s) {
+                                closing = false;
                               });
-                              return;
-                            } else {
-                              _closeWidget();
                             }
-                          }, (c, s){
-
-                          });}
+                            WebParent(
+                                    '/app/mobile/select-payment-type/${widget.model.paymentTypeId}',
+                                    HttpMethod.GET)
+                                .request((d) {
+                              if (widget.model.paymentTypeId == 3) {
+                                WebParent(
+                                        '/app/mobile/transactions/select-default-card/${widget.model.paymentCardId}/1',
+                                        HttpMethod.GET)
+                                    .request((d) {
+                                  _closeWidget();
+                                }, (c, s) {
+                                  closing = false;
+                                });
+                                return;
+                              } else {
+                                _closeWidget();
+                              }
+                            }, (c, s) {
+                              closing = false;
+                            });
+                          }
                         }, tr(trReady).toUpperCase(),
                             ts: const TextStyle(color: Colors.white),
                             bgColor: Consts.colorRed)))
@@ -391,12 +467,25 @@ class _PaymentWidget extends State<PaymentWidget> {
         ));
   }
 
-  _closeWidget() {
+  _onlyClose() {
     widget.model.showWallet = false;
     widget.model.dimvisible = false;
-    Consts.sizeofPaymentWidget =
-        Consts.defaultSizeofPaymentWidget;
+    Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;
     widget.stateCallback();
+  }
+
+  _closeWidget() {
+    widget.model.using_cashback_balance = double.tryParse(widget.model.cashbackController.text) ?? 0;
+    widget.model.using_cashback = widget.model.using_cashback_balance > 0.1 ? 1 : 0;
+    WebInitOpen webInitOpen = WebInitOpen(
+        latitude: Consts.getDouble('last_lat'),
+        longitude: Consts.getDouble('last_lon'));
+    webInitOpen.request((mp) {
+      widget.model.parseInitOpenData(mp);
+      _onlyClose();
+    }, (c, s) {
+      closing = false;
+    });
   }
 
   void uncheckCompanies() {

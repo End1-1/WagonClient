@@ -76,6 +76,7 @@ const trEnter = 73;
 const trPaymentMethods = 74;
 const trAddCard = 75;
 const trBankCard = 76;
+const trBonus = 77;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
@@ -152,7 +153,8 @@ const Map<int, String> ru = {
   trEnter: "Вход",
   trPaymentMethods: "Методы оплаты",
   trAddCard:"Добавить карту",
-  trBankCard:"Банковская карта"
+  trBankCard:"Банковская карта",
+  trBonus: 'Бонус',
 };
 
 String tr(int key) {
