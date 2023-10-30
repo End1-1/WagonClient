@@ -15,8 +15,12 @@ class PaymentWidget extends StatefulWidget {
   late final MainWindowModel model;
   Function stateCallback;
   bool widgetMode;
+  double using_cashback_balance = 0;
 
-  PaymentWidget(this.model, this.stateCallback, this.widgetMode);
+  PaymentWidget(this.model, this.stateCallback, this.widgetMode) {
+    using_cashback_balance = double.tryParse(model.cashbackInfo.balance) ?? 0;
+    using_cashback_balance = using_cashback_balance > 200 ? 200 : using_cashback_balance;
+  }
 
   @override
   State<StatefulWidget> createState() => _PaymentWidget();
@@ -28,6 +32,8 @@ class _PaymentWidget extends State<PaymentWidget> {
   var loadingCards = false;
   var openCompany = false;
   var closing = false;
+  var _using_cashback = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +86,58 @@ class _PaymentWidget extends State<PaymentWidget> {
                 child: Container(
                     child: SingleChildScrollView(
                         child: Column(children: [
+
+                          //BONUSI MOMENT
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Image.asset(
+                                'images/gift.png',
+                                height: 30,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text('${tr(trBonus)}'),
+                              Expanded(child: Container()),
+                              Text('${widget.model.cashbackInfo.balance}')
+
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(tr(trUseAmountOfBonus).replaceAll('%bonus%', '${widget.using_cashback_balance}')),
+                              Expanded(child: Container()),
+                              Transform.scale(
+                                  scale: 1.5,
+                                  child: Checkbox(
+                                    checkColor: Colors.black,
+                                    activeColor: Consts.colorOrange,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                                    value: _using_cashback,
+                                    onChanged: (bool? value) {
+                                      _using_cashback = value ?? false;
+                                      setState(() {
+                                      });
+                                    },
+                                  ))
+                            ],
+                          ),
+                          Divider(),
+
               //CASH METHOD
               const SizedBox(
                 height: 10,
@@ -121,43 +179,7 @@ class _PaymentWidget extends State<PaymentWidget> {
               ),
               Divider(),
 
-              //BONUSI MOMENT
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Image.asset(
-                    'images/wallet.png',
-                    height: 30,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text('${tr(trBonus)} ${widget.model.cashbackInfo.balance}'),
-                  Expanded(child: Container()),
-                  SizedBox(width: 150, height: 40, child: TextFormField(
-                    onChanged: (s) {
-                      double balance = double.tryParse(widget.model.cashbackInfo.balance) ?? 0;
-                      double input = double.tryParse(s) ?? 0;
-                      if (input > balance) {
-                        widget.model.cashbackController.text = widget.model.cashbackInfo.balance;
-                      }
-                    },
-                    controller: widget.model.cashbackController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
 
-                      )
-                    ),
-                  )),
-                ],
-              ),
-              Divider(),
 
               //COMPANY MODE
               Row(
@@ -344,16 +366,6 @@ class _PaymentWidget extends State<PaymentWidget> {
             const SizedBox(
               height: 10,
             ),
-            if (closing)
-              Row(
-                children: [
-                  Expanded(
-                      child: Center(
-                          child: Container(
-                              margin: const EdgeInsets.all(10),
-                              child: CircularProgressIndicator())))
-                ],
-              ),
             if (!closing)
               Row(children: [
                 Expanded(
@@ -471,12 +483,12 @@ class _PaymentWidget extends State<PaymentWidget> {
     widget.model.showWallet = false;
     widget.model.dimvisible = false;
     Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;
+    widget.model.using_cashback_balance = _using_cashback ? widget.using_cashback_balance : 0;
+    widget.model.using_cashback = _using_cashback ? 1 : 0;
     widget.stateCallback();
   }
 
   _closeWidget() {
-    widget.model.using_cashback_balance = double.tryParse(widget.model.cashbackController.text) ?? 0;
-    widget.model.using_cashback = widget.model.using_cashback_balance > 0.1 ? 1 : 0;
     WebInitOpen webInitOpen = WebInitOpen(
         latitude: Consts.getDouble('last_lat'),
         longitude: Consts.getDouble('last_lon'));

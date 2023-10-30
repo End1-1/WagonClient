@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
 
@@ -36,7 +37,7 @@ class CarType extends StatelessWidget {
   final CarTypeStruct ct;
 
   CarType(this.ct) {
-    bgColor = ct.selected ? Color(0xffF2A649) : Color(0xffffffff);
+    bgColor = Color(0xffffffff);
     print(bgColor);
   }
 
@@ -44,9 +45,9 @@ class CarType extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-        padding: const EdgeInsets.all(10),
-        width: 100,
-        height: 220,
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+
+        height: 100,
         decoration: BoxDecoration(
           border: Border.fromBorderSide(
               BorderSide(color: Colors.black12, width: 1)),
@@ -57,12 +58,12 @@ class CarType extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                padding: const EdgeInsets.all(10),
-                width: 65,
-                height: 65,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                padding: const EdgeInsets.all(5),
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                    color: ct.selected ? Consts.colorOrange : Consts.colorRed,
                     borderRadius: BorderRadius.all(Radius.circular(50))),
                 child: Image.asset(ct.imageName)),
             Container(height: 20, child: Text(ct.title))

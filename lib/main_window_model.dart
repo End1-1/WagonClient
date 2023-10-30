@@ -48,7 +48,6 @@ class MainWindowModel {
   final addressTo = TextEditingController();
   final chatTextController = TextEditingController();
   final feedbackText = TextEditingController();
-  final cashbackController = TextEditingController();
 
   final List<MapObject> mapObjects = [];
   YandexMapController? mapController;
@@ -419,5 +418,17 @@ class MainWindowModel {
       ChatMessageList cml = ChatMessageList.fromJson({'list': m['messages']});
       unreadChatMessagesCount = cml.list.length;
     });
+  }
+
+  String getPaymentImage() {
+    switch (paymentTypeId) {
+      case 1:
+        return 'images/wallet.png';
+      case 2:
+        return 'images/business.png';
+      case 3:
+        return 'images/card.png';
+    }
+    return 'images/heart.png';
   }
 }

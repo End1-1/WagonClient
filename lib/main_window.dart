@@ -435,8 +435,8 @@ class WMainWidowState extends State<WMainWindow>
                   IconButton(
                     icon: Image.asset(
                       "images/mapdraw.png",
-                      height: 15,
-                      width: 15,
+                      height: 25,
+                      width: 25,
                       isAntiAlias: true,
                     ),
                     onPressed: () {
@@ -457,8 +457,8 @@ class WMainWidowState extends State<WMainWindow>
                     child: Row(children: [
                       Image.asset(
                         "images/flajok.png",
-                        height: 15,
-                        width: 15,
+                        height: 25,
+                        width: 25,
                         isAntiAlias: true,
                       ),
                       Expanded(
@@ -503,8 +503,8 @@ class WMainWidowState extends State<WMainWindow>
                         IconButton(
                           icon: Image.asset(
                             "images/mapdraw.png",
-                            height: 15,
-                            width: 15,
+                            height: 25,
+                            width: 25,
                             isAntiAlias: true,
                           ),
                           onPressed: () {
@@ -557,7 +557,6 @@ class WMainWidowState extends State<WMainWindow>
                         padding: EdgeInsets.only(left: 5),
                         alignment: Alignment.centerLeft,
                         height: 70,
-                        color: Colors.yellow,
                         child: InkWell(
                             onTap: () {
                               _setDriverComment();
@@ -574,14 +573,14 @@ class WMainWidowState extends State<WMainWindow>
                                         Text(tr(trDriverComment),
                                             style:
                                                 const TextStyle(fontSize: 16)),
-                                        // model.commentFrom.text.isEmpty
-                                        //     ? Container(height: 0,)
-                                        //     : Text(model.commentFrom.text,
-                                        //         style: const TextStyle(
-                                        //             fontSize: 12,
-                                        //             color: Colors.black54,
-                                        //             fontWeight:
-                                        //                 FontWeight.bold))
+                                        model.commentFrom.text.isEmpty
+                                            ? Container(height: 0,)
+                                            : Text(model.commentFrom.text,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black54,
+                                                    fontWeight:
+                                                        FontWeight.bold))
                                       ])),
                               Expanded(child: Container()),
                               Align(
@@ -658,7 +657,10 @@ class WMainWidowState extends State<WMainWindow>
                     absorbing: model.loadingData,
                     child: Row(children: [
                       //WALLET
-                      OutlinedButton(
+    Container(child: Stack(children: [
+      if (model.using_cashback >0)
+        Positioned(right: 5, top: 2, child: Image.asset('images/gift.png', height: 15,)),
+      OutlinedButton(
                           onPressed: () {
                             setState(() {
                               model.showWallet = !model.showWallet;
@@ -676,10 +678,10 @@ class WMainWidowState extends State<WMainWindow>
                           child: Padding(
                               padding: EdgeInsets.only(top: 5, bottom: 5),
                               child: Image.asset(
-                                'images/wallet.png',
+                                model.getPaymentImage(),
                                 width: 25,
-                                height: 35,
-                              ))),
+                                height: 45,
+                              )))])),
                       //ORDERBUTTON BUTTON
                       VerticalDivider(width: 7, color: Colors.transparent),
                       Expanded(
@@ -702,7 +704,8 @@ class WMainWidowState extends State<WMainWindow>
                                           height: 30,
                                           fit: BoxFit.cover)
                                       : Center(
-                                          child: Text(
+
+                                         child:   Text(
                                           model.orderDateTime
                                                   .isBefore(DateTime.now())
                                               ? tr(trORDER)
@@ -1643,6 +1646,11 @@ class WMainWidowState extends State<WMainWindow>
   }
 
   void _geocodeResponse(AddressStruct ass) {
+    if (model.isMapPressed) {
+      setState((){
+        model.isMapPressed = false;
+      });
+    }
     RouteHandler.routeHandler.directionStruct.from = ass;
     model.addressFrom.text = ass.title;
     if (model.currentPage == pageSelectCar ||
@@ -2156,7 +2164,7 @@ class WMainWidowState extends State<WMainWindow>
     }
     if (finished) {
       setState(() {
-        model.isMapPressed = false;
+        //model.isMapPressed = false;
       });
     } else {
       if (!model.isMapPressed) {
@@ -2183,7 +2191,7 @@ class WMainWidowState extends State<WMainWindow>
       return;
     }
 
-    model.addressFrom.text = "определяем адрес...";
+    model.addressFrom.text = tr(trGettingAddress);
     model.geocode.geocode(cameraPosition.target.latitude,
         cameraPosition.target.longitude, _geocodeResponse);
   }

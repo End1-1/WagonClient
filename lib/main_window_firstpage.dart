@@ -43,9 +43,24 @@ class FirstPage extends StatelessWidget {
       Container(
           decoration: Consts.boxDecoration,
           child: Column(children: [
-            Row(children: [
-              Container(height: 60,)
-            ],),
+            //SERVICE TYPES
+            Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                width: MediaQuery.sizeOf(context).width,
+                height: 120,
+                child: CarTypeList()),
+
+            //FROM
+            Row(
+              children: [
+                Container(
+                  height: 20,
+                )
+              ],
+            ),
+            const Divider(
+              height: 2,
+            ),
             Padding(
                 padding: EdgeInsets.all(5),
                 child: Row(children: <Widget>[
@@ -93,7 +108,11 @@ class FirstPage extends StatelessWidget {
                     },
                   )
                 ])),
-                Container(color: Colors.black12, margin: const EdgeInsets.fromLTRB(30, 0, 15, 0), height: 2,),
+            Container(
+              color: Colors.black12,
+              margin: const EdgeInsets.fromLTRB(30, 0, 15, 0),
+              height: 2,
+            ),
             Padding(
                 padding: EdgeInsets.all(5),
                 child: Row(children: <Widget>[
@@ -173,7 +192,8 @@ class FirstPage extends StatelessWidget {
                             width: 50,
                             child: InkWell(
                                 onTap: () {
-                                  if (!RouteHandler.routeHandler.sourceDefined()) {
+                                  if (!RouteHandler.routeHandler
+                                      .sourceDefined()) {
                                     Fluttertoast.showToast(
                                         msg: tr(trWaitForCoordinate),
                                         toastLength: Toast.LENGTH_SHORT,
@@ -207,20 +227,15 @@ class FirstPage extends StatelessWidget {
                                 },
                                 child: model.loadingData
                                     ? Image.asset("images/load1.gif",
-                                    width: 40, height: 40, fit: BoxFit.cover)
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover)
                                     : Image.asset("images/arrowcircleright.png",
-                                    width: 30,
-                                    height: 30,
-                                    fit: BoxFit.cover))))))
+                                        width: 30,
+                                        height: 30,
+                                        fit: BoxFit.cover))))))
           ])),
     ]);
-    return Stack(alignment: Alignment.bottomCenter, children: [
-      w1,
-      Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 200),
-          width: MediaQuery.sizeOf(context).width,
-          height: 150,
-          child: CarTypeList()),
-    ]);
+    return Stack(alignment: Alignment.bottomCenter, children: [w1]);
   }
 }
