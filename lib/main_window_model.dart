@@ -115,6 +115,21 @@ class MainWindowModel {
     ResourceCarTypes.res.clear();
     ResourceCarTypes.res
         .add(CarTypeStruct('images/car.png', 'Taxi', selected: true));
+
+    //DELETE FROM HEAR
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Տաքսի', selected: true));
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Շարժական\r\nվուլկանացում', selected: true));
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Ավտո\r\nտեխսպասարկում', selected: true));
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Սթափ\r\nվարորդ', selected: true));
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Կայֆարիկ\r\nվարորդ', selected: true));
+    ResourceCarTypes.res
+        .add(CarTypeStruct('images/car.png', 'Ավտոաշտարակ', selected: true));
+
     var first = true;
     for (final e in mp['data']['car_classes']) {
       ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
@@ -124,6 +139,7 @@ class MainWindowModel {
           e['name'],
           'No comment for now',
           double.tryParse(e['min_price'].toString()) ?? 0));
+
       first = false;
     }
 

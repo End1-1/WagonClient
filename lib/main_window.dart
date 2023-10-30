@@ -589,8 +589,8 @@ class WMainWidowState extends State<WMainWindow>
                                       model.commentFrom.text.isEmpty
                                           ? 'images/drivercomment.png'
                                           : 'images/check.png',
-                                      height: 20,
-                                      width: 20)),
+                                      height: 25,
+                                      width: 25)),
                               VerticalDivider(
                                 width: 10,
                               )
@@ -633,8 +633,8 @@ class WMainWidowState extends State<WMainWindow>
                                               .isBefore(DateTime.now())
                                           ? 'images/preordertime.png'
                                           : 'images/check.png',
-                                      height: 20,
-                                      width: 20)),
+                                      height: 25,
+                                      width: 25)),
                               VerticalDivider(
                                 width: 10,
                               )
@@ -1304,7 +1304,7 @@ class WMainWidowState extends State<WMainWindow>
                       child: Text(_getPhoneFormatted(),
                           style: Consts.textStylePhoneHeader))),
               Divider(
-                color: Consts.colorBlue,
+                color: Consts.colorRed,
                 thickness: 4,
               ),
               Align(
@@ -1354,8 +1354,9 @@ class WMainWidowState extends State<WMainWindow>
               //   color: Colors.black38,
               //   thickness: 1,
               // ),
+
               //SETTINGS
-              Align(
+              Visibility(visible: false, child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                       padding: EdgeInsets.only(left: 20, top: 10),
@@ -1385,11 +1386,8 @@ class WMainWidowState extends State<WMainWindow>
                             });
                           },
                           child: Text(tr(trSETTINGS),
-                              style: Consts.textStyleMenu)))),
-              Divider(
-                color: Colors.black38,
-                thickness: 1,
-              ),
+                              style: Consts.textStyleMenu))))),
+
               Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(

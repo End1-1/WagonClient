@@ -8,6 +8,11 @@ import 'package:sprintf/sprintf.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Consts {
+  static RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
+  static doubleToString(double d) {
+    return d.toString().replaceAll(regex, '');
+  }
+
   static double sizeofPaymentWidget = 0.8;
   static double defaultSizeofPaymentWidget = 0.8;
 

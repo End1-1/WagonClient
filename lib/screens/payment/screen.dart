@@ -106,7 +106,11 @@ class _PaymentWidget extends State<PaymentWidget> {
                               ),
                               Text('${tr(trBonus)}'),
                               Expanded(child: Container()),
-                              Text('${widget.model.cashbackInfo.balance}')
+                              Text('${Consts.doubleToString(double.tryParse(widget.model.cashbackInfo.balance) ?? 0)}',
+                              style: const TextStyle(fontWeight: FontWeight.bold, color: Consts.colorRed, fontSize: 18),),
+                              const SizedBox(
+                                width: 10,
+                              ),
 
                             ],
                           ),
@@ -228,7 +232,7 @@ class _PaymentWidget extends State<PaymentWidget> {
                     children: [
                       const SizedBox(width: 30),
                       Image.asset(
-                        'images/card.png',
+                        'images/business.png',
                         height: 30,
                         width: 30,
                       ),
@@ -304,6 +308,13 @@ class _PaymentWidget extends State<PaymentWidget> {
                           'images/downarrowc.png',
                           height: 40,
                         ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      InkWell(onTap: (){},child: Image.asset(
+                        'images/plus.png',
+                        height: 30,
+                      ),),
                       const SizedBox(
                         width: 5,
                       )

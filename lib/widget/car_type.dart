@@ -47,7 +47,7 @@ class CarType extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
 
-        height: 100,
+        height: 120,
         decoration: BoxDecoration(
           border: Border.fromBorderSide(
               BorderSide(color: Colors.black12, width: 1)),
@@ -66,7 +66,7 @@ class CarType extends StatelessWidget {
                     color: ct.selected ? Consts.colorOrange : Consts.colorRed,
                     borderRadius: BorderRadius.all(Radius.circular(50))),
                 child: Image.asset(ct.imageName)),
-            Container(height: 20, child: Text(ct.title))
+            Container(height: 40, child: Text(ct.title, textAlign: TextAlign.center,))
           ],
         ));
   }
