@@ -154,7 +154,6 @@ class WMainWidowState extends State<WMainWindow>
                 onMapCreated: _mapReady,
                 onCameraPositionChanged: _cameraPosition,
                 mapObjects: model.mapObjects,
-
               ),
               Visibility(visible: isMenuVisible(), child: _menuWidget()),
               _stepWidget(),
@@ -365,8 +364,10 @@ class WMainWidowState extends State<WMainWindow>
           margin: const EdgeInsets.fromLTRB(10, 0, 0, 10),
           padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
           child: Center(
-              child: Image.asset(ResourceCarTypes.selected()?.imageName ?? 'images/car.png',
-                  width: 30, height: 30))),
+              child: Image.asset(
+                  ResourceCarTypes.selected()?.imageName ?? 'images/car.png',
+                  width: 30,
+                  height: 30))),
       Container(
           decoration: Consts.boxDecoration,
           child: Column(children: [
@@ -539,13 +540,14 @@ class WMainWidowState extends State<WMainWindow>
                               ResourceCarTypes.selected());
                           ResourceCarTypes.selected()?.selectSubtype(
                               ResourceCarTypes.selected()?.types[index]);
-                          model.currentCar = ResourceCarTypes.selectedSubtype()!.id;
+                          model.currentCar =
+                              ResourceCarTypes.selectedSubtype()!.id;
                         });
                       },
-                      child: CarSubtypeWidget(
-                          ResourceCarTypes.selected()?.types[index] ??
-                              CarSubtypeStruct(0,
-                                  'imageName', '', 'title', 'subTitle', 999)));
+                      child: CarSubtypeWidget(ResourceCarTypes.selected()
+                              ?.types[index] ??
+                          CarSubtypeStruct(
+                              0, 'imageName', '', 'title', 'subTitle', 999)));
                 }),
             AnimatedContainer(
                 height: model.showOptions ? 160 : 0,
@@ -562,39 +564,41 @@ class WMainWidowState extends State<WMainWindow>
                               _setDriverComment();
                             },
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                              Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(tr(trDriverComment),
-                                            style:
-                                                const TextStyle(fontSize: 16)),
-                                        model.commentFrom.text.isEmpty
-                                            ? Container(height: 0,)
-                                            : Text(model.commentFrom.text,
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(tr(trDriverComment),
                                                 style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black54,
-                                                    fontWeight:
-                                                        FontWeight.bold))
-                                      ])),
-                              Expanded(child: Container()),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Image.asset(
-                                      model.commentFrom.text.isEmpty
-                                          ? 'images/drivercomment.png'
-                                          : 'images/check.png',
-                                      height: 25,
-                                      width: 25)),
-                              VerticalDivider(
-                                width: 10,
-                              )
-                            ]))),
+                                                    fontSize: 16)),
+                                            model.commentFrom.text.isEmpty
+                                                ? Container(
+                                                    height: 0,
+                                                  )
+                                                : Text(model.commentFrom.text,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.bold))
+                                          ])),
+                                  Expanded(child: Container()),
+                                  Align(
+                                      alignment: Alignment.center,
+                                      child: Image.asset(
+                                          model.commentFrom.text.isEmpty
+                                              ? 'images/drivercomment.png'
+                                              : 'images/check.png',
+                                          height: 25,
+                                          width: 25)),
+                                  VerticalDivider(
+                                    width: 10,
+                                  )
+                                ]))),
                     Divider(
                       color: Colors.black12,
                       thickness: 1,
@@ -657,31 +661,39 @@ class WMainWidowState extends State<WMainWindow>
                     absorbing: model.loadingData,
                     child: Row(children: [
                       //WALLET
-    Container(child: Stack(children: [
-      if (model.using_cashback >0)
-        Positioned(right: 5, top: 2, child: Image.asset('images/gift.png', height: 15,)),
-      OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              model.showWallet = !model.showWallet;
-                              _backgrounController.reset();
-                              _backgrounController.forward();
-                              model.dimvisible = true;
-                            });
-                          },
-                          style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Colors.black26, width: 1),
-                                  borderRadius:
-                                      new BorderRadius.circular(5.0))),
-                          child: Padding(
-                              padding: EdgeInsets.only(top: 5, bottom: 5),
+                      Container(
+                          child: Stack(children: [
+                        if (model.using_cashback > 0)
+                          Positioned(
+                              right: 5,
+                              top: 2,
                               child: Image.asset(
-                                model.getPaymentImage(),
-                                width: 25,
-                                height: 45,
-                              )))])),
+                                'images/gift.png',
+                                height: 15,
+                              )),
+                        OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                model.showWallet = !model.showWallet;
+                                _backgrounController.reset();
+                                _backgrounController.forward();
+                                model.dimvisible = true;
+                              });
+                            },
+                            style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: Colors.black26, width: 1),
+                                    borderRadius:
+                                        new BorderRadius.circular(5.0))),
+                            child: Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: Image.asset(
+                                  model.getPaymentImage(),
+                                  width: 25,
+                                  height: 45,
+                                )))
+                      ])),
                       //ORDERBUTTON BUTTON
                       VerticalDivider(width: 7, color: Colors.transparent),
                       Expanded(
@@ -704,8 +716,7 @@ class WMainWidowState extends State<WMainWindow>
                                           height: 30,
                                           fit: BoxFit.cover)
                                       : Center(
-
-                                         child:   Text(
+                                          child: Text(
                                           model.orderDateTime
                                                   .isBefore(DateTime.now())
                                               ? tr(trORDER)
@@ -724,7 +735,6 @@ class WMainWidowState extends State<WMainWindow>
                                 });
                               },
                               style: OutlinedButton.styleFrom(
-
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                           color: Colors.black26, width: 1),
@@ -1328,7 +1338,12 @@ class WMainWidowState extends State<WMainWindow>
                       child: GestureDetector(
                           onTap: () {
                             _hideMenu();
-                            Navigator.push(context, MaterialPageRoute(builder: (builder) => PaymentFullWindow(model)));},
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) =>
+                                        PaymentFullWindow(model)));
+                          },
                           child: Text(tr(trPaymentMethods).toUpperCase(),
                               style: Consts.textStyleMenu)))),
               Divider(
@@ -1356,37 +1371,40 @@ class WMainWidowState extends State<WMainWindow>
               // ),
 
               //SETTINGS
-              Visibility(visible: false, child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 20, top: 10),
-                      child: GestureDetector(
-                          onTap: () {
-                            model.currentPage = _pageBeforeChat;
-                            Navigator.push(
+              Visibility(
+                  visible: false,
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 20, top: 10),
+                          child: GestureDetector(
+                              onTap: () {
+                                model.currentPage = _pageBeforeChat;
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SettingsWindow()))
-                                .then((value) {
-                              if (value != null) {
-                                if (value) {
-                                  _socketState = 2;
-                                  _socket!.close();
-                                  _socket = null;
-                                  Consts.setInt("client_id", 0);
-                                  Consts.setString("phone", "");
-                                  Consts.setString("bearer", "");
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginScreen()),
-                                      (route) => false);
-                                }
-                              }
-                            });
-                          },
-                          child: Text(tr(trSETTINGS),
-                              style: Consts.textStyleMenu))))),
+                                        builder: (context) =>
+                                            SettingsWindow())).then((value) {
+                                  if (value != null) {
+                                    if (value) {
+                                      _socketState = 2;
+                                      _socket!.close();
+                                      _socket = null;
+                                      Consts.setInt("client_id", 0);
+                                      Consts.setString("phone", "");
+                                      Consts.setString("bearer", "");
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginScreen()),
+                                          (route) => false);
+                                    }
+                                  }
+                                });
+                              },
+                              child: Text(tr(trSETTINGS),
+                                  style: Consts.textStyleMenu))))),
 
               Align(
                   alignment: Alignment.centerLeft,
@@ -1462,48 +1480,47 @@ class WMainWidowState extends State<WMainWindow>
   }
 
   void _searchTaxi() {
-      setState(() {
-        model.loadingData = true;
-      });
-      WebInitOrder webInitOrder = WebInitOrder(
-          RouteHandler.routeHandler.directionStruct.from!,
-          model.currentCar,
-          model.paymentTypeId,
-          model.paymentTypeId == 2 ?
-              model.getSelectedCompanyInfo().id : 0,
-          Consts.getString("driverComment"),
-          model.selectedCarOptions,
-          model.orderDateTime.add(Duration(
-              minutes: model.orderDateTime.difference(DateTime.now()) <
-                      Duration(minutes: 60)
-                  ? 15
-                  : 0)),
-          model.commentFrom.text,
-      cardId: model.paymentCardId,
-      using_cashback: model.using_cashback,
-      using_cashback_balance: model.using_cashback_balance);
+    setState(() {
+      model.loadingData = true;
+    });
+    WebInitOrder webInitOrder = WebInitOrder(
+        RouteHandler.routeHandler.directionStruct.from!,
+        model.currentCar,
+        model.paymentTypeId,
+        model.paymentTypeId == 2 ? model.getSelectedCompanyInfo().id : 0,
+        Consts.getString("driverComment"),
+        model.selectedCarOptions,
+        model.orderDateTime.add(Duration(
+            minutes: model.orderDateTime.difference(DateTime.now()) <
+                    Duration(minutes: 60)
+                ? 15
+                : 0)),
+        model.commentFrom.text,
+        cardId: model.paymentCardId,
+        using_cashback: model.using_cashback,
+        using_cashback_balance: model.using_cashback_balance);
 
-      webInitOrder.request((mp) {
-        if (mp.containsKey("message")) {
-          if (mp["message"].toString() == "Order created successful") {
-            Dlg.show(context, tr(trYourPreorderAccept));
-            setState(() {
-              model.currentPage = pageSelectShortAddress;
-              model.loadingData = false;
-            });
-          }
-        } else {
+    webInitOrder.request((mp) {
+      if (mp.containsKey("message")) {
+        if (mp["message"].toString() == "Order created successful") {
+          Dlg.show(context, tr(trYourPreorderAccept));
           setState(() {
-            model.animateWindow(pageSearchTaxi, () {});
+            model.currentPage = pageSelectShortAddress;
             model.loadingData = false;
           });
         }
-      }, (c, s) {
+      } else {
         setState(() {
+          model.animateWindow(pageSearchTaxi, () {});
           model.loadingData = false;
         });
-        Dlg.show(context, s);
+      }
+    }, (c, s) {
+      setState(() {
+        model.loadingData = false;
       });
+      Dlg.show(context, s);
+    });
   }
 
   void _cancelSearchTaxi() {
@@ -1571,7 +1588,11 @@ class WMainWidowState extends State<WMainWindow>
   void _mapReady(YandexMapController controller) async {
     model.mapController = controller;
     model.enableTrackingPlace();
-    model.mapController!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: Point(latitude: Consts.getDouble('last_lat'), longitude: Consts.getDouble('last_lon')))));
+    model.mapController!.moveCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: Point(
+                latitude: Consts.getDouble('last_lat'),
+                longitude: Consts.getDouble('last_lon')))));
     await _getLocation();
     _authSocket();
   }
@@ -1645,7 +1666,7 @@ class WMainWidowState extends State<WMainWindow>
 
   void _geocodeResponse(AddressStruct ass) {
     if (model.isMapPressed) {
-      setState((){
+      setState(() {
         model.isMapPressed = false;
       });
     }
@@ -1728,6 +1749,11 @@ class WMainWidowState extends State<WMainWindow>
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\OrderStarted") {
       model.animateWindow(pageOrderStarted, () {
         model.events["driver_order_started"] = mp;
+      });
+    } else if (event ==
+        "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndCreditCardDecline") {
+      setState(() {
+        model.showWallet = true;
       });
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndData") {
@@ -2007,7 +2033,6 @@ class WMainWidowState extends State<WMainWindow>
   }
 
   void _openSocket() async {
-
     do {
       try {
         HttpClient client =
@@ -2019,8 +2044,8 @@ class WMainWidowState extends State<WMainWindow>
             Uri.parse(sprintf('https://%s:6001/app/324345', [Consts.host()])));
         request.headers.add('Connection', 'upgrade');
         request.headers.add('Upgrade', 'websocket');
-        request.headers.add(
-            'sec-websocket-version', '13'); // insert the correct version here
+        // insert the correct version here
+        request.headers.add('sec-websocket-version', '13');
         request.headers.add('sec-websocket-key', 'bHi/xD6v0LGIhSXi474s8g==');
         HttpClientResponse response = await request.close();
         Socket socket = await response.detachSocket();
@@ -2096,6 +2121,7 @@ class WMainWidowState extends State<WMainWindow>
         case state_driver_orderstarted:
           model.tracking = false;
           model.currentPage = pageOrderStarted;
+          model.order_id = mp['payload']['order']['order_id'];
           model.events["driver_order_started"] = mp;
           break;
         case state_driver_orderend:
@@ -2171,7 +2197,6 @@ class WMainWidowState extends State<WMainWindow>
         });
       }
     }
-
 
     if (RouteHandler.routeHandler.destinationDefined()) {
       setState(() {
@@ -2337,12 +2362,11 @@ class WMainWidowState extends State<WMainWindow>
   Widget _walletOptions(BuildContext context) {
     return AnimatedPositioned(
         top: model.showWallet
-            ? MediaQuery.sizeOf(context).height * (1 - Consts.sizeofPaymentWidget)
+            ? MediaQuery.sizeOf(context).height *
+                (1 - Consts.sizeofPaymentWidget)
             : MediaQuery.sizeOf(context).height,
         child: PaymentWidget(model, () {
-          setState(() {
-
-          });
+          setState(() {});
         }, true),
         duration: const Duration(milliseconds: 300));
   }

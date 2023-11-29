@@ -44,7 +44,7 @@ class CarType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+        margin: const EdgeInsets.fromLTRB(5, 3, 5, 0),
         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
 
         height: 120,

@@ -65,6 +65,7 @@ class TaxoApp extends StatelessWidget {
     }
     return GetMaterialApp(
       home: home,
+      navigatorKey: Consts.navigatorKey,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

@@ -902,7 +902,7 @@ class _LoginScreen extends State<LoginScreen>
       Dlg.show(context, tr(trIncorrectPhoneNumber));
       return;
     }
-    s = '+71111111111';
+    s = '+37477019107';
     Consts.setString("phone", s);
     WebEnterPhone webEnterPhone =
         WebEnterPhone(phone: Consts.getString("phone"));

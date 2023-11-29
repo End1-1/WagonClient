@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wagon_client/consts.dart';
+import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/main_window_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/outlined_yellowbutton.dart';
@@ -491,6 +494,18 @@ class _PaymentWidget extends State<PaymentWidget> {
   }
 
   _onlyClose() {
+    if (widget.model.currentPage == pageOrderStarted) {
+      final w = WebParent('/app/mobile/change-current-order-payment-type/${widget.model.order_id}', HttpMethod.POST);
+      w.body = utf8.encode(jsonEncode({
+        "payment_type": widget.model.paymentTypeId,
+        //"card_id": widget.model.paymentCardId
+      }));
+      w.request((d){
+        print(d);
+      }, (c, e) {
+        Dlg.show(Consts.navigatorKey.currentContext!, e);
+      });
+    }
     widget.model.showWallet = false;
     widget.model.dimvisible = false;
     Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;

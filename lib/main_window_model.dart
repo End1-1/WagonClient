@@ -58,6 +58,7 @@ class MainWindowModel {
   int driverRating = 0;
   int currentPage = 0;
   int currentState = 0;
+  var order_id = 0;
   bool loadingData = false;
   bool showWallet = false;
   bool tracking = false;

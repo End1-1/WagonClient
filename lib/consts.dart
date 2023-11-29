@@ -13,6 +13,8 @@ class Consts {
     return d.toString().replaceAll(regex, '');
   }
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   static double sizeofPaymentWidget = 0.8;
   static double defaultSizeofPaymentWidget = 0.8;
 

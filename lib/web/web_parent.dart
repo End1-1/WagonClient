@@ -6,20 +6,16 @@ import 'package:http/src/response.dart';
 
 import '../consts.dart';
 
-enum HttpMethod {
-  GET,
-  POST,
-  PUT,
-  DELE
-}
+enum HttpMethod { GET, POST, PUT, DELE }
 
 class WebParent {
-
   String? _url;
   HttpMethod? method;
 
   int responseCode = -1;
   String? errorBody;
+
+  dynamic body;
 
   WebParent(String? url, HttpMethod? m) {
     _url = url;
@@ -27,27 +23,41 @@ class WebParent {
   }
 
   Future<void> request(Function done, Function? fail) async {
-
     var client = HttpClient()
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
     IOClient ioClient = IOClient(client);
     print("URL: $_url");
     try {
+      print("BODY: ${utf8.decode(getBody() ?? [])}");
+    } catch (e) {
+      print("BODY: ${getBody()}");
+      print(e);
+    }
+    try {
       late Response response;
       switch (method) {
         case HttpMethod.GET:
-          response = await ioClient.get(Uri.https(Consts.host(), _url! ), headers: getHeader());
+          response = await ioClient.get(Uri.https(Consts.host(), _url!),
+              headers: getHeader());
           break;
         case HttpMethod.POST:
         case HttpMethod.PUT:
-          response = await ioClient.post(Uri.https(Consts.host(), getUrl()!), body: getBody(), headers: getHeader());
+          response = await ioClient.post(Uri.https(Consts.host(), getUrl()!),
+              body: getBody(), headers: getHeader());
           break;
         case HttpMethod.DELE:
-          response = await ioClient.delete(Uri.https(Consts.host(), getUrl()!), headers: getHeader());
+          response = await ioClient.delete(Uri.https(Consts.host(), getUrl()!),
+              headers: getHeader());
           break;
       }
-      print("Response " + response.statusCode.toString() + ": " + Consts.host() +  _url! + ": " + response.body ?? "body is null");
+      print("Response " +
+              response.statusCode.toString() +
+              ": " +
+              Consts.host() +
+              _url! +
+              ": " +
+              response.body);
       responseCode = response.statusCode;
       if (responseCode < 299) {
         dynamic d = jsonDecode(response.body);
@@ -71,16 +81,14 @@ class WebParent {
   }
 
   dynamic getHeader() {
-    print("_____________________BEARER___________________________");
-    print(Consts.getString("bearer"));
     return {
-      'Accept':'application/json',
+      'Accept': 'application/json',
       'Authorization': 'Bearer ' + Consts.getString("bearer")
     };
   }
 
   dynamic getBody() {
-    return "";
+    return jsonEncode(body);
   }
 
   String? getUrl() {

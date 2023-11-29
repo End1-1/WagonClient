@@ -16,7 +16,7 @@ class Dlg extends StatefulWidget {
     return DlgState();
   }
 
-  static void show(BuildContext context, String msg) {
+  static void show(BuildContext context, String msg) async {
     Dlg dlg = Dlg(msg: msg);
     dlg.yesno = false;
     showDialog(context: context, builder: (BuildContext context) {
