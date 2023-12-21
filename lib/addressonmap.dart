@@ -67,7 +67,7 @@ class AddressOnMapState extends State<AddressOnMap> {
   @override
   void dispose() {
     _yandexGeocode.cancel();
-    _mapController.dispose();
+    //_mapController.dispose();
     super.dispose();
   }
 
