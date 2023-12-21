@@ -286,6 +286,18 @@ class MainWindowModel {
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return AddressOnMap();
     }));
+    print(result);
+    if (result != null) {
+      if (from) {
+        RouteHandler.routeHandler.directionStruct.from = result;
+      } else {
+        if (RouteHandler.routeHandler.directionStruct.to.isEmpty) {
+          RouteHandler.routeHandler.directionStruct.to.add(result);
+        } else {
+          RouteHandler.routeHandler.directionStruct.to.last = result;
+        }
+      }
+    }
     addressFrom.text = RouteHandler.routeHandler.addressFrom();
     addressTo.text = RouteHandler.routeHandler.addressTo().join(", ");
   }
