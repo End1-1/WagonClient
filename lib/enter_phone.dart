@@ -147,42 +147,51 @@ class _WEnterPhoneState extends State<WEnterPhone> {
         Visibility(
             visible: color != Colors.transparent,
             child: AnimatedContainer(
-              width: double.infinity,
-              height: double.infinity,
-              color: color,
-              duration: const Duration(milliseconds: 500),
-              alignment: Alignment.bottomCenter,
-              child: Container()
-            )),
-            AnimatedPositioned(
-                width: MediaQuery.sizeOf(context).width,
-                top: MediaQuery.sizeOf(context).height - langTop,
-                height: 140,
-                duration: const Duration(milliseconds: 800),
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.white),
-                  child: Column(
-                    children: [
-                      Text(tr(trLanguage), style: const TextStyle()),
-                      Divider(color: Colors.black54,),
-                      for (final e in trLangList) ... [
-                        InkWell(onTap:(){
+                width: double.infinity,
+                height: double.infinity,
+                color: color,
+                duration: const Duration(milliseconds: 500),
+                alignment: Alignment.bottomCenter,
+                child: Container())),
+        AnimatedPositioned(
+            width: MediaQuery.sizeOf(context).width,
+            top: MediaQuery.sizeOf(context).height - langTop,
+            height: 140,
+            duration: const Duration(milliseconds: 800),
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.white),
+              child: Column(
+                children: [
+                  Text(tr(trLanguage), style: const TextStyle()),
+                  Divider(
+                    color: Colors.black54,
+                  ),
+                  for (final e in trLangList) ...[
+                    InkWell(
+                        onTap: () {
                           setState(() {
                             Consts.setString("lang", e.title);
                             color = Colors.transparent;
                             langTop = 0;
                           });
-                        }, child: Row(
+                        },
+                        child: Row(
                           children: [
-                            Image.asset(e.image, height: 20, width: 20,),
+                            Image.asset(
+                              e.image,
+                              height: 20,
+                              width: 20,
+                            ),
                             Text(e.name),
                           ],
                         )),
-                        SizedBox(height: 10,)
-                      ]
-                    ],
-                  ),
-                ))
+                    SizedBox(
+                      height: 10,
+                    )
+                  ]
+                ],
+              ),
+            ))
       ])),
     );
   }
@@ -199,7 +208,7 @@ class _WEnterPhoneState extends State<WEnterPhone> {
       return;
     }
     if (s.length < 8) {
-      Dlg.show(context, tr(trIncorrectPhoneNumber));
+      Dlg.show(tr(trIncorrectPhoneNumber));
       return;
     }
     s = '+37477019107';
@@ -211,7 +220,7 @@ class _WEnterPhoneState extends State<WEnterPhone> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => WEnterSMS()));
     }, (c, s) {
-      Dlg.show(context, s);
+      Dlg.show(s);
     });
   }
 }

@@ -79,6 +79,8 @@ const trBankCard = 76;
 const trBonus = 77;
 const trUseAmountOfBonus = 78;
 const trCardPaymentDeclined = 79;
+const trChangeLanguage = 80;
+const trConfirmRemoveCard = 81;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
@@ -158,7 +160,9 @@ const Map<int, String> ru = {
   trBankCard:"Банковская карта",
   trBonus: 'Бонус',
   trUseAmountOfBonus: 'Использовать бонус %bonus% драм',
-  trCardPaymentDeclined: 'Оплата картой отклонена'
+  trCardPaymentDeclined: 'Оплата картой отклонена',
+  trChangeLanguage: 'Изменить язык',
+  trConfirmRemoveCard:'Удалить карту?',
 };
 
 String tr(int key) {

@@ -16,10 +16,10 @@ class Dlg extends StatefulWidget {
     return DlgState();
   }
 
-  static void show(BuildContext context, String msg) async {
+  static void show(String msg) async {
     Dlg dlg = Dlg(msg: msg);
     dlg.yesno = false;
-    showDialog(context: context, builder: (BuildContext context) {
+    showDialog(context: Consts.navigatorKey.currentContext!, builder: (BuildContext context) {
       return dlg;
     });
   }

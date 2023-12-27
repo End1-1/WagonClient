@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:wagon_client/main_window_model.dart';
+import 'package:wagon_client/screens/app/model.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 class IPhoneDatePicker {

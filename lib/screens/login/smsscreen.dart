@@ -277,12 +277,12 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
     }, (c, s) {
       try {
         Map<String, dynamic> msg = jsonDecode(s);
-        Dlg.show(context, msg['message']);
+        Dlg.show(msg['message']);
         return;
       } catch (e) {
         print(e.toString());
       }
-      Dlg.show(context, s);
+      Dlg.show(s);
     });
   }
 }

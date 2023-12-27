@@ -190,7 +190,7 @@ class MyAddressDetailsState extends State<MyAddressDetails> {
 
   void _removeAddress() {
     if (_address["address_id"] == null) {
-      Dlg.show(context, tr(trCannotRemoveUnavailableAddress));
+      Dlg.show(tr(trCannotRemoveUnavailableAddress));
     }
     WebMyAddresses.remove(_address["address_id"], (d){
       Navigator.pop(context);

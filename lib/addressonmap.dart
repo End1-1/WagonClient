@@ -71,15 +71,5 @@ class AddressOnMapState extends State<AddressOnMap> {
     super.dispose();
   }
 
-  void _cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
-    setState(() {
-      _address = tr(trGettingAddress);
-    });
-    _yandexGeocode.geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
-      setState((){
-        data = d;
-        _address = d.title;
-      });
-    });
-  }
+
 }

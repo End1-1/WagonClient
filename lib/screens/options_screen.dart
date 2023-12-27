@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../consts.dart';
-import '../main_window_model.dart';
+import 'app/model.dart';
 
 class OptionScreen extends StatelessWidget {
   final MainWindowModel model;

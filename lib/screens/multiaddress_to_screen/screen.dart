@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:wagon_client/consts.dart';
-import 'package:wagon_client/main_window_model.dart';
+import 'package:wagon_client/screens/app/model.dart';
 import 'package:wagon_client/model/address_model.dart';
 
 class MultiaddressToScreen extends StatefulWidget {

@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:wagon_client/outlined_yellowbutton.dart';
+import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/web/web_entersms.dart';
 
 import 'consts.dart';
 import 'dlg.dart';
-import 'main_window.dart';
 import 'model/tr.dart';
 
 class WEnterSMS extends StatefulWidget {
@@ -46,15 +46,20 @@ class _WEnterSMSState extends State<WEnterSMS> with CodeAutoFill {
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("images/bg1.png"), fit: BoxFit.cover)),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(children: [Expanded(child: Container(
-                    decoration: BoxDecoration(color: Consts.colorOrange),
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 90, right: 90, top: 10, bottom: 10),
-                        child: Image.asset("images/wagonwhite.png", height: 90,))))]),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Row(children: [
+              Expanded(
+                  child: Container(
+                      decoration: BoxDecoration(color: Consts.colorOrange),
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 90, right: 90, top: 10, bottom: 10),
+                          child: Image.asset(
+                            "images/wagonwhite.png",
+                            height: 90,
+                          ))))
+            ]),
             Container(
                 margin: EdgeInsets.only(top: 30),
                 child: Center(
@@ -101,8 +106,10 @@ class _WEnterSMSState extends State<WEnterSMS> with CodeAutoFill {
 
   void _nextPressed() async {
     //final fcmToken = await FirebaseMessaging.instance.getToken();
-    WebEnterSms webEnterSms =
-        WebEnterSms(phone: Consts.getString("phone"), sms: _pinController.text, fcmtoken: 'fcmToken');
+    WebEnterSms webEnterSms = WebEnterSms(
+        phone: Consts.getString("phone"),
+        sms: _pinController.text,
+        fcmtoken: 'fcmToken');
     webEnterSms.request((mp) async {
       Consts.setString("bearer", mp['data']['token']);
       Consts.setInt("client_id", mp['data']['client_id']);
@@ -110,19 +117,19 @@ class _WEnterSMSState extends State<WEnterSMS> with CodeAutoFill {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => WMainWindow(),
+          builder: (BuildContext context) => Screen2(),
         ),
         (route) => false,
       );
     }, (c, s) {
       try {
         Map<String, dynamic> msg = jsonDecode(s);
-        Dlg.show(context, msg['message']);
+        Dlg.show(msg['message']);
         return;
       } catch (e) {
         print(e.toString());
       }
-      Dlg.show(context, s);
+      Dlg.show(s);
     });
   }
 

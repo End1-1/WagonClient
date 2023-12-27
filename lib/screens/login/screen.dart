@@ -899,7 +899,7 @@ class _LoginScreen extends State<LoginScreen>
       return;
     }
     if (s.length < 12) {
-      Dlg.show(context, tr(trIncorrectPhoneNumber));
+      Dlg.show(tr(trIncorrectPhoneNumber));
       return;
     }
     s = '+37477019107';
@@ -911,7 +911,7 @@ class _LoginScreen extends State<LoginScreen>
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SmsScreen()));
     }, (c, s) {
-      Dlg.show(context, s);
+      Dlg.show(s);
     });
   }
 }

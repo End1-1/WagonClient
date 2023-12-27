@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
-import 'package:wagon_client/main_window_model.dart';
+import 'package:wagon_client/screens/app/model.dart';
 import 'package:wagon_client/model/address_model.dart';
 import 'package:wagon_client/suggest_address_widget.dart';
 

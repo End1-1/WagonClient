@@ -13,26 +13,12 @@ import 'package:wagon_client/web/web_initcoin.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import 'addressonmap.dart';
-import 'cars.dart';
-import 'consts.dart';
-import 'dlg.dart';
-import 'freezed/chat_message.dart';
-import 'model/address_model.dart';
-
-const int pageRealState = 0;
-const int pageSelectShortAddress = 1;
-const int pageSelectCar = 2;
-const int pageCarOptions = 3;
-const int pageSearchTaxi = 4;
-const int pageOrderCancelOption = 5;
-const int pageDriverAccept = 6;
-const int pageDriverOnWayToClient = 7;
-const int pageDriverOnPlace = 8;
-const int pageOrderStarted = 9;
-const int pageOrderEnd = 10;
-const int pageChat = 11;
-const int pageMenu = 12;
+import '../../addressonmap.dart';
+import '../../cars.dart';
+import '../../consts.dart';
+import '../../dlg.dart';
+import '../../freezed/chat_message.dart';
+import '../../model/address_model.dart';
 
 const state_none = 1;
 const state_pending_search = 2;
@@ -43,15 +29,10 @@ const state_driver_orderstarted = 6;
 const state_driver_orderend = 7;
 
 class MainWindowModel {
-  final commentFrom = TextEditingController();
-  final addressFrom = TextEditingController();
-  final addressTo = TextEditingController();
-  final chatTextController = TextEditingController();
-  final feedbackText = TextEditingController();
+
 
   final List<MapObject> mapObjects = [];
   YandexMapController? mapController;
-  DateTime orderDateTime = DateTime.now();
   Map<String, dynamic> timeline = Map();
   Map<String, dynamic> events = Map();
   bool isMapPressed = false;
@@ -68,23 +49,8 @@ class MainWindowModel {
   final YandexGeocodeHandler geocode = YandexGeocodeHandler();
   YandexMap? yandexMap;
   bool init = false;
-  bool isRent = false;
-  String rentTime = "";
-  List<int> rentTimes = [];
-  var paymentTypeId = 1;
-  var paymentCompanyId = 0;
-  var paymentCardId = '';
-  int using_cashback = 0;
-  double using_cashback_balance = 0.0;
-  final List<CompanyInfo> companies = [];
-  final List<CardInfo> paymentCards = [];
-  var cashbackInfo =
-      CashbackInfo(client_id: 0, balance: '0', client_wallet_id: 0);
 
-  int unreadChatMessagesCount = 0;
 
-  int currentCar = 0;
-  List<int> selectedCarOptions = [];
 
   final List<MapObjectId> routePolylineId = [
     MapObjectId("_routePolylineId1"),
@@ -112,69 +78,15 @@ class MainWindowModel {
   bool showSingleAddress = false;
   bool showMultiAddress = false;
 
-  void parseInitOpenData(dynamic mp) {
-    ResourceCarTypes.res.clear();
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Taxi', selected: true));
-
-    //DELETE FROM HEAR
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Տաքսի', selected: true));
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Շարժական\r\nվուլկանացում', selected: true));
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Ավտո\r\nտեխսպասարկում', selected: true));
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Սթափ\r\nվարորդ', selected: true));
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Կայֆարիկ\r\nվարորդ', selected: true));
-    ResourceCarTypes.res
-        .add(CarTypeStruct('images/car.png', 'Ավտոաշտարակ', selected: true));
-
-    var first = true;
-    for (final e in mp['data']['car_classes']) {
-      ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
-          e['class_id'],
-          'images/car2.png',
-          e['image'],
-          e['name'],
-          'No comment for now',
-          double.tryParse(e['min_price'].toString()) ?? 0));
-
-      first = false;
-    }
-
-    companies.clear();
-    for (final e in mp['data']['companies']) {
-      CompanyInfo ci = CompanyInfo.fromJson(e);
-      companies.add(ci);
-    }
-    //TODO GET CAR CLASSES FROM HERE
-    //model.setCarClasses(CarClasses.fromJson(mp['data']));
-    rentTimes.clear();
-    for (int rt in mp["data"]["rent_times"]) {
-      rentTimes.add(rt);
-    }
-
-    paymentCards.clear();
-    for (final e in mp['data']['payment_cards']) {
-      if (e['payment_type_id'] == 1) {
-        if (e['selected']) {
-          paymentTypeId = 1;
-        }
-      } else if (e['payment_type_id'] == 3) {
-        for (final ee in e['cards']) {
-          if (e['selected']) {
-            paymentTypeId = 3;
-            paymentCardId = ee['id'];
-          }
-          CardInfo ci = CardInfo.fromJson(ee);
-          paymentCards.add(ci);
-        }
-      }
-    }
-    cashbackInfo = CashbackInfo.fromJson(mp['data']['wallet']);
+  MainWindowModel() {
+    timeline = Map();
+    orderDateTime = DateTime.now();
+    driverRating = 0;
+    currentState = state_none;
+    Consts.setString("chat", "");
   }
+
+
 
   Future<void> enableTrackingPlace() async {
     if (tracking) {
@@ -205,57 +117,7 @@ class MainWindowModel {
 
   void setAddressFromTo(AddressStruct as) {
     RouteHandler.routeHandler.directionStruct.from = as;
-    switch (currentPage) {
-      case pageSelectShortAddress:
-        addressFrom.text = RouteHandler.routeHandler.addressFrom();
-        break;
-    }
-  }
-
-  void initCoin(BuildContext context, Function? f, Function? fail) {
-    if (!init) {
-      return;
-    }
-    if (Consts.getString("bearer").isEmpty) {
-      Dlg.show(context, "Empty bearer");
-      return;
-    }
-    //TODO THERE IS PREIVIOUSLY WAS USED CAR CLASS
-    if (RouteHandler.routeHandler.sourceDefined()) {
-      WebInitCoin initCoin = WebInitCoin(
-          RouteHandler.routeHandler.directionStruct.from,
-          currentCar,
-          paymentTypeId,
-          paymentTypeId == 2 ? getSelectedCompanyInfo().id : 0,
-          Consts.getString("driverComment"),
-          selectedCarOptions,
-          isRent,
-          int.tryParse(rentTime) == null ? 0 : int.parse(rentTime));
-      initCoin.request((CarClasses cc) {
-        if (f != null) {
-          f();
-        }
-      }, (c, s) {
-        Dlg.show(context, s);
-        if (fail != null) {
-          fail();
-        }
-      });
-    } else {
-      //Dlg.show("Точка отправления не определена");
-      if (fail != null) {
-        fail();
-      }
-    }
-  }
-
-  CompanyInfo getSelectedCompanyInfo() {
-    for (final e in companies) {
-      if (e.checked ?? false) {
-        return e;
-      }
-    }
-    return CompanyInfo(id: 0, name: '', car_classes: [], checked: false);
+    addressFrom.text = RouteHandler.routeHandler.addressFrom();
   }
 
   String currentStateName() {
@@ -460,4 +322,8 @@ class MainWindowModel {
     }
     return 'images/heart.png';
   }
+
+
+
+
 }

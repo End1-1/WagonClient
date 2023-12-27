@@ -4,23 +4,27 @@ import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/model/address_model.dart';
 import 'package:wagon_client/widget/car_type.dart';
 
-import 'consts.dart';
-import 'main_window_model.dart';
-import 'model/tr.dart';
+import '../../consts.dart';
+import '../app/model.dart';
+import '../../model/tr.dart';
 
-class FirstPage extends StatelessWidget {
+class FirstPage extends StatefulWidget {
   final MainWindowModel model;
-  final Function parentState;
 
-  FirstPage({required this.model, required this.parentState});
+  FirstPage({required this.model});
+
+  @override
+  State<StatefulWidget> createState() => _FirstPageState(model);
+}
+
+
+class _FirstPageState extends State<FirstPage> {
+  final MainWindowModel model;
+
+  _FirstPageState(this.model);
 
   @override
   Widget build(BuildContext context) {
-    model.timeline = Map();
-    model.orderDateTime = DateTime.now();
-    model.driverRating = 0;
-    model.currentState = state_none;
-    Consts.setString("chat", "");
     if (model.mapController != null) {
       if (RouteHandler.routeHandler.routeNotDefined()) {
         model.enableTrackingPlace();
@@ -46,7 +50,9 @@ class FirstPage extends StatelessWidget {
             //SERVICE TYPES
             Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                width: MediaQuery.sizeOf(context).width,
+                width: MediaQuery
+                    .sizeOf(context)
+                    .width,
                 height: 120,
                 child: CarTypeList()),
 
@@ -75,27 +81,27 @@ class FirstPage extends StatelessWidget {
                   ),
                   Expanded(
                       child: TextFormField(
-                    readOnly: true,
-                    onTap: () {
-                      model.selectRoute(context, true);
-                      if (model.currentPage == pageSelectCar) {
-                        model.loadingData = true;
-                        parentState();
-                        model.initCoin(context, () {
-                          model.loadingData = false;
-                          parentState();
-                        }, () {
-                          model.loadingData = false;
-                          parentState();
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                        hintText: tr(trFrom),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none),
-                    controller: model.addressFrom,
-                  )),
+                        readOnly: true,
+                        onTap: () {
+                          model.selectRoute(context, true);
+                          if (model.currentPage == pageSelectCar) {
+                            model.loadingData = true;
+                            parentState();
+                            model.initCoin(context, () {
+                              model.loadingData = false;
+                              parentState();
+                            }, () {
+                              model.loadingData = false;
+                              parentState();
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                            hintText: tr(trFrom),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none),
+                        controller: model.addressFrom,
+                      )),
                   IconButton(
                     icon: Image.asset(
                       "images/mapdraw.png",
@@ -125,35 +131,36 @@ class FirstPage extends StatelessWidget {
                   VerticalDivider(width: 10),
                   Expanded(
                       child: TextFormField(
-                    readOnly: true,
-                    minLines: 1,
-                    maxLines: 6,
-                    onTap: () {
-                      if (RouteHandler.routeHandler.directionStruct.to.length >
-                          1) {
-                        model.showMultiAddress = true;
-                        parentState();
-                        return;
-                      }
-                      model.selectRoute(context, false);
-                      if (model.currentPage == pageSelectCar) {
-                        model.loadingData = true;
-                        parentState();
-                        model.initCoin(context, () {
-                          model.loadingData = false;
-                          parentState();
-                        }, () {
-                          model.loadingData = false;
-                          parentState();
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                        hintText: tr(trTo),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none),
-                    controller: model.addressTo,
-                  )),
+                        readOnly: true,
+                        minLines: 1,
+                        maxLines: 6,
+                        onTap: () {
+                          if (RouteHandler.routeHandler.directionStruct.to
+                              .length >
+                              1) {
+                            model.showMultiAddress = true;
+
+                            return;
+                          }
+                          model.selectRoute(context, false);
+                          if (model.currentPage == pageSelectCar) {
+                            model.loadingData = true;
+                            parentState();
+                            model.initCoin(context, () {
+                              model.loadingData = false;
+                              parentState();
+                            }, () {
+                              model.loadingData = false;
+                              parentState();
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                            hintText: tr(trTo),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none),
+                        controller: model.addressTo,
+                      )),
                   if (RouteHandler.routeHandler.directionStruct.to.isEmpty)
                     IconButton(
                       icon: Image.asset(
@@ -227,15 +234,30 @@ class FirstPage extends StatelessWidget {
                                 },
                                 child: model.loadingData
                                     ? Image.asset("images/load1.gif",
-                                        width: 40,
-                                        height: 40,
-                                        fit: BoxFit.cover)
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover)
                                     : Image.asset("images/arrowcircleright.png",
-                                        width: 30,
-                                        height: 30,
-                                        fit: BoxFit.cover))))))
+                                    width: 30,
+                                    height: 30,
+                                    fit: BoxFit.cover))))))
           ])),
     ]);
     return Stack(alignment: Alignment.bottomCenter, children: [w1]);
+  }
+
+  void countRoute() {
+    setState(() {
+      model.loadingData = true;
+    });
+    model.initCoin(context, () {
+      setState(() {
+        model.loadingData = false;
+      });
+    }, () {
+      setState(() {
+        model.loadingData = false;
+      });
+    });
   }
 }

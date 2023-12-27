@@ -220,7 +220,7 @@ class HistoryOrderState extends State<HistoryOrder> {
         //_drawRoute();
       });
     }, (c, s){
-      Dlg.show(context, s);
+      Dlg.show(s);
       Navigator.pop(context);
     });
   }
