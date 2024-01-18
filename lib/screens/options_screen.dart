@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wagon_client/screen2/model/model.dart';
 
 import '../consts.dart';
 import 'app/model.dart';
 
 class OptionScreen extends StatelessWidget {
-  final MainWindowModel model;
+  final Screen2Model model;
   final Function parentState;
 
   OptionScreen({required this.model, required this.parentState});
@@ -77,14 +78,13 @@ class OptionScreen extends StatelessWidget {
                               left: 10, right: 10, top: 15, bottom: 15),
                           child: OutlinedButton(
                               onPressed: () {
-                                model.loadingData = true;
+                                //model.appState.loadingData = true;
                                 parentState();
-                                model.initCoin(context, () {
-                                  model.currentPage = pageSelectCar;
-                                  model.loadingData = false;
+                                model.requests.initCoin( () {
+
                                   parentState();
                                 }, () {
-                                  model.loadingData = false;
+
                                   parentState();
                                 });
                               },
@@ -102,10 +102,7 @@ class OptionScreen extends StatelessWidget {
                                       child: SizedBox(
                                           width: 100,
                                           height: 25,
-                                          child: model.loadingData
-                                              ? Image.asset("images/load1.gif",
-                                                  fit: BoxFit.cover)
-                                              : Text(
+                                          child: Text(
                                                   "ГОТОВО",
                                                   style: Consts.textStyleButton,
                                                   textAlign: TextAlign.center,

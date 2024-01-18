@@ -20,6 +20,7 @@ import 'package:wagon_client/history_all.dart';
 import 'package:wagon_client/information.dart';
 import 'package:wagon_client/order_cancel_options.dart';
 import 'package:wagon_client/resources/resource_car_types.dart';
+import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/iphonedatepicker.dart';
 import 'package:wagon_client/screens/language/screen.dart';
 import 'package:wagon_client/screens/login/screen.dart';
@@ -61,7 +62,7 @@ class WMainWidowState extends State<WMainWindow>
   late Animation<Color?> background;
   Animation<double?>? langPos;
 
-  final MainWindowModel model = MainWindowModel();
+  final Screen2Model model = Screen2Model();
   final player = AudioPlayer();
 
 
@@ -117,8 +118,8 @@ class WMainWidowState extends State<WMainWindow>
               //TODO: whats to do
               // _appendAddressToWidget(context),
               // _multiAddressWiget(context),
-              _dimWidget(context),
-              _walletOptions(context),
+              //_dimWidget(context),
+              //_walletOptions(context),
             ])));
   }
 
@@ -426,17 +427,17 @@ class WMainWidowState extends State<WMainWindow>
   //   setState(() {});
   // }
 
-  void _clearTaxiOnMap() {
-    List<MapObject> mm = [];
-    for (MapObject mo in model.mapObjects) {
-      if (mo.mapId.toString().contains("taxionmap")) {
-        mm.add(mo);
-      }
-    }
-    for (MapObject mo in mm) {
-      model.mapObjects.remove(mo);
-    }
-  }
+  // void _clearTaxiOnMap() {
+  //   List<MapObject> mm = [];
+  //   for (MapObject mo in model.mapObjects) {
+  //     if (mo.mapId.toString().contains("taxionmap")) {
+  //       mm.add(mo);
+  //     }
+  //   }
+  //   for (MapObject mo in mm) {
+  //     model.mapObjects.remove(mo);
+  //   }
+  // }
 
   void _getUnreadMessages() {
     var client = HttpClient()
@@ -530,39 +531,39 @@ class WMainWidowState extends State<WMainWindow>
   //       duration: Duration(milliseconds: 200));
   // }
 
-  Widget _walletOptions(BuildContext context) {
-    return AnimatedPositioned(
-        top: model.showWallet
-            ? MediaQuery.sizeOf(context).height *
-                (1 - Consts.sizeofPaymentWidget)
-            : MediaQuery.sizeOf(context).height,
-        child: PaymentWidget(model, () {
-          setState(() {});
-        }, true),
-        duration: const Duration(milliseconds: 300));
-  }
+  // Widget _walletOptions(BuildContext context) {
+  //   return AnimatedPositioned(
+  //       top: model.showWallet
+  //           ? MediaQuery.sizeOf(context).height *
+  //               (1 - Consts.sizeofPaymentWidget)
+  //           : MediaQuery.sizeOf(context).height,
+  //       child: PaymentWidget(model, () {
+  //         setState(() {});
+  //       }, true),
+  //       duration: const Duration(milliseconds: 300));
+  // }
 
-  Widget _dimWidget(BuildContext context) {
-    return Visibility(
-        visible: model.dimvisible,
-        child: AnimatedBuilder(
-          animation: _backgrounController,
-          builder: (BuildContext context, Widget? child) {
-            return GestureDetector(
-                onTap: () {
-                  _backgrounController.reverse().whenComplete(() {
-                    setState(() {
-                      model.dimvisible = false;
-                      model.showWallet = false;
-                    });
-                  });
-                },
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height,
-                  color: background.value,
-                ));
-          },
-        ));
-  }
+  // Widget _dimWidget(BuildContext context) {
+  //   return Visibility(
+  //       visible: model.dimvisible,
+  //       child: AnimatedBuilder(
+  //         animation: _backgrounController,
+  //         builder: (BuildContext context, Widget? child) {
+  //           return GestureDetector(
+  //               onTap: () {
+  //                 _backgrounController.reverse().whenComplete(() {
+  //                   setState(() {
+  //                     model.dimvisible = false;
+  //                     model.showWallet = false;
+  //                   });
+  //                 });
+  //               },
+  //               child: Container(
+  //                 width: MediaQuery.sizeOf(context).width,
+  //                 height: MediaQuery.sizeOf(context).height,
+  //                 color: background.value,
+  //               ));
+  //         },
+  //       ));
+  // }
 }

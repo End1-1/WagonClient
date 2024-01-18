@@ -11,7 +11,8 @@ class AppState {
   final feedbackText = TextEditingController();
 
   bool isRent = false;
-  String rentTime = "";
+  String rentTime = '';
+  String order_id = '';
   List<int> rentTimes = [];
   var paymentTypeId = 1;
   var paymentCompanyId = 0;

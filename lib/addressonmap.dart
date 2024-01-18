@@ -27,7 +27,7 @@ class AddressOnMapState extends State<AddressOnMap> {
       body: SafeArea (
         child: Stack (
           children: [
-            YandexMap(onMapCreated: _mapReady, mapObjects: [], onCameraPositionChanged: _cameraPosition,),
+            YandexMap(onMapCreated: _mapReady, mapObjects: [], onCameraPositionChanged: (c,v, b){},),
             Row(
               children: [
                 Expanded(

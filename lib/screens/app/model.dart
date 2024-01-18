@@ -80,7 +80,7 @@ class MainWindowModel {
 
   MainWindowModel() {
     timeline = Map();
-    orderDateTime = DateTime.now();
+    //orderDateTime = DateTime.now();
     driverRating = 0;
     currentState = state_none;
     Consts.setString("chat", "");
@@ -117,7 +117,7 @@ class MainWindowModel {
 
   void setAddressFromTo(AddressStruct as) {
     RouteHandler.routeHandler.directionStruct.from = as;
-    addressFrom.text = RouteHandler.routeHandler.addressFrom();
+    //addressFrom.text = RouteHandler.routeHandler.addressFrom();
   }
 
   String currentStateName() {
@@ -160,8 +160,8 @@ class MainWindowModel {
         }
       }
     }
-    addressFrom.text = RouteHandler.routeHandler.addressFrom();
-    addressTo.text = RouteHandler.routeHandler.addressTo().join(", ");
+    // addressFrom.text = RouteHandler.routeHandler.addressFrom();
+    // addressTo.text = RouteHandler.routeHandler.addressTo().join(", ");
   }
 
   Future<void> selectRoute(BuildContext context, bool from) async {
@@ -178,8 +178,8 @@ class MainWindowModel {
             animation: MapAnimation(duration: 1));
       }
       await paintRoute();
-      addressFrom.text = RouteHandler.routeHandler.addressFrom();
-      addressTo.text = RouteHandler.routeHandler.addressTo().join(", ");
+      // addressFrom.text = RouteHandler.routeHandler.addressFrom();
+      // addressTo.text = RouteHandler.routeHandler.addressTo().join(", ");
     }
   }
 
@@ -307,11 +307,11 @@ class MainWindowModel {
       print(value.body.toString());
       Map<String, dynamic> m = jsonDecode(value.body.toString());
       ChatMessageList cml = ChatMessageList.fromJson({'list': m['messages']});
-      unreadChatMessagesCount = cml.list.length;
+      //unreadChatMessagesCount = cml.list.length;
     });
   }
 
-  String getPaymentImage() {
+  String getPaymentImage(int paymentTypeId) {
     switch (paymentTypeId) {
       case 1:
         return 'images/wallet.png';

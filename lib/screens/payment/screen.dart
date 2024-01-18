@@ -501,9 +501,9 @@ class _PaymentWidget extends State<PaymentWidget> {
   }
 
   _onlyClose() {
-    if (widget.model.currentPage == pageOrderStarted) {
+    //if (widget.model.currentPage == pageOrderStarted) {
       final w = WebParent(
-          '/app/mobile/change-current-order-payment-type/${widget.model.order_id}',
+          '/app/mobile/change-current-order-payment-type/${widget.model.appState.order_id}',
           HttpMethod.POST);
       w.body = utf8.encode(jsonEncode({
         "payment_type": widget.model.appState.paymentTypeId,
@@ -514,9 +514,9 @@ class _PaymentWidget extends State<PaymentWidget> {
       }, (c, e) {
         Dlg.show(e);
       });
-    }
-    widget.model.showWallet = false;
-    widget.model.dimvisible = false;
+    //}
+    // widget.model.showWallet = false;
+    // widget.model.dimvisible = false;
     Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;
     widget.model.appState.using_cashback_balance =
         _using_cashback ? widget.using_cashback_balance : 0;
@@ -556,7 +556,7 @@ class _PaymentWidget extends State<PaymentWidget> {
 }
 
 class PaymentFullWindow extends StatelessWidget {
-  final MainWindowModel model;
+  final Screen2Model model;
 
   PaymentFullWindow(this.model);
 
