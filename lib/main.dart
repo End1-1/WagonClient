@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window.dart';
+import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 
 // @pragma('vm:entry-point')
@@ -60,7 +61,7 @@ class TaxoApp extends StatelessWidget {
     if (Consts.getString("bearer").isEmpty) {
       home = LoginScreen();
     } else {
-      home = WMainWindow();
+      home = Screen2();
     }
     return GetMaterialApp(
       home: home,

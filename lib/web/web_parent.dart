@@ -27,7 +27,7 @@ class WebParent {
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
     IOClient ioClient = IOClient(client);
-    print("URL: $_url");
+    print("URL: ${Consts.host()}$_url");
     try {
       print("BODY: ${utf8.decode(getBody() ?? [])}");
     } catch (e) {

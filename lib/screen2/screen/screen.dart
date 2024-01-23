@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
