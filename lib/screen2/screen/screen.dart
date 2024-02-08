@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/model.dart';
+import 'package:wagon_client/screen2/parts/screen_address.dart';
+import 'package:wagon_client/screen2/parts/screen_bottom.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -34,6 +36,13 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
                 child: Align(
                     alignment: Alignment.center,
                     child: AnimPlaceMark(false))),
+            Column(
+              children: [
+                Expanded(child: Container()),
+                ScreenAddress(widget.model),
+                ScreenBottom()
+              ],
+            )
           ],
         )
       ),
