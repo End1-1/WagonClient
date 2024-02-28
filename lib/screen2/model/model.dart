@@ -15,4 +15,8 @@ class Screen2Model {
     mapController = MapController(this);
     requests = Requests(this);
   }
+
+  void setAcType(int t) {
+    appState.acType = t;
+  }
 }

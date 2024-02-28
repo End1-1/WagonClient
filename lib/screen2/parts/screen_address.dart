@@ -21,6 +21,7 @@ class _ScreenAddress extends State<ScreenAddress> {
         ),
       child: Column(
         children: [
+          //FROM
           Row(
             children: [
               Container(
@@ -28,6 +29,7 @@ class _ScreenAddress extends State<ScreenAddress> {
               ),
               Expanded(child: TextFormField(
                 controller: widget.model.appState.addressFrom,
+                readOnly: true,
               )),
               InkWell(
                 onTap: (){},
@@ -36,7 +38,25 @@ class _ScreenAddress extends State<ScreenAddress> {
                 ),
               )
             ],
-          )
+          ),
+          Row(
+            children: [
+              Container(
+                child: Image.asset('images/frompoint.png', height: 20,),
+              ),
+              Expanded(child: TextFormField(
+                controller: widget.model.appState.addressTo,
+                readOnly: true,
+              )),
+              InkWell(
+                onTap: (){},
+                child: Container(
+                  child: Image.asset('images/mappin.png', height: 20,),
+                ),
+              )
+            ],
+          ),
+          //TO
         ],
       )
     );

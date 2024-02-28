@@ -5,9 +5,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/model/address_model.dart';
+import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/web/web_initopen.dart';
+import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'package:wagon_client/consts.dart';
@@ -84,22 +86,18 @@ class MapController {
           Navigator.pushReplacement(
               Consts.navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => LoginScreen()));
         } else {
-          Dlg.show("initOpen()\r\n" + s);
+          Dlg.show("initOpen()\r\n");
         }
       });
 
   }
 
   void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
-    // setState(() {
-    //   _address = tr(trGettingAddress);
-    // });
-    // _yandexGeocode.geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
-    //   setState((){
-    //     data = d;
-    //     _address = d.title;
-    //   });
-    // });
+    model.appState.addressFrom.text = tr(trGettingAddress);
+    YandexGeocodeHandler().geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
+      print(d);
+      model.appState.addressFrom.text = d.title;
+    });
   }
 
   void geocodeResponse(AddressStruct ass) {

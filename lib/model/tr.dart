@@ -81,10 +81,20 @@ const trUseAmountOfBonus = 78;
 const trCardPaymentDeclined = 79;
 const trChangeLanguage = 80;
 const trConfirmRemoveCard = 81;
+const trTaxCab = 82;
+const trAvtobus = 83;
+const trAvtoKran = 84;
+const trBernatar = 85;
+const trBuzinesCab = 86;
+const trEakulator = 87;
+const trLimuzin = 88;
+const trStapVarord = 89;
+const trVulkanacum = 90;
+const trForOrderChooseService = 91;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
-  trRentTaxi:"АРЕНДА ТАКСИ",
+  trRentTaxi:"Аренда такси",
   trRentTime: "Время аренды",
   trFrom: "Откуда",
   trTo: "Куда",
@@ -163,6 +173,16 @@ const Map<int, String> ru = {
   trCardPaymentDeclined: 'Оплата картой отклонена',
   trChangeLanguage: 'Изменить язык',
   trConfirmRemoveCard:'Удалить карту?',
+  trTaxCab: 'Такси / Кэб',
+  trAvtobus: 'Автобус',
+   trAvtoKran: "Автокран",
+   trBernatar: "Перевозка грузов",
+   trBuzinesCab: "Бизнес кэб",
+   trEakulator: "Эвакуатор",
+   trLimuzin: "Лимузин",
+   trStapVarord: "Трезвый водитель",
+   trVulkanacum: "Вулканизация",
+  trForOrderChooseService: 'Для заказа выбирите тип услуги',
 };
 
 String tr(int key) {

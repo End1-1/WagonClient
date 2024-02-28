@@ -29,12 +29,12 @@ class AppWebSocket {
     do {
       try {
         HttpClient client =
-        HttpClient(); //.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+            HttpClient(); //.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) => true;
         //HttpClientRequest request = await client.getUrl(Uri.parse("https://10.1.0.2:10002/app/324345"));// (sprintf('10.1.0.2', []), 10002, "/app/324345");
-        HttpClientRequest request = await client.getUrl(
-            Uri.parse('https://${Consts.host()}:6001/app/324345'));
+        HttpClientRequest request = await client
+            .getUrl(Uri.parse('https://${Consts.host()}:6001/app/324345'));
         request.headers.add('Connection', 'upgrade');
         request.headers.add('Upgrade', 'websocket');
         // insert the correct version here
@@ -51,9 +51,8 @@ class AppWebSocket {
         });
         setConnectionState(true);
         timerPingPong = Timer.periodic(Duration(milliseconds: 30000), pingpong);
-
-          subscribeToFreeChannel();
-
+        subscribeToFreeChannel();
+        connected = true;
       } catch (e) {
         print(e);
         sleep(const Duration(seconds: 2));
@@ -72,7 +71,6 @@ class AppWebSocket {
 
   void setConnectionState(bool c) {
     if (c) {
-
     } else {
       if (timerPingPong != null) {
         timerPingPong!.cancel();
@@ -91,9 +89,10 @@ class AppWebSocket {
   }
 
   void subscribeToFreeChannel() {
-    String channel = 'free-${Consts.getString("channel_hash")}';;
-    Consts.setString('free-channel',
-        'client-${Consts.getString('channel_hash')}');
+    String channel = 'free-${Consts.getString("channel_hash")}';
+    ;
+    Consts.setString(
+        'free-channel', 'client-${Consts.getString('channel_hash')}');
     String strToCrypt = Consts.getString('socket_id') + ":" + channel;
     String secret = '34345';
     List<int> messageBytes = utf8.encode(strToCrypt);
@@ -140,31 +139,35 @@ class AppWebSocket {
         "Src\\Broadcasting\\Broadcast\\Client\\DriverOnAcceptOrderEvent") {
       Map<String, dynamic> md = jsonDecode(mp["data"]);
       eventBroadcast.add({event: 'DriverOnAcceptOrderEvent', 'data': md});
-     //??? check and remove na xuy
-        Consts.setString("channel_hash", md["hash"]);
-       //check and remove na xuy
+      //??? check and remove na xuy
+      Consts.setString("channel_hash", md["hash"]);
+      //check and remove na xuy
       //subscribeToFreeChannel();
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\DriverOnWayOrderEvent") {
-      eventBroadcast.add({event: 'DriverOnWayOrderEvent', 'data': jsonDecode(mp["data"])});
-
+      eventBroadcast.add(
+          {event: 'DriverOnWayOrderEvent', 'data': jsonDecode(mp["data"])});
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\DriverInPlace") {
-      eventBroadcast.add({event: 'DriverInPlace', 'data': jsonDecode(mp["data"])});
-
+      eventBroadcast
+          .add({event: 'DriverInPlace', 'data': jsonDecode(mp["data"])});
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\OrderStarted") {
-      eventBroadcast.add({event: 'OrderStarted', 'data': jsonDecode(mp["data"])});
+      eventBroadcast
+          .add({event: 'OrderStarted', 'data': jsonDecode(mp["data"])});
       //why here is mp??????
-        //model.events["driver_order_started"] = mp;
-
+      //model.events["driver_order_started"] = mp;
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndCreditCardDecline") {
-      eventBroadcast.add({event: 'ClientOrderEndCreditCardDecline', 'data': jsonDecode(mp["data"])});
+      eventBroadcast.add({
+        event: 'ClientOrderEndCreditCardDecline',
+        'data': jsonDecode(mp["data"])
+      });
       // setState(() {
       //   model.showWallet = true;
       // });
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndData") {
-      eventBroadcast.add({event: 'ClientOrderEndData', 'data': jsonDecode(mp["data"])});
+      eventBroadcast
+          .add({event: 'ClientOrderEndData', 'data': jsonDecode(mp["data"])});
       // model.timeline["arrival_time"] = "00:00";
       // model.timeline["travel_time"] = "00:00";
       // model.timeline["past_length"] = 0;
@@ -185,14 +188,16 @@ class AppWebSocket {
       // });
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\NonDriverEvent") {
-      eventBroadcast.add({event: 'NonDriverEvent', 'data': jsonDecode(mp["data"])});
+      eventBroadcast
+          .add({event: 'NonDriverEvent', 'data': jsonDecode(mp["data"])});
       // resetAddresses();
       // Map<String, dynamic> msg = jsonDecode(mp["data"]);
       // Dlg.show(context, msg["message"].toString());
       // _restoreState();
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ListenTaxiPositionEvent") {
-      eventBroadcast.add({event: 'ListenTaxiPositionEvent', 'data': jsonDecode(mp["data"])});
+      eventBroadcast.add(
+          {event: 'ListenTaxiPositionEvent', 'data': jsonDecode(mp["data"])});
       // Map<String, dynamic> data = jsonDecode(mp["data"]);
       // Point p = Point(
       //     latitude: data["driver"]["current_coordinate"]["lat"],
@@ -215,12 +220,14 @@ class AppWebSocket {
       //});
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\BroadwayDriverTalk") {
-      eventBroadcast.add({event: 'BroadwayDriverTalk', 'data': jsonDecode(mp["data"])});
+      eventBroadcast
+          .add({event: 'BroadwayDriverTalk', 'data': jsonDecode(mp["data"])});
       playSoundChat();
       //model.getChatCount().then((value) => setState(() {}));
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ListenRadiusTaxiEvent") {
-      eventBroadcast.add({event: 'ListenRadiusTaxiEvent', 'data': jsonDecode(mp["data"])});
+      eventBroadcast.add(
+          {event: 'ListenRadiusTaxiEvent', 'data': jsonDecode(mp["data"])});
       // _clearTaxiOnMap();
       // Map<String, dynamic> tl = jsonDecode(mp["data"]);
       // ListenRadiusTaxiEvent te = ListenRadiusTaxiEvent.fromJson(tl);
@@ -269,7 +276,8 @@ class AppWebSocket {
       //_restoreState();
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\AdminOrderCancel") {
-      eventBroadcast.add({event: 'AdminOrderCancel', 'data': jsonDecode(mp["data"])});
+      eventBroadcast
+          .add({event: 'AdminOrderCancel', 'data': jsonDecode(mp["data"])});
       // resetAddresses();
       // Map<String, dynamic> msg = jsonDecode(mp["data"]);
       // Dlg.show(context, msg["message"].toString());
