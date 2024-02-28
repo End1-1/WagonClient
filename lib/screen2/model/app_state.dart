@@ -10,6 +10,8 @@ class AppState {
   final addressTo = TextEditingController();
   final feedbackText = TextEditingController();
 
+  var showFullAddressWidget = false;
+
   bool isRent = false;
   int acType = 0;
   String rentTime = '';

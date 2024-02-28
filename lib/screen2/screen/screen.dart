@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screen2/parts/screen_ac.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
+import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -15,6 +16,12 @@ class Screen2 extends StatefulWidget {
 }
 
 class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
+
+  void parentState() {
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +48,11 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
               children: [
                 Expanded(child: Container()),
                 ScreenAC(widget.model),
-                ScreenAddress(widget.model),
-                ScreenBottom(widget.model)
+                ScreenAddress(widget.model, parentState),
+                ScreenBottom(widget.model),
               ],
-            )
+            ),
+            ScreenAddressSuggest(widget.model, parentState),
           ],
         )
       ),

@@ -7,6 +7,7 @@ import 'package:wagon_client/screen2/model/model.dart';
 class ScreenAC extends StatefulWidget {
   final Screen2Model model;
 
+
   ScreenAC(this.model);
 
   @override

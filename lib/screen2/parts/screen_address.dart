@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 
 class ScreenAddress extends StatefulWidget {
   final Screen2Model model;
+  final Function parentState;
 
-  ScreenAddress(this.model);
+  ScreenAddress(this.model, this.parentState);
 
   @override
-  State<StatefulWidget> createState()  => _ScreenAddress();
-
+  State<StatefulWidget> createState() => _ScreenAddress();
 }
 
 class _ScreenAddress extends State<ScreenAddress> {
@@ -19,47 +21,67 @@ class _ScreenAddress extends State<ScreenAddress> {
         decoration: BoxDecoration(
           color: Colors.white,
         ),
-      child: Column(
-        children: [
-          //FROM
-          Row(
-            children: [
-              Container(
-                child: Image.asset('images/frompoint.png', height: 20,),
-              ),
-              Expanded(child: TextFormField(
-                controller: widget.model.appState.addressFrom,
-                readOnly: true,
-              )),
-              InkWell(
-                onTap: (){},
-                child: Container(
-                  child: Image.asset('images/mappin.png', height: 20,),
+        child: Column(
+          children: [
+            //FROM
+            Row(
+              children: [
+                Container(
+                  child: Image.asset(
+                    'images/frompoint.png',
+                    height: 20,
+                  ),
                 ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                child: Image.asset('images/frompoint.png', height: 20,),
-              ),
-              Expanded(child: TextFormField(
-                controller: widget.model.appState.addressTo,
-                readOnly: true,
-              )),
-              InkWell(
-                onTap: (){},
-                child: Container(
-                  child: Image.asset('images/mappin.png', height: 20,),
+                Expanded(
+                    child: TextFormField(
+                  controller: widget.model.appState.addressFrom,
+                  onTap: () {
+                    widget.model.appState.showFullAddressWidget = true;
+                    widget.parentState();
+                  },
+                  readOnly: true,
+                )),
+                InkWell(
+                  onTap: () {
+                    exit(0);
+                  },
+                  child: Container(
+                    child: Image.asset(
+                      'images/mappin.png',
+                      height: 20,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  child: Image.asset(
+                    'images/frompoint.png',
+                    height: 20,
+                  ),
                 ),
-              )
-            ],
-          ),
-          //TO
-        ],
-      )
-    );
+                Expanded(
+                    child: TextFormField(
+                  controller: widget.model.appState.addressTo,
+                  readOnly: true,
+                )),
+                InkWell(
+                  onTap: () {
+                    exit(0);
+                  },
+                  child: Container(
+                    child: Image.asset(
+                      'images/mappin.png',
+                      height: 20,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            //TO
+          ],
+        ));
   }
-
 }
