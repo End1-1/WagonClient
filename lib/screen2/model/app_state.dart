@@ -11,6 +11,7 @@ class AppState {
   final feedbackText = TextEditingController();
 
   var showFullAddressWidget = false;
+  var focusFrom = true;
 
   bool isRent = false;
   int acType = 0;

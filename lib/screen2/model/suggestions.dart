@@ -10,6 +10,9 @@ class Suggestions {
   Suggestions(this.model);
 
   void suggest(String template) {
+    if (template.length < 3) {
+      return;
+    }
     model.suggestStream.add(true);
     var suggestResultWithSession = YandexSuggest.getSuggestions(
         text: template.trim(),
@@ -25,7 +28,16 @@ class Suggestions {
             suggestWords: true,
             userPosition: RouteHandler.routeHandler.lastPoint));
     suggestResultWithSession.result.then((value) {
-      model.suggestStream.add(value.items);
+      final items = [];
+      for (final i in value.items ?? []) {
+        if (i.tags.contains('province')) {
+          continue;
+        }
+        if (i.type == SuggestItemType.toponym) {
+          items.add(i);
+        }
+      }
+      model.suggestStream.add(items);
     });
   }
 }

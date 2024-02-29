@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screen2/parts/screen_ac.dart';
+import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
@@ -45,9 +46,13 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
                     alignment: Alignment.center,
                     child: AnimPlaceMark(false))),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: Container()),
-                ScreenAC(widget.model),
+                if (widget.model.appState.acType == 0)
+                  ScreenAC(widget.model, parentState),
+                if (widget.model.appState.acType > 0)
+                  ScreenAcSelected(widget.model, parentState),
                 ScreenAddress(widget.model, parentState),
                 ScreenBottom(widget.model),
               ],

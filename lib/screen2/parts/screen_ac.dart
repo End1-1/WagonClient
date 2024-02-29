@@ -6,9 +6,9 @@ import 'package:wagon_client/screen2/model/model.dart';
 
 class ScreenAC extends StatefulWidget {
   final Screen2Model model;
+  final Function parentState;
 
-
-  ScreenAC(this.model);
+  ScreenAC(this.model, this.parentState);
 
   @override
   State<StatefulWidget> createState() => _ScreenAC();
@@ -46,6 +46,7 @@ class _ScreenAC extends State<ScreenAC> {
     return InkWell(
         onTap: () {
           widget.model.setAcType(act);
+          widget.parentState();
         },
         child: Container(
           padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),

@@ -23,7 +23,9 @@ class _ScreenAddress extends State<ScreenAddress> {
         ),
         child: Column(
           children: [
-            //FROM
+
+
+            //ADDRESS FROM
             Row(
               children: [
                 Container(
@@ -37,13 +39,14 @@ class _ScreenAddress extends State<ScreenAddress> {
                   controller: widget.model.appState.addressFrom,
                   onTap: () {
                     widget.model.appState.showFullAddressWidget = true;
+                    widget.model.appState.focusFrom = true;
                     widget.parentState();
                   },
                   readOnly: true,
                 )),
                 InkWell(
                   onTap: () {
-                    exit(0);
+
                   },
                   child: Container(
                     child: Image.asset(
@@ -54,6 +57,9 @@ class _ScreenAddress extends State<ScreenAddress> {
                 )
               ],
             ),
+
+
+            //ADDRESS TO
             Row(
               children: [
                 Container(
@@ -64,12 +70,17 @@ class _ScreenAddress extends State<ScreenAddress> {
                 ),
                 Expanded(
                     child: TextFormField(
+                      onTap: (){
+                        widget.model.appState.showFullAddressWidget = true;
+                        widget.model.appState.focusFrom = false;
+                        widget.parentState();
+                      },
                   controller: widget.model.appState.addressTo,
                   readOnly: true,
                 )),
                 InkWell(
                   onTap: () {
-                    exit(0);
+
                   },
                   child: Container(
                     child: Image.asset(
