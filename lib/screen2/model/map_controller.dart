@@ -96,6 +96,8 @@ class MapController {
     model.appState.addressFrom.text = tr(trGettingAddress);
     YandexGeocodeHandler().geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
       print(d);
+      Consts.setDouble('last_lat', cameraPosition.target.latitude);
+      Consts.setDouble('last_lon', cameraPosition.target.longitude);
       model.appState.addressFrom.text = d.title;
     });
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/model/model.dart';
@@ -10,7 +11,6 @@ class ScreenBottom extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _ScreenBottom();
-  
 }
 
 class _ScreenBottom extends State<ScreenBottom> {
@@ -25,56 +25,67 @@ class _ScreenBottom extends State<ScreenBottom> {
         children: [
           //Wallet button
           Container(
-            child: InkWell(
-              onTap:(){},
-              child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                decoration: BoxDecoration(
-                  border: Border.fromBorderSide(BorderSide(color: Color(0xFFF2A649))),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-                ),
-                child: Image.asset('images/wallet.png', height: 30,)
-              )
-            )
-          ),
-
-          //Order button
-          Expanded(child: Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              height: 55,
               child: InkWell(
-                  onTap:(){},
-                  child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          border: Border.fromBorderSide(BorderSide(color: Color(0xFFF2A649))),
-                          borderRadius: BorderRadius.all(Radius.circular(5))
-                      ),
-                      child: widget.model.appState.acType == 0 ?
-                          Text(tr(trForOrderChooseService),textAlign: TextAlign.center, style: const TextStyle(color: Consts.colorRed, fontWeight: FontWeight.bold),)
-                          : Text(tr(trORDER), )
-                  )
-              ))
-          ),
-
-          //Options button
-          Container(
-              child: InkWell(
-                  onTap:(){},
+                  onTap: () {},
                   child: Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: BoxDecoration(
-                          border: Border.fromBorderSide(BorderSide(color: Color(0xFFF2A649))),
-                          borderRadius: BorderRadius.all(Radius.circular(5))
-                      ),
-                      child: Image.asset('images/wallet.png', height: 30,)
-                  )
-              )
-          )
+                          border: Border.fromBorderSide(
+                              BorderSide(color: Color(0xFFF2A649))),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Image.asset(
+                        'images/wallet.png',
+                        height: 30,
+                      )))),
+
+          //Order button
+          Expanded(
+              child: Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        height: 55,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: widget.model.appState.acType == 0 ? Colors.white : Color(0xfff2a649),
+                              border: Border.fromBorderSide(
+                                  BorderSide(color: Color(0xFFF2A649))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          child: widget.model.appState.acType == 0
+                              ? Text(
+                                  tr(trForOrderChooseService),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Consts.colorRed,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              : Center(child: Text(
+                                  tr(trORDER),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            textAlign: TextAlign.center,
+                                )))))),
+
+          //Options button
+          Container(
+              height: 55,
+              child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      decoration: BoxDecoration(
+                          border: Border.fromBorderSide(
+                              BorderSide(color: Color(0xFFF2A649))),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: SvgPicture.asset('images/arrowoption.svg',
+                        height: 30,
+                      ))))
         ],
       ),
     );
   }
-
 }

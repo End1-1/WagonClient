@@ -19,11 +19,17 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.model.appState.focusFrom) {
-      focusFrom.requestFocus();
+    if (widget.model.appState.showFullAddressWidget) {
+      if (widget.model.appState.focusFrom) {
+        focusFrom.requestFocus();
+      } else {
+        focusTo.requestFocus();
+      }
     } else {
-      focusTo.requestFocus();
+      focusFrom.unfocus();
+      focusTo.unfocus();
     }
+
     return AnimatedPositioned(
         bottom: 0,
         left: 0,
@@ -189,6 +195,11 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                           widget.model.appState.addressTo.text = i.displayText;
                                         }
                                         widget.model.suggestStream.add(null);
+                                        print(i.tags);
+                                        if (i.tags.contains('house')) {
+                                          widget.model.appState.showFullAddressWidget = false;
+                                          widget.parentState();
+                                        }
                                       },
                                       child: Text(i.displayText,
                                               maxLines: 1,

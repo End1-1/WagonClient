@@ -29,9 +29,9 @@ class WebParent {
     IOClient ioClient = IOClient(client);
     print("URL: ${Consts.host()}$_url");
     try {
-      print("BODY: ${utf8.decode(getBody() ?? [])}");
+      print("BODY TRY: ${utf8.decode(getBody() ?? [])}");
     } catch (e) {
-      print("BODY: ${getBody()}");
+      print("BODY CATCH: ${getBody()}");
       print(e);
     }
     try {

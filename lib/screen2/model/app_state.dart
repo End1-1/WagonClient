@@ -15,6 +15,7 @@ class AppState {
 
   bool isRent = false;
   int acType = 0;
+  int selectedTaxi = 0;
   String rentTime = '';
   String order_id = '';
   List<int> rentTimes = [];

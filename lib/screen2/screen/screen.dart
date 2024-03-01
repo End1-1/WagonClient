@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_geometry.dart';
+import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screen2/parts/screen_ac.dart';
 import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
+import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -53,6 +56,13 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
                   ScreenAC(widget.model, parentState),
                 if (widget.model.appState.acType > 0)
                   ScreenAcSelected(widget.model, parentState),
+                if (widget.model.appState.acType == ACType.act_taxi)
+                  StreamBuilder(stream: widget.model.taxiCarsStream.stream , builder: (builder, snapshot) {
+                    if (snapshot.data == null) {
+                      return Container(child: CircularProgressIndicator(),);
+                    }
+                    return ScreenTaxi(widget.model, snapshot.data, parentState);
+                  }),
                 ScreenAddress(widget.model, parentState),
                 ScreenBottom(widget.model),
               ],
