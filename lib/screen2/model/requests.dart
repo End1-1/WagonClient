@@ -13,9 +13,14 @@ import 'package:wagon_client/web/web_initorder.dart';
 
 class Requests {
   final Screen2Model model;
+
+
   Requests(this.model);
+
   void initCoin(Function? f, Function? fail) {
-    if (Consts.getString("bearer").isEmpty) {
+    if (Consts
+        .getString("bearer")
+        .isEmpty) {
       Dlg.show("Empty bearer");
       return;
     }
@@ -25,11 +30,14 @@ class Requests {
           RouteHandler.routeHandler.directionStruct.from,
           model.appState.currentCar,
           model.appState.paymentTypeId,
-          model.appState.paymentTypeId == 2 ? model.appState.getSelectedCompanyInfo().id : 0,
+          model.appState.paymentTypeId == 2 ? model.appState
+              .getSelectedCompanyInfo()
+              .id : 0,
           Consts.getString("driverComment"),
           model.appState.selectedCarOptions,
           model.appState.isRent,
-          int.tryParse(model.appState.rentTime) == null ? 0 : int.parse(model.appState.rentTime));
+          int.tryParse(model.appState.rentTime) == null ? 0 : int.parse(
+              model.appState.rentTime));
       initCoin.request((CarClasses cc) {
         if (f != null) {
           f();
@@ -115,7 +123,8 @@ class Requests {
       model.appState.cashbackInfo =
           CashbackInfo(client_id: 0, balance: '0', client_wallet_id: 0);
     } else {
-      model.appState.cashbackInfo = CashbackInfo.fromJson(mp['data']['wallet'] ?? {});
+      model.appState.cashbackInfo =
+          CashbackInfo.fromJson(mp['data']['wallet'] ?? {});
     }
   }
 
@@ -127,7 +136,9 @@ class Requests {
         RouteHandler.routeHandler.directionStruct.from!,
         model.appState.currentCar,
         model.appState.paymentTypeId,
-        model.appState.paymentTypeId == 2 ? model.appState.getSelectedCompanyInfo().id : 0,
+        model.appState.paymentTypeId == 2 ? model.appState
+            .getSelectedCompanyInfo()
+            .id : 0,
         Consts.getString("driverComment"),
         model.appState.selectedCarOptions,
         model.appState.orderDateTime.add(Duration(
@@ -160,6 +171,28 @@ class Requests {
       //   model.loadingData = false;
       // });
       Dlg.show(s);
+    });
+  }
+
+
+  void initOrder() {
+    WebInitOrder w = WebInitOrder(
+        model.appState.structAddressFrom!,
+        model.appState.currentCar,
+        model.appState.paymentTypeId,
+        model.appState.paymentCompanyId,
+        model.appState.driverText.text,
+        model.appState.selectedCarOptions,
+        model.appState.orderDateTime,
+        model.appState.commentFrom.text,
+        cardId: model.appState.paymentCardId,
+        using_cashback: model.appState.using_cashback,
+        using_cashback_balance: model.appState.using_cashback_balance);
+    w.request((d){
+      print(d);
+    }, (c,m){
+      print(c);
+      print(m);
     });
   }
 }

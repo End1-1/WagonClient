@@ -90,8 +90,8 @@ class WebInitOrder extends WebParent {
     jtime["create_time"] = df.format(DateTime.now());
     jtime["time"] = df.format(orderDateTime);
 
-    //jtime["zone"] = "Asia/Yerevan"; //time.timeZoneName;
-    jtime["zone"] = "Europe/Moscow"; //time.timeZoneName;
+    jtime["zone"] = "Asia/Yerevan"; //time.timeZoneName;
+    //jtime["zone"] = "Europe/Moscow"; //time.timeZoneName;
 
     Map<String, dynamic> jphone = Map();
     jphone["client"] = Consts.getString("phone");

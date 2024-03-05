@@ -99,6 +99,7 @@ class MapController {
       Consts.setDouble('last_lat', cameraPosition.target.latitude);
       Consts.setDouble('last_lon', cameraPosition.target.longitude);
       model.appState.addressFrom.text = d.title;
+      model.appState.structAddressFrom = d;
     });
   }
 

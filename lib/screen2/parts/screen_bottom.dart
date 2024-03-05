@@ -6,8 +6,9 @@ import 'package:wagon_client/screen2/model/model.dart';
 
 class ScreenBottom extends StatefulWidget {
   final Screen2Model model;
+  final Function parentState;
 
-  ScreenBottom(this.model);
+  ScreenBottom(this.model, this.parentState);
 
   @override
   State<StatefulWidget> createState() => _ScreenBottom();
@@ -45,7 +46,9 @@ class _ScreenBottom extends State<ScreenBottom> {
               child: Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        widget.model.requests.initOrder();
+                      },
                       child: Container(
                         height: 55,
                           padding: EdgeInsets.all(5),
@@ -73,7 +76,10 @@ class _ScreenBottom extends State<ScreenBottom> {
           Container(
               height: 55,
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                   widget.model.appState.showRideOptions = !widget.model.appState.showRideOptions;
+                   widget.parentState();
+                  },
                   child: Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),

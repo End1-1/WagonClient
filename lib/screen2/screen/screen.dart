@@ -9,8 +9,11 @@ import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
+import 'package:wagon_client/screen2/parts/screen_payment.dart';
+import 'package:wagon_client/screen2/parts/screen_ride_options.dart';
 import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
+import 'package:wagon_client/screens/payment/screen.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Screen2 extends StatefulWidget {
@@ -64,10 +67,12 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
                     return ScreenTaxi(widget.model, snapshot.data, parentState);
                   }),
                 ScreenAddress(widget.model, parentState),
-                ScreenBottom(widget.model),
+                ScreenRideOptions(widget.model, parentState),
+                ScreenBottom(widget.model, parentState),
               ],
             ),
             ScreenAddressSuggest(widget.model, parentState),
+            PaymentWidget(widget.model, parentState, true),
           ],
         )
       ),
