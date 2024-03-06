@@ -6,6 +6,14 @@ import 'package:wagon_client/screens/payment/company_info.dart';
 import 'package:wagon_client/web/web_realstate.dart';
 
 class AppState {
+  static const int asIdle = 1;
+  static const int asSearchTaxi = 2;
+  static const int asDriverAccept = 3;
+  static const int asDriverOnWay = 4;
+  static const int asOnPlace = 5;
+  static const int asOrderStarted = 6;
+  static const int asOrderEnd = 7;
+
   final commentFrom = TextEditingController();
   final addressFrom = TextEditingController();
   final addressTo = TextEditingController();
@@ -18,6 +26,10 @@ class AppState {
   var showFullAddressWidget = false;
   var focusFrom = true;
   var showRideOptions = false;
+  var showChangePayment = false;
+  var dimVisible = false;
+
+  var appState = 0;
 
   bool isRent = false;
   int acType = 0;
@@ -44,7 +56,7 @@ class AppState {
   void getState() {
     WebRealState webRealState = WebRealState();
     webRealState.request((Map<String, dynamic> mp) {
-      //   model.currentState = mp["status"];
+         appState = mp["status"];
       //   switch (mp["status"]) {
       //     case state_none:
       //       model.currentPage = pageSelectShortAddress;

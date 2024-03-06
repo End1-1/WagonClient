@@ -28,7 +28,10 @@ class _ScreenBottom extends State<ScreenBottom> {
           Container(
               height: 55,
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    widget.model.appState.showChangePayment = true;
+                    widget.parentState();
+                  },
                   child: Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),

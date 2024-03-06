@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
+import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/app/model.dart';
 import 'package:wagon_client/model/tr.dart';
@@ -17,11 +18,11 @@ import 'company_info.dart';
 
 class PaymentWidget extends StatefulWidget {
   late final Screen2Model model;
-  Function stateCallback;
+  Function parentState;
   bool widgetMode;
   double using_cashback_balance = 0;
 
-  PaymentWidget(this.model, this.stateCallback, this.widgetMode) {
+  PaymentWidget(this.model, this.parentState, this.widgetMode) {
     using_cashback_balance = double.tryParse(model.appState.cashbackInfo.balance) ?? 0;
     using_cashback_balance =
         using_cashback_balance > 200 ? 200 : using_cashback_balance;
@@ -48,7 +49,7 @@ class _PaymentWidget extends State<PaymentWidget> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40), topRight: Radius.circular(40))),
         height: widget.widgetMode
-            ? MediaQuery.sizeOf(context).height * Consts.sizeofPaymentWidget
+            ? MediaQuery.sizeOf(context).height
             : double.infinity,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
@@ -501,7 +502,7 @@ class _PaymentWidget extends State<PaymentWidget> {
   }
 
   _onlyClose() {
-    //if (widget.model.currentPage == pageOrderStarted) {
+    if (widget.model.appState.appState > AppState.asIdle) {
       final w = WebParent(
           '/app/mobile/change-current-order-payment-type/${widget.model.appState.order_id}',
           HttpMethod.POST);
@@ -514,14 +515,15 @@ class _PaymentWidget extends State<PaymentWidget> {
       }, (c, e) {
         Dlg.show(e);
       });
-    //}
+    }
     // widget.model.showWallet = false;
     // widget.model.dimvisible = false;
     Consts.sizeofPaymentWidget = Consts.defaultSizeofPaymentWidget;
     widget.model.appState.using_cashback_balance =
         _using_cashback ? widget.using_cashback_balance : 0;
     widget.model.appState.using_cashback = _using_cashback ? 1 : 0;
-    widget.stateCallback();
+    widget.model.appState.showChangePayment = false;
+    widget.parentState();
   }
 
   _closeWidget() {

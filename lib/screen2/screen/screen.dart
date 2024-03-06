@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_geometry.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screen2/parts/screen_ac.dart';
@@ -9,7 +6,6 @@ import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
-import 'package:wagon_client/screen2/parts/screen_payment.dart';
 import 'package:wagon_client/screen2/parts/screen_ride_options.dart';
 import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
@@ -18,64 +14,98 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Screen2 extends StatefulWidget {
   final model = Screen2Model();
+
   @override
   State<StatefulWidget> createState() => _Screen2State();
 }
 
-class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
+class _Screen2State extends State<Screen2>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  late AnimationController _backgrounController;
+  late Animation<Color?> background;
+  Animation<double?>? langPos;
 
   void parentState() {
-    setState(() {
+    setState(() {});
+  }
 
-    });
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    _backgrounController = AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this);
+    background = TweenSequence<Color?>(
+      [
+        TweenSequenceItem(
+          weight: 1.0,
+          tween: ColorTween(
+            //begin: Colors.transparent,
+            begin: Colors.black12,
+            //begin: Colors.yellow,
+            end: Colors.black54,
+          ),
+        ),
+      ],
+    ).animate(_backgrounController);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      // ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            YandexMap(
-              rotateGesturesEnabled: false,
-              onMapCreated: widget.model.mapController.mapReady,
-              onCameraPositionChanged: widget.model.mapController.cameraPosition,
-              mapObjects: widget.model.mapController.mapObjects,
-            ),
-            Visibility(
-                visible: widget.model.appState.addressFrom.text.isEmpty ||
-                    widget.model.appState.addressTo.text.isEmpty,
-                child: Align(
-                    alignment: Alignment.center,
-                    child: AnimPlaceMark(false))),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: Container()),
-                if (widget.model.appState.acType == 0)
-                  ScreenAC(widget.model, parentState),
-                if (widget.model.appState.acType > 0)
-                  ScreenAcSelected(widget.model, parentState),
-                if (widget.model.appState.acType == ACType.act_taxi)
-                  StreamBuilder(stream: widget.model.taxiCarsStream.stream , builder: (builder, snapshot) {
-                    if (snapshot.data == null) {
-                      return Container(child: CircularProgressIndicator(),);
-                    }
-                    return ScreenTaxi(widget.model, snapshot.data, parentState);
-                  }),
-                ScreenAddress(widget.model, parentState),
-                ScreenRideOptions(widget.model, parentState),
-                ScreenBottom(widget.model, parentState),
-              ],
-            ),
-            ScreenAddressSuggest(widget.model, parentState),
-            PaymentWidget(widget.model, parentState, true),
-          ],
-        )
-      ),
+          child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          YandexMap(
+            rotateGesturesEnabled: false,
+            onMapCreated: widget.model.mapController.mapReady,
+            onCameraPositionChanged: widget.model.mapController.cameraPosition,
+            mapObjects: widget.model.mapController.mapObjects,
+          ),
+          Visibility(
+              visible: widget.model.appState.addressFrom.text.isEmpty ||
+                  widget.model.appState.addressTo.text.isEmpty,
+              child: Align(
+                  alignment: Alignment.center, child: AnimPlaceMark(false))),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              if (widget.model.appState.acType == 0)
+                ScreenAC(widget.model, parentState),
+              if (widget.model.appState.acType > 0)
+                ScreenAcSelected(widget.model, parentState),
+              if (widget.model.appState.acType == ACType.act_taxi)
+                StreamBuilder(
+                    stream: widget.model.taxiCarsStream.stream,
+                    builder: (builder, snapshot) {
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      return ScreenTaxi(
+                          widget.model, snapshot.data, parentState);
+                    }),
+              ScreenAddress(widget.model, parentState),
+              ScreenRideOptions(widget.model, parentState),
+              ScreenBottom(widget.model, parentState),
+            ],
+          ),
+          _dimWidget(context),
+          ScreenAddressSuggest(widget.model, parentState),
+          AnimatedPositioned(
+              child: PaymentWidget(widget.model, parentState, true),
+              top: widget.model.appState.showChangePayment
+                  ? 0
+                  : MediaQuery.sizeOf(context).height,
+              duration: const Duration(milliseconds: 300)),
+        ],
+      )),
     );
   }
 
@@ -90,14 +120,28 @@ class _Screen2State extends State<Screen2> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        widget.model.socket.authSocket();
-        widget.model.appState.getState();
+        widget.model.appResumed();
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
       case AppLifecycleState.paused:
-        widget.model.socket.closeSocket();
+        widget.model.appPaused();
         break;
     }
+  }
+
+  Widget _dimWidget(BuildContext context) {
+    return Visibility(
+        visible: widget.model.appState.dimVisible,
+        child: AnimatedBuilder(
+          animation: _backgrounController,
+          builder: (BuildContext context, Widget? child) {
+            return  Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  color: background.value,
+                );
+          },
+        ));
   }
 }

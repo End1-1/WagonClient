@@ -45,7 +45,7 @@ class _ScreenAC extends State<ScreenAC> {
   Widget acType(BuildContext context, String image, String text, int act) {
     return InkWell(
         onTap: () {
-          widget.model.setAcType(act);
+          widget.model.setAcType(act, widget.parentState);
           widget.parentState();
         },
         child: Container(

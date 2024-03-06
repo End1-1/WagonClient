@@ -30,12 +30,15 @@ class Screen2Model {
     suggest = Suggestions(this);
   }
 
-  void setAcType(int t) {
+  void setAcType(int t, Function state) {
     appState.acType = t;
     switch (t) {
       case ACType.act_taxi:
+        appState.dimVisible = true;
         WebInitOpen wr = WebInitOpen(latitude:  Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'));
-        wr.request(parseWebInitOpen, parseError);
+        wr.request(parseWebInitOpen, parseError).then((value) {
+          state();
+        });
         // WebParent w = new WebParent('/app/mobile/init_open', HttpMethod.POST);
         // w.body = <dynamic, dynamic>{
         //   'lat': Consts.getDouble('last_lat'),
@@ -51,10 +54,21 @@ class Screen2Model {
     if (cars.isNotEmpty) {
       appState.selectedTaxi = cars[0]['class_id'];
     }
+    appState.dimVisible = false;
     taxiCarsStream.add(cars);
   }
 
   void parseError(int code, String err) {
     print('$code ---- $err');
+  }
+
+  void appResumed() {
+    socket.authSocket();
+    appState.getState();
+
+  }
+
+  void appPaused() {
+    socket.closeSocket();
   }
 }
