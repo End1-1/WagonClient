@@ -16,7 +16,7 @@ import 'map_controller.dart';
 class Screen2Model {
 
   final socket = AppWebSocket();
-  final appState = AppState();
+  late final AppState appState;
   final acTypes = ACType();
   late final Suggestions suggest;
   late final Requests requests;
@@ -28,6 +28,7 @@ class Screen2Model {
     mapController = MapController(this);
     requests = Requests(this);
     suggest = Suggestions(this);
+    appState = AppState(this);
   }
 
   void setAcType(int t, Function state) {
@@ -52,7 +53,7 @@ class Screen2Model {
   void parseWebInitOpen(dynamic d) {
     List<dynamic> cars = d['data']['car_classes'];
     if (cars.isNotEmpty) {
-      appState.selectedTaxi = cars[0]['class_id'];
+      appState.currentCar = cars[0]['class_id'];
     }
     appState.dimVisible = false;
     taxiCarsStream.add(cars);
@@ -62,9 +63,9 @@ class Screen2Model {
     print('$code ---- $err');
   }
 
-  void appResumed() {
+  void appResumed(Function parentState) {
     socket.authSocket();
-    appState.getState();
+    appState.getState(parentState);
 
   }
 

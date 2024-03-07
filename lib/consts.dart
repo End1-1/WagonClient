@@ -52,12 +52,6 @@ class Consts {
 
   static List<String> hosts = [
     "wagon.am",
-    "newyellowtaxi.com",
-    "ayction.ru",
-    "test.nyt.ru",
-    "192.168.0.110",
-    "192.168.0.112",
-    "192.168.0.106",
   ];
 
 

@@ -40,7 +40,7 @@ class _ScreenTaxi extends State<ScreenTaxi> {
   Widget taxi(BuildContext context, dynamic c) {
     return InkWell(
         onTap: () {
-          widget.model.appState.selectedTaxi = c['class_id'];
+          widget.model.appState.currentCar = c['class_id'];
           widget.model.appState.currentCar = c['class_id'];
           widget.parentState();
         },
@@ -48,12 +48,12 @@ class _ScreenTaxi extends State<ScreenTaxi> {
           padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
           margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: BoxDecoration(
-              color: widget.model.appState.selectedTaxi == c['class_id']
+              color: widget.model.appState.currentCar == c['class_id']
                   ? Colors.black12
                   : Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(5)),
               border: Border.fromBorderSide(BorderSide(
-                  color: widget.model.appState.selectedTaxi == c['class_id']
+                  color: widget.model.appState.currentCar == c['class_id']
                       ? Consts.colorRed
                       : Consts.colorOrange))),
           child: Column(

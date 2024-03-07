@@ -1,11 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wagon_client/model/address_model.dart';
+import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screens/payment/card_info.dart';
 import 'package:wagon_client/screens/payment/cashback_info.dart';
 import 'package:wagon_client/screens/payment/company_info.dart';
 import 'package:wagon_client/web/web_realstate.dart';
 
+import 'model.dart';
+
 class AppState {
+  final Screen2Model model;
+
+  AppState(this.model);
+
+  static const int asNone = 0;
   static const int asIdle = 1;
   static const int asSearchTaxi = 2;
   static const int asDriverAccept = 3;
@@ -27,13 +35,15 @@ class AppState {
   var focusFrom = true;
   var showRideOptions = false;
   var showChangePayment = false;
-  var dimVisible = false;
+  var dimVisible = true;
+  var dimText = '';
+  var driverName = '';
+  var driverPhoto = '';
 
-  var appState = 0;
+  var appState = asNone;
 
   bool isRent = false;
   int acType = 0;
-  int selectedTaxi = 0;
   String rentTime = '';
   String order_id = '';
   List<int> rentTimes = [];
@@ -53,10 +63,26 @@ class AppState {
   int currentCar = 0;
   List<int> selectedCarOptions = [];
 
-  void getState() {
+  void getState(Function parentState) {
+    dimText = '';
     WebRealState webRealState = WebRealState();
     webRealState.request((Map<String, dynamic> mp) {
-         appState = mp["status"];
+         appState = mp['status'];
+         switch (appState) {
+           case asSearchTaxi:
+             dimText = tr(trSEARCHCAR);
+             dimVisible = true;
+             break;
+           case asDriverAccept:
+           case asDriverOnWay:
+           case asOnPlace:
+           case asOrderStarted:
+             dimText = mp['message'];
+             driverName = mp['payload']['driver']['name'];
+             driverPhoto = mp['payload']['driver']['photo'];
+             break;
+         }
+         parentState();
       //   switch (mp["status"]) {
       //     case state_none:
       //       model.currentPage = pageSelectShortAddress;
