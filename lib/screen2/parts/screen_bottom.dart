@@ -50,7 +50,7 @@ class _ScreenBottom extends State<ScreenBottom> {
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: InkWell(
                       onTap: () {
-                        widget.model.requests.initOrder();
+                        widget.model.requests.initOrder(widget.parentState);
                       },
                       child: Container(
                         height: 55,

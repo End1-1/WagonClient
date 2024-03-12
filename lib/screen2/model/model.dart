@@ -36,6 +36,7 @@ class Screen2Model {
     switch (t) {
       case ACType.act_taxi:
         appState.dimVisible = true;
+        state();
         WebInitOpen wr = WebInitOpen(latitude:  Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'));
         wr.request(parseWebInitOpen, parseError).then((value) {
           state();
@@ -65,7 +66,11 @@ class Screen2Model {
 
   void appResumed(Function parentState) {
     socket.authSocket();
-    appState.getState(parentState);
+    appState.getState(parentState).then((value) {
+      if (appState.acType == ACType.act_taxi) {
+        setAcType(appState.acType, parentState);
+      }
+    });
 
   }
 

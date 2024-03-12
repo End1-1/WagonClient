@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 
 class ScreenAddress extends StatefulWidget {
@@ -46,7 +47,8 @@ class _ScreenAddress extends State<ScreenAddress> {
                 )),
                 InkWell(
                   onTap: () {
-
+                    widget.model.appState.appState = AppState.asSearchOnMapFrom;
+                    widget.parentState();
                   },
                   child: Container(
                     child: Image.asset(
@@ -80,7 +82,8 @@ class _ScreenAddress extends State<ScreenAddress> {
                 )),
                 InkWell(
                   onTap: () {
-
+                    widget.model.appState.appState = AppState.asSearchOnMapTo;
+                    widget.parentState();
                   },
                   child: Container(
                     child: Image.asset(

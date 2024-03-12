@@ -146,19 +146,19 @@ class AppWebSocket {
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\DriverOnWayOrderEvent") {
       eventBroadcast.add(
-          {event: 'DriverOnWayOrderEvent', 'data': jsonDecode(mp["data"])});
+          {'event': 'DriverOnWayOrderEvent', 'data': jsonDecode(mp["data"])});
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\DriverInPlace") {
       eventBroadcast
-          .add({event: 'DriverInPlace', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'DriverInPlace', 'data': jsonDecode(mp["data"])});
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\OrderStarted") {
       eventBroadcast
-          .add({event: 'OrderStarted', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'OrderStarted', 'data': jsonDecode(mp["data"])});
       //why here is mp??????
       //model.events["driver_order_started"] = mp;
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndCreditCardDecline") {
       eventBroadcast.add({
-        event: 'ClientOrderEndCreditCardDecline',
+        'event': 'ClientOrderEndCreditCardDecline',
         'data': jsonDecode(mp["data"])
       });
       // setState(() {
@@ -167,7 +167,7 @@ class AppWebSocket {
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ClientOrderEndData") {
       eventBroadcast
-          .add({event: 'ClientOrderEndData', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'ClientOrderEndData', 'data': jsonDecode(mp["data"])});
       // model.timeline["arrival_time"] = "00:00";
       // model.timeline["travel_time"] = "00:00";
       // model.timeline["past_length"] = 0;
@@ -189,7 +189,7 @@ class AppWebSocket {
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\NonDriverEvent") {
       eventBroadcast
-          .add({event: 'NonDriverEvent', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'NonDriverEvent', 'data': jsonDecode(mp["data"])});
       // resetAddresses();
       // Map<String, dynamic> msg = jsonDecode(mp["data"]);
       // Dlg.show(context, msg["message"].toString());
@@ -197,7 +197,7 @@ class AppWebSocket {
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ListenTaxiPositionEvent") {
       eventBroadcast.add(
-          {event: 'ListenTaxiPositionEvent', 'data': jsonDecode(mp["data"])});
+          {'event': 'ListenTaxiPositionEvent', 'data': jsonDecode(mp["data"])});
       // Map<String, dynamic> data = jsonDecode(mp["data"]);
       // Point p = Point(
       //     latitude: data["driver"]["current_coordinate"]["lat"],
@@ -221,13 +221,13 @@ class AppWebSocket {
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\BroadwayDriverTalk") {
       eventBroadcast
-          .add({event: 'BroadwayDriverTalk', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'BroadwayDriverTalk', 'data': jsonDecode(mp["data"])});
       playSoundChat();
       //model.getChatCount().then((value) => setState(() {}));
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\ListenRadiusTaxiEvent") {
       eventBroadcast.add(
-          {event: 'ListenRadiusTaxiEvent', 'data': jsonDecode(mp["data"])});
+          {'event': 'ListenRadiusTaxiEvent', 'data': jsonDecode(mp["data"])});
       // _clearTaxiOnMap();
       // Map<String, dynamic> tl = jsonDecode(mp["data"]);
       // ListenRadiusTaxiEvent te = ListenRadiusTaxiEvent.fromJson(tl);
@@ -248,7 +248,7 @@ class AppWebSocket {
       // }
       // setState(() {});
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\DriverLate") {
-      eventBroadcast.add({event: 'DriverLate', 'data': jsonDecode(mp["data"])});
+      eventBroadcast.add({'event': 'DriverLate', 'data': jsonDecode(mp["data"])});
       // setState(() {
       //   String chat = Consts.getString("chat");
       //   if (chat.isEmpty) {
@@ -272,12 +272,12 @@ class AppWebSocket {
       //   }
       // });
     } else if (event == "Src\\Broadcasting\\Broadcast\\Client\\OrderReset") {
-      eventBroadcast.add({event: 'OrderReset', 'data': jsonDecode(mp["data"])});
+      eventBroadcast.add({'event': 'OrderReset', 'data': jsonDecode(mp["data"])});
       //_restoreState();
     } else if (event ==
         "Src\\Broadcasting\\Broadcast\\Client\\AdminOrderCancel") {
       eventBroadcast
-          .add({event: 'AdminOrderCancel', 'data': jsonDecode(mp["data"])});
+          .add({'event': 'AdminOrderCancel', 'data': jsonDecode(mp["data"])});
       // resetAddresses();
       // Map<String, dynamic> msg = jsonDecode(mp["data"]);
       // Dlg.show(context, msg["message"].toString());

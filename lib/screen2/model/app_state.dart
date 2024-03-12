@@ -21,15 +21,19 @@ class AppState {
   static const int asOnPlace = 5;
   static const int asOrderStarted = 6;
   static const int asOrderEnd = 7;
+  static const int asSearchOnMapFrom = 11;
+  static const int asSearchOnMapTo = 12;
 
   final commentFrom = TextEditingController();
   final addressFrom = TextEditingController();
   final addressTo = TextEditingController();
+  final addressTemp = TextEditingController();
   final feedbackText = TextEditingController();
   final driverText = TextEditingController();
 
   AddressStruct? structAddressFrom;
   AddressStruct? structAddressTod;
+  AddressStruct? structAddressTemp;
 
   var showFullAddressWidget = false;
   var focusFrom = true;
@@ -39,6 +43,7 @@ class AppState {
   var dimText = '';
   var driverName = '';
   var driverPhoto = '';
+  var driverRating = 0;
 
   var appState = asNone;
 
@@ -62,13 +67,22 @@ class AppState {
 
   int currentCar = 0;
   List<int> selectedCarOptions = [];
+  List<dynamic> assassment = [];
+  var assassmentOption = 0;
+  var assassmentText = '';
 
-  void getState(Function parentState) {
+  Future<void> getState(Function parentState) async {
     dimText = '';
+    dimVisible = true;
+    appState = asNone;
+    parentState();
     WebRealState webRealState = WebRealState();
-    webRealState.request((Map<String, dynamic> mp) {
+    await webRealState.request((Map<String, dynamic> mp) {
          appState = mp['status'];
          switch (appState) {
+           case asIdle:
+            dimVisible = false;
+            break;
            case asSearchTaxi:
              dimText = tr(trSEARCHCAR);
              dimVisible = true;
@@ -80,6 +94,12 @@ class AppState {
              dimText = mp['message'];
              driverName = mp['payload']['driver']['name'];
              driverPhoto = mp['payload']['driver']['photo'];
+             order_id = mp['payload']['order']['order_id'].toString();
+             break;
+           case asOrderEnd:
+             dimText = mp['message'];
+             order_id = mp['payload']['order']['order_id'].toString();
+             assassment = mp['payload']['assessment'];
              break;
          }
          parentState();
@@ -144,5 +164,16 @@ class AppState {
       }
     }
     return CompanyInfo(id: 0, name: '', car_classes: [], checked: false);
+  }
+
+  void copyTempAddress() {
+    if (appState == asSearchOnMapFrom) {
+      addressFrom.text = addressTemp.text;
+      structAddressFrom = structAddressTemp;
+    }
+    if (appState == asSearchOnMapTo) {
+      addressTo.text = addressTemp.text;
+      structAddressTod = structAddressTemp;
+    }
   }
 }

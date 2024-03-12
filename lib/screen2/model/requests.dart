@@ -8,6 +8,7 @@ import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/payment/card_info.dart';
 import 'package:wagon_client/screens/payment/cashback_info.dart';
 import 'package:wagon_client/screens/payment/company_info.dart';
+import 'package:wagon_client/web/web_canceloptions.dart';
 import 'package:wagon_client/web/web_initcoin.dart';
 import 'package:wagon_client/web/web_initorder.dart';
 
@@ -132,50 +133,57 @@ class Requests {
     // setState(() {
     //   model.loadingData = true;
     // });
-    WebInitOrder webInitOrder = WebInitOrder(
-        RouteHandler.routeHandler.directionStruct.from!,
-        model.appState.currentCar,
-        model.appState.paymentTypeId,
-        model.appState.paymentTypeId == 2 ? model.appState
-            .getSelectedCompanyInfo()
-            .id : 0,
-        Consts.getString("driverComment"),
-        model.appState.selectedCarOptions,
-        model.appState.orderDateTime.add(Duration(
-            minutes: model.appState.orderDateTime.difference(DateTime.now()) <
-                Duration(minutes: 60)
-                ? 15
-                : 0)),
-        model.appState.commentFrom.text,
-        cardId: model.appState.paymentCardId,
-        using_cashback: model.appState.using_cashback,
-        using_cashback_balance: model.appState.using_cashback_balance);
+    initCoin((){
+      WebInitOrder webInitOrder = WebInitOrder(
+          RouteHandler.routeHandler.directionStruct.from!,
+          model.appState.currentCar,
+          model.appState.paymentTypeId,
+          model.appState.paymentTypeId == 2 ? model.appState
+              .getSelectedCompanyInfo()
+              .id : 0,
+          Consts.getString("driverComment"),
+          model.appState.selectedCarOptions,
+          model.appState.orderDateTime.add(Duration(
+              minutes: model.appState.orderDateTime.difference(DateTime.now()) <
+                  Duration(minutes: 60)
+                  ? 15
+                  : 0)),
+          model.appState.commentFrom.text,
+          cardId: model.appState.paymentCardId,
+          using_cashback: model.appState.using_cashback,
+          using_cashback_balance: model.appState.using_cashback_balance);
 
-    webInitOrder.request((mp) {
-      if (mp.containsKey("message")) {
-        if (mp["message"].toString() == "Order created successful") {
-          Dlg.show(tr(trYourPreorderAccept));
+      webInitOrder.request((mp) {
+        if (mp.containsKey("message")) {
+          if (mp["message"].toString() == "Order created successful") {
+            Dlg.show(tr(trYourPreorderAccept));
+            // setState(() {
+            //   model.currentPage = pageSelectShortAddress;
+            //   model.loadingData = false;
+            // });
+          }
+        } else {
           // setState(() {
-          //   model.currentPage = pageSelectShortAddress;
+          //   model.animateWindow(pageSearchTaxi, () {});
           //   model.loadingData = false;
           // });
         }
-      } else {
+      }, (c, s) {
         // setState(() {
-        //   model.animateWindow(pageSearchTaxi, () {});
         //   model.loadingData = false;
         // });
-      }
-    }, (c, s) {
-      // setState(() {
-      //   model.loadingData = false;
-      // });
-      Dlg.show(s);
-    });
+        Dlg.show(s);
+      });
+    }, (c,s){});
+
   }
 
 
-  void initOrder() {
+  void initOrder(Function parentState) {
+    model.appState.dimText = '';
+    model.appState.dimVisible = true;
+    parentState();
+    initCoin((){
     WebInitOrder w = WebInitOrder(
         model.appState.structAddressFrom!,
         model.appState.currentCar,
@@ -189,10 +197,36 @@ class Requests {
         using_cashback: model.appState.using_cashback,
         using_cashback_balance: model.appState.using_cashback_balance);
     w.request((d){
-      print(d);
+      model.appState.getState(parentState);
     }, (c,m){
       print(c);
       print(m);
+    });}, (c,s){});
+  }
+
+  void endOrder(Function parentState) {
+    model.appState.dimVisible = true;
+    parentState();
+
+    WebSendCancelReason webSendAssessment = WebSendCancelReason(
+        0,
+        int.tryParse(model.appState.order_id),
+        model.appState.assassmentOption == 0 ? null : model.appState.assassmentOption,
+        model.appState.assassmentText,
+        model.appState.assassmentText,
+        //_assessment!.assessment, <--- i dont remember what is this fucking shit
+        model.appState.feedbackText.text,
+        false, // DRIVER IS FAVORITE IN FUTURE
+        model.appState.driverRating);
+    webSendAssessment.request((mp) {
+      model.appState.assassmentText = '';
+      model.appState.feedbackText.clear();
+      model.appState.assassmentOption = 0;
+      model.appState.getState(parentState);
+        //widget.model.enableTrackingPlace();
+        //model.centerMeOnMap();
+    }, (c, s) {
+      //Dlg.show(n, s);
     });
   }
 }

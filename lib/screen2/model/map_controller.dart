@@ -6,6 +6,7 @@ import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/model/address_model.dart';
 import 'package:wagon_client/model/tr.dart';
+import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/web/web_initopen.dart';
@@ -94,12 +95,22 @@ class MapController {
 
   void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
     model.appState.addressFrom.text = tr(trGettingAddress);
+    model.appState.addressTemp.text = tr(trGettingAddress);
     YandexGeocodeHandler().geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
       print(d);
       Consts.setDouble('last_lat', cameraPosition.target.latitude);
       Consts.setDouble('last_lon', cameraPosition.target.longitude);
-      model.appState.addressFrom.text = d.title;
-      model.appState.structAddressFrom = d;
+      if (model.appState.appState == AppState.asIdle) {
+        model.appState.addressFrom.text = d.title;
+        model.appState.structAddressFrom = d;
+        model.appState.addressTemp.text = d.title;
+        model.appState.structAddressTemp = d;
+      }
+      if (model.appState.appState == AppState.asSearchOnMapFrom
+      || model.appState.appState == AppState.asSearchOnMapTo) {
+          model.appState.addressTemp.text = d.title;
+          model.appState.structAddressTemp = d;
+      }
     });
   }
 

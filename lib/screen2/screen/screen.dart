@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
@@ -8,7 +10,9 @@ import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
 import 'package:wagon_client/screen2/parts/screen_ride_options.dart';
+import 'package:wagon_client/screen2/parts/screen_search_onmap.dart';
 import 'package:wagon_client/screen2/parts/screen_status4.dart';
+import 'package:wagon_client/screen2/parts/screen_status7.dart';
 import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:wagon_client/screens/payment/screen.dart';
@@ -26,6 +30,8 @@ class _Screen2State extends State<Screen2>
   late AnimationController _backgrounController;
   late Animation<Color?> background;
   Animation<double?>? langPos;
+
+  late StreamSubscription<dynamic> events;
 
   void parentState() {
     setState(() {});
@@ -51,6 +57,22 @@ class _Screen2State extends State<Screen2>
         ),
       ],
     ).animate(_backgrounController);
+
+    events = widget.model.socket.eventBroadcast.stream.listen((event) {
+      print(event);
+      if (event['event'] == 'DriverOnWayOrderEvent' ||
+          event['event'] == 'DriverInPlace' ||
+          event['event'] == 'OrderStarted' ||
+          event['event'] == 'ClientOrderEndData' ||
+          event['event'] == 'DriverOnAcceptOrderEvent' ||
+          event['event'] == 'AdminOrderCancel') {
+        widget.model.appState.getState(parentState);
+      }
+    });
+
+    widget.model.socket.eventBroadcast.onListen = () {
+      print('Active');
+    };
   }
 
   @override
@@ -72,7 +94,13 @@ class _Screen2State extends State<Screen2>
             onCameraPositionChanged: widget.model.mapController.cameraPosition,
             mapObjects: widget.model.mapController.mapObjects,
           ),
-          if (widget.model.appState.appState == AppState.asNone)...[
+          if (widget.model.appState.appState == AppState.asSearchOnMapFrom ||
+              widget.model.appState.appState == AppState.asSearchOnMapTo) ...[
+            ScreenOnMap(widget.model, parentState),
+            Align(
+                alignment: Alignment.center, child: AnimPlaceMark(false))
+          ],
+          if (widget.model.appState.appState == AppState.asNone) ...[
             _dimWidget(context)
           ],
           if (widget.model.appState.appState == AppState.asIdle) ...[
@@ -113,14 +141,17 @@ class _Screen2State extends State<Screen2>
                     : MediaQuery.sizeOf(context).height,
                 duration: const Duration(milliseconds: 300))
           ],
-          if (widget.model.appState.appState == AppState.asSearchTaxi) ... [
+          if (widget.model.appState.appState == AppState.asSearchTaxi) ...[
             _dimWidget(context)
           ],
-          if (widget.model.appState.appState == AppState.asDriverOnWay
-              || widget.model.appState.appState == AppState.asDriverAccept
-              || widget.model.appState.appState == AppState.asOnPlace
-              || widget.model.appState.appState == AppState.asOrderStarted) ... [
+          if (widget.model.appState.appState == AppState.asDriverOnWay ||
+              widget.model.appState.appState == AppState.asDriverAccept ||
+              widget.model.appState.appState == AppState.asOnPlace ||
+              widget.model.appState.appState == AppState.asOrderStarted) ...[
             ScreenStatus4(widget.model, parentState)
+          ],
+          if (widget.model.appState.appState == AppState.asOrderEnd) ...[
+            ScreenStatus7(widget.model, parentState)
           ],
         ],
       )),
@@ -163,11 +194,13 @@ class _Screen2State extends State<Screen2>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(child: Container()),
-                    Image.asset('images/login/wp1.png', height: 60,),
+                    Image.asset(
+                      'images/login/wp1.png',
+                      height: 60,
+                    ),
                     Text(widget.model.appState.dimText),
                     Expanded(child: Container()),
                   ],
-
                 ),
               ),
             );
