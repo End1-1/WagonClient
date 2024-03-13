@@ -32,7 +32,7 @@ class AppState {
   final driverText = TextEditingController();
 
   AddressStruct? structAddressFrom;
-  AddressStruct? structAddressTod;
+  List<AddressStruct> structAddressTod = [];
   AddressStruct? structAddressTemp;
 
   var showFullAddressWidget = false;
@@ -44,6 +44,7 @@ class AppState {
   var driverName = '';
   var driverPhoto = '';
   var driverRating = 0;
+  var orderPrice = 0;
 
   var appState = asNone;
 
@@ -99,6 +100,7 @@ class AppState {
            case asOrderEnd:
              dimText = mp['message'];
              order_id = mp['payload']['order']['order_id'].toString();
+             orderPrice = int.tryParse(mp['payload']['order']['price'].toString()) ?? 0 ;
              assassment = mp['payload']['assessment'];
              break;
          }
@@ -173,7 +175,11 @@ class AppState {
     }
     if (appState == asSearchOnMapTo) {
       addressTo.text = addressTemp.text;
-      structAddressTod = structAddressTemp;
+      if (structAddressTod.isEmpty) {
+        structAddressTod.add(structAddressTemp!);
+      } else {
+        structAddressTod[0] = structAddressTemp!;
+      }
     }
   }
 }

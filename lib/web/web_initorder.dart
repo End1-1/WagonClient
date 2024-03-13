@@ -4,11 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:wagon_client/model/address_model.dart';
 
 import '../consts.dart';
-import '../model/address_model.dart';
 import 'web_parent.dart';
 
 class WebInitOrder extends WebParent {
   final AddressStruct from;
+  final List<AddressStruct> to;
   int carClass;
   int paymentType;
   int paymentCompany;
@@ -22,6 +22,7 @@ class WebInitOrder extends WebParent {
 
   WebInitOrder(
       this.from,
+      this.to,
       this.carClass,
       this.paymentType,
       this.paymentCompany,
@@ -69,16 +70,16 @@ class WebInitOrder extends WebParent {
     List<double> jToCoordinates = [];
 
     jr["to_address"] = null;
-    if (RouteHandler.routeHandler.directionStruct.to.isNotEmpty) {
+    if (to.isNotEmpty) {
       jToCoordinates.add(
-          RouteHandler.routeHandler.directionStruct.to.first.point!.latitude);
+          to.first.point!.latitude);
       jToCoordinates.add(
-          RouteHandler.routeHandler.directionStruct.to.first.point!.longitude);
-      jr["to_address"] = RouteHandler.routeHandler.directionStruct.to.first.address;
+          to.first.point!.longitude);
+      jr["to_address"] = to.first.address;
     }
 
     jr["to"] = null;
-    if (RouteHandler.routeHandler.directionStruct.to.isEmpty) {
+    if (to.isEmpty) {
     } else {
       jr["to"] = jToCoordinates;
     }
@@ -130,10 +131,10 @@ class WebInitOrder extends WebParent {
     jfat["structure"] = null;
     jo["full_address_to"] = jfat;
 
-    if (RouteHandler.routeHandler.directionStruct.to.length > 1) {
+    if (to.length > 1) {
       List<Map<String, dynamic>> ma = [];
-      for (int i = 1; i < RouteHandler.routeHandler.directionStruct.to.length; i++) {
-        final as = RouteHandler.routeHandler.directionStruct.to[i];
+      for (int i = 1; i < to.length; i++) {
+        final as = to[i];
         Map<String, dynamic> a = {};
         a['house'] = null;
         a['frame'] = null;

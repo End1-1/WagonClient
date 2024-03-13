@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wagon_client/cars.dart';
 import 'package:wagon_client/consts.dart';
@@ -11,9 +10,11 @@ import 'web_parent.dart';
 class WebInitCoin extends WebParent {
 
   final AddressStruct from;
+  final List<AddressStruct> to;
 
   WebInitCoin(
       this.from,
+      this.to,
       this.carClass,
       this.paymentType,
       this.paymentCompany,
@@ -79,19 +80,19 @@ class WebInitCoin extends WebParent {
     jFromCoordinates.add(from.point!.longitude);
     jr["from"] = jFromCoordinates;
     List<double> jToCoordinates = [];
-    if (RouteHandler.routeHandler.directionStruct.to.isNotEmpty) {
-      jToCoordinates.add(RouteHandler.routeHandler.directionStruct.to.first.point!.latitude);
-      jToCoordinates.add(RouteHandler.routeHandler.directionStruct.to.first.point!.longitude);
+    if (to.isNotEmpty) {
+      jToCoordinates.add(to.first.point!.latitude);
+      jToCoordinates.add(to.first.point!.longitude);
     }
     jr["from_address"] = from.address;
     jr["to"] = jToCoordinates;
-    jr["to_address"] = RouteHandler.routeHandler.directionStruct.to.isEmpty ? "" : RouteHandler.routeHandler.directionStruct.to.first.address;
+    jr["to_address"] = to.isEmpty ? "" : to.first.address;
 
-    if (RouteHandler.routeHandler.directionStruct.to.length > 1) {
+    if (to.length > 1) {
       List<Map<String, dynamic>> ma = [];
       List<List<double>> mc = [];
-      for (int i = 0; i < RouteHandler.routeHandler.directionStruct.to.length; i++) {
-        final as = RouteHandler.routeHandler.directionStruct.to[i];
+      for (int i = 0; i < to.length; i++) {
+        final as = to[i];
         Map<String, dynamic> a = {};
         a['wait_minut'] = 0;
         a['displayFrom'] = as.title;

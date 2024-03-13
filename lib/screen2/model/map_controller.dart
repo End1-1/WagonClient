@@ -105,6 +105,9 @@ class MapController {
         model.appState.structAddressFrom = d;
         model.appState.addressTemp.text = d.title;
         model.appState.structAddressTemp = d;
+        model.requests.initCoin((){
+
+        }, (c,e){});
       }
       if (model.appState.appState == AppState.asSearchOnMapFrom
       || model.appState.appState == AppState.asSearchOnMapTo) {

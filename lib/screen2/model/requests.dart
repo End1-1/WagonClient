@@ -28,7 +28,8 @@ class Requests {
     //TODO THERE IS PREIVIOUSLY WAS USED CAR CLASS
     if (RouteHandler.routeHandler.sourceDefined()) {
       WebInitCoin initCoin = WebInitCoin(
-          RouteHandler.routeHandler.directionStruct.from,
+          model.appState.structAddressFrom!,
+          model.appState.structAddressTod,
           model.appState.currentCar,
           model.appState.paymentTypeId,
           model.appState.paymentTypeId == 2 ? model.appState
@@ -43,6 +44,17 @@ class Requests {
         if (f != null) {
           f();
         }
+
+        final carclasses = <dynamic>[];
+        for (final c in cc.car_classes) {
+          carclasses.add({'class_id': c.class_id,
+            'name': c.name,
+            'image': c.image,
+            'min_price': c.min_price == null ? c.coin : c.min_price
+          });
+        }
+        model.taxiCarsStream.add(carclasses);
+
       }, (c, s) {
         Dlg.show(s);
         if (fail != null) {
@@ -135,7 +147,8 @@ class Requests {
     // });
     initCoin((){
       WebInitOrder webInitOrder = WebInitOrder(
-          RouteHandler.routeHandler.directionStruct.from!,
+         model.appState.structAddressFrom!,
+          model.appState.structAddressTod,
           model.appState.currentCar,
           model.appState.paymentTypeId,
           model.appState.paymentTypeId == 2 ? model.appState
@@ -186,6 +199,7 @@ class Requests {
     initCoin((){
     WebInitOrder w = WebInitOrder(
         model.appState.structAddressFrom!,
+        model.appState.structAddressTod,
         model.appState.currentCar,
         model.appState.paymentTypeId,
         model.appState.paymentCompanyId,

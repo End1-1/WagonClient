@@ -69,6 +69,22 @@ class _ScreenTaxi extends State<ScreenTaxi> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         color: Consts.colorRed, fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                  constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
+                  child: Text(
+                    '${c['min_price']}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Consts.colorRed, fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                  constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
+                  child: Text(
+                    '5 Ռապե',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Consts.colorRed, fontWeight: FontWeight.bold),
                   ))
             ],
           ),

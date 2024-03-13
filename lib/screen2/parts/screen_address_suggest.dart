@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wagon_client/model/address_model.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 
@@ -53,6 +54,15 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                   InkWell(
                     onTap: () {
                       widget.model.appState.showFullAddressWidget = false;
+                      if (widget.model.appState.focusFrom) {
+                        if (widget.model.appState.addressFrom.text.isEmpty) {
+                          widget.model.appState.structAddressFrom = null;
+                        }
+                      } else {
+                        if (widget.model.appState.structAddressTod.isEmpty) {
+                          widget.model.appState.structAddressTod.clear();
+                        }
+                      }
                       widget.parentState();
                     },
                     child: Container(
@@ -191,8 +201,14 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                           widget.model.appState.addressFrom
                                               .text =
                                               i.displayText;
+                                          widget.model.appState.structAddressFrom = i;
                                         } else {
                                           widget.model.appState.addressTo.text = i.displayText;
+                                          if (widget.model.appState.structAddressTod.isEmpty) {
+                                            widget.model.appState.structAddressTod.add(AddressStruct(address: i.searchText, title: i.title, point: i.center));
+                                          } else {
+                                            widget.model.appState.structAddressTod[0] = AddressStruct(address: i.searchText, title: i.title, point: i.center);
+                                          }
                                         }
                                         widget.model.suggestStream.add(null);
                                         print(i.tags);

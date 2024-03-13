@@ -27,6 +27,9 @@ class _ScreenStatus7 extends State<ScreenStatus7> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Row(children: [
+                    Expanded(child: Text('${widget.model.appState.orderPrice} ${tr(trDramSymbol)}', textAlign: TextAlign.center, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)))
+                  ],),
                   Text(widget.model.appState.dimText),
                   Divider(),
 
