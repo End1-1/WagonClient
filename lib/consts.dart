@@ -52,6 +52,7 @@ class Consts {
 
   static List<String> hosts = [
     "wagon.am",
+    "192.168.0.25",
   ];
 
 

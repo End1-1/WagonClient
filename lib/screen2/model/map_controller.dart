@@ -96,6 +96,14 @@ class MapController {
   void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
     model.appState.addressFrom.text = tr(trGettingAddress);
     model.appState.addressTemp.text = tr(trGettingAddress);
+    if (!model.appState.mapPressed && !finished) {
+      model.appState.mapPressed = true;
+      model.markerStream.add(null);
+    }
+    if (finished) {
+      model.appState.mapPressed = false;
+      model.markerStream.add(null);
+    }
     YandexGeocodeHandler().geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
       print(d);
       Consts.setDouble('last_lat', cameraPosition.target.latitude);

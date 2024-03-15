@@ -8,6 +8,7 @@ import 'package:wagon_client/screen2/model/model.dart';
 class ScreenAddressSuggest extends StatefulWidget {
   final Screen2Model model;
   final Function parentState;
+
   ScreenAddressSuggest(this.model, this.parentState);
 
   @override
@@ -17,6 +18,7 @@ class ScreenAddressSuggest extends StatefulWidget {
 class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
   final focusFrom = FocusNode();
   final focusTo = FocusNode();
+  var x = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,205 +33,248 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
       focusTo.unfocus();
     }
 
-    return AnimatedPositioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        top: widget.model.appState.showFullAddressWidget
-            ? 50
-            : MediaQuery.sizeOf(context).height,
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //short line for hide this menu
-              Row(
-                children: [
-                  Expanded(child: Container()),
-                  InkWell(
-                    onTap: () {
-                      widget.model.appState.showFullAddressWidget = false;
-                      if (widget.model.appState.focusFrom) {
-                        if (widget.model.appState.addressFrom.text.isEmpty) {
-                          widget.model.appState.structAddressFrom = null;
-                        }
-                      } else {
-                        if (widget.model.appState.structAddressTod.isEmpty) {
-                          widget.model.appState.structAddressTod.clear();
-                        }
-                      }
-                      widget.parentState();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                      color: Colors.black26,
-                      height: 5,
-                      width: 50,
-                    ),
-                  ),
-                  Expanded(child: Container()),
-                ],
-              ),
+    return  AnimatedPositioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            top: widget.model.appState.showFullAddressWidget
+                ? 50 + x > 50 ? 50 + x : 50
+                : MediaQuery.sizeOf(context).height,
+            child: GestureDetector(
+              onPanUpdate: (d) {
+                print(d);
+                x += d.delta.dy;
+                if (x + 50 < 50) {
+                  x = 0;
+                }
+                setState(() {
 
-              //ADDRESS FROM
-              Row(
+                });
+              },
+                onPanEnd: (d) {
+                  if (x > 150) {
+                    widget.model.appState.showFullAddressWidget = false;
+                  }
+                  x = 0;
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                    child: Image.asset(
-                      'images/frompoint.png',
-                      height: 20,
-                    ),
+                  //short line for hide this menu
+                  Row(
+                    children: [
+                      Expanded(child: Container()),
+                      InkWell(
+                        onTap: () {
+                          widget.model.appState.showFullAddressWidget = false;
+                          if (widget.model.appState.focusFrom) {
+                            if (widget
+                                .model.appState.addressFrom.text.isEmpty) {
+                              widget.model.appState.structAddressFrom = null;
+                            }
+                          } else {
+                            if (widget
+                                .model.appState.structAddressTod.isEmpty) {
+                              widget.model.appState.structAddressTod.clear();
+                            }
+                          }
+                          widget.parentState();
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                          color: Colors.black26,
+                          height: 5,
+                          width: 50,
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                    ],
                   ),
-                  Expanded(
-                      child: TextFormField(
+
+                  //ADDRESS FROM
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                        child: Image.asset(
+                          'images/frompoint.png',
+                          height: 20,
+                        ),
+                      ),
+                      Expanded(
+                          child: TextFormField(
                         focusNode: focusFrom,
                         decoration: InputDecoration(
-                          hintText: tr(trFrom),
-                          hintStyle: const TextStyle(color: Colors.black12)
-                        ),
-                    controller: widget.model.appState.addressFrom,
-                    onTap: () {
-
-                    },
-                    onChanged: (s) {
-                      widget.model.suggest.suggest(s);
-                    },
-                  )),
-                  InkWell(
-                    onTap: () {
-                      widget.model.appState.addressFrom.clear();
-                      focusFrom.requestFocus();
-                    },
-                    child: Image.asset(
-                      'images/close.png',
-                      height: 30,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      exit(0);
-                    },
-                    child: Container(
-                      child: Image.asset(
-                        'images/mappin.png',
-                        height: 20,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-
-              //ADDRESS TO
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                    child: Image.asset(
-                      'images/frompoint.png',
-                      height: 20,
-                    ),
-                  ),
-                  Expanded(
-                      child: TextFormField(
-                        focusNode: focusTo,
-                        decoration: InputDecoration(
-                            hintText: tr(trTo),
-                            hintStyle: const TextStyle(color: Colors.black12)
-                        ),
-                        controller: widget.model.appState.addressTo,
-                        onTap: () {
-
-                        },
+                            hintText: tr(trFrom),
+                            hintStyle: const TextStyle(color: Colors.black12)),
+                        controller: widget.model.appState.addressFrom,
+                        onTap: () {},
                         onChanged: (s) {
                           widget.model.suggest.suggest(s);
                         },
                       )),
-                  InkWell(
-                    onTap: () {
-                      widget.model.appState.addressTo.clear();
-                      focusTo.requestFocus();
-                    },
-                    child: Image.asset(
-                      'images/close.png',
-                      height: 30,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      exit(0);
-                    },
-                    child: Container(
-                      child: Image.asset(
-                        'images/mappin.png',
-                        height: 20,
+                      InkWell(
+                        onTap: () {
+                          widget.model.appState.addressFrom.clear();
+                          focusFrom.requestFocus();
+                        },
+                        child: Image.asset(
+                          'images/close.png',
+                          height: 30,
+                        ),
                       ),
-                    ),
-                  )
+                      InkWell(
+                        onTap: () {
+                          exit(0);
+                        },
+                        child: Container(
+                          child: Image.asset(
+                            'images/mappin.png',
+                            height: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+
+                  //ADDRESS TO
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                        child: Image.asset(
+                          'images/frompoint.png',
+                          height: 20,
+                        ),
+                      ),
+                      Expanded(
+                          child: TextFormField(
+                        focusNode: focusTo,
+                        decoration: InputDecoration(
+                            hintText: tr(trTo),
+                            hintStyle: const TextStyle(color: Colors.black12)),
+                        controller: widget.model.appState.addressTo,
+                        onTap: () {},
+                        onChanged: (s) {
+                          widget.model.suggest.suggest(s);
+                        },
+                      )),
+                      InkWell(
+                        onTap: () {
+                          widget.model.appState.addressTo.clear();
+                          focusTo.requestFocus();
+                        },
+                        child: Image.asset(
+                          'images/close.png',
+                          height: 30,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          exit(0);
+                        },
+                        child: Container(
+                          child: Image.asset(
+                            'images/mappin.png',
+                            height: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+
+                  StreamBuilder(
+                      stream: widget.model.suggestStream.stream,
+                      builder: (builder, snapshot) {
+                        if (snapshot.data == null) {
+                          return Container();
+                        }
+                        if (snapshot.data is bool) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        return Expanded(
+                            child: SingleChildScrollView(
+                                child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final i in snapshot.data) ...[
+                              Container(
+                                  height: 40,
+                                  decoration: const BoxDecoration(),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: InkWell(
+                                              onTap: () {
+                                                if (focusFrom.hasFocus) {
+                                                  widget
+                                                      .model
+                                                      .appState
+                                                      .addressFrom
+                                                      .text = i.displayText;
+                                                  widget.model.appState
+                                                      .structAddressFrom = i;
+                                                } else {
+                                                  widget
+                                                      .model
+                                                      .appState
+                                                      .addressTo
+                                                      .text = i.displayText;
+                                                  if (widget
+                                                      .model
+                                                      .appState
+                                                      .structAddressTod
+                                                      .isEmpty) {
+                                                    widget.model.appState
+                                                        .structAddressTod
+                                                        .add(AddressStruct(
+                                                            address:
+                                                                i.searchText,
+                                                            title: i.title,
+                                                            point: i.center));
+                                                  } else {
+                                                    widget.model.appState
+                                                            .structAddressTod[0] =
+                                                        AddressStruct(
+                                                            address:
+                                                                i.searchText,
+                                                            title: i.title,
+                                                            point: i.center);
+                                                  }
+                                                }
+                                                widget.model.suggestStream
+                                                    .add(null);
+                                                print(i.tags);
+                                                if (i.tags.contains('house')) {
+                                                  widget.model.appState
+                                                          .showFullAddressWidget =
+                                                      false;
+                                                  widget.parentState();
+                                                }
+                                              },
+                                              child: Text(i.displayText,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis))),
+                                    ],
+                                  ))
+                            ]
+                          ],
+                        )));
+                      }),
                 ],
               ),
-
-              StreamBuilder(
-                  stream: widget.model.suggestStream.stream,
-                  builder: (builder, snapshot) {
-                    if (snapshot.data == null) {
-                      return Container();
-                    }
-                    if (snapshot.data is bool) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    return Expanded(
-                        child: SingleChildScrollView(
-                            child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final i in snapshot.data) ...[
-                          Container(
-                              height: 40,
-                              decoration: const BoxDecoration(),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: InkWell(
-                                      onTap: () {
-                                        if (focusFrom.hasFocus) {
-                                          widget.model.appState.addressFrom
-                                              .text =
-                                              i.displayText;
-                                          widget.model.appState.structAddressFrom = i;
-                                        } else {
-                                          widget.model.appState.addressTo.text = i.displayText;
-                                          if (widget.model.appState.structAddressTod.isEmpty) {
-                                            widget.model.appState.structAddressTod.add(AddressStruct(address: i.searchText, title: i.title, point: i.center));
-                                          } else {
-                                            widget.model.appState.structAddressTod[0] = AddressStruct(address: i.searchText, title: i.title, point: i.center);
-                                          }
-                                        }
-                                        widget.model.suggestStream.add(null);
-                                        print(i.tags);
-                                        if (i.tags.contains('house')) {
-                                          widget.model.appState.showFullAddressWidget = false;
-                                          widget.parentState();
-                                        }
-                                      },
-                                      child: Text(i.displayText,
-                                              maxLines: 1,
-                                              overflow:
-                                                  TextOverflow.ellipsis))),
-                                ],
-                              ))
-                        ]
-                      ],
-                    )));
-                  }),
-            ],
-          ),
-        ),
-        duration: Duration(milliseconds: 300));
+            )),
+            duration: Duration(milliseconds: 300));
   }
 }

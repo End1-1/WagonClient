@@ -47,6 +47,7 @@ class AppState {
   var orderPrice = 0;
 
   var appState = asNone;
+  var mapPressed = false;
 
   bool isRent = false;
   int acType = 0;

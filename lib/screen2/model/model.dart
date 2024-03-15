@@ -23,6 +23,7 @@ class Screen2Model {
   late final MapController mapController;
   final suggestStream = StreamController.broadcast();
   final taxiCarsStream = StreamController.broadcast();
+  final markerStream = StreamController.broadcast();
 
   Screen2Model() {
     mapController = MapController(this);

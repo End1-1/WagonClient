@@ -86,7 +86,7 @@ class _ScreenOnMap extends State<ScreenOnMap> {
                                         borderRadius:
                                         BorderRadius.all(Radius.circular(5))),
                                     child:  Text(
-                                      tr(trFINISH),
+                                      tr(trReady),
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           color: Colors.white,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
+import 'package:wagon_client/screen2/parts/cancel_order_button.dart';
 import 'package:wagon_client/screen2/parts/screen_ac.dart';
 import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
@@ -98,17 +99,17 @@ class _Screen2State extends State<Screen2>
               widget.model.appState.appState == AppState.asSearchOnMapTo) ...[
             ScreenOnMap(widget.model, parentState),
             Align(
-                alignment: Alignment.center, child: AnimPlaceMark(false))
+                alignment: Alignment.center, child: AnimPlaceMark(widget.model))
           ],
           if (widget.model.appState.appState == AppState.asNone) ...[
-            _dimWidget(context)
+            _dimWidget(context, null)
           ],
           if (widget.model.appState.appState == AppState.asIdle) ...[
             Visibility(
                 visible: widget.model.appState.addressFrom.text.isEmpty ||
                     widget.model.appState.addressTo.text.isEmpty,
                 child: Align(
-                    alignment: Alignment.center, child: AnimPlaceMark(false))),
+                    alignment: Alignment.center, child: StreamBuilder(stream: widget.model.markerStream.stream, builder: (builder, snapshot) {return AnimPlaceMark(widget.model);}))),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -132,7 +133,7 @@ class _Screen2State extends State<Screen2>
                 ScreenBottom(widget.model, parentState),
               ],
             ),
-            _dimWidget(context),
+            _dimWidget(context, null),
             ScreenAddressSuggest(widget.model, parentState),
             AnimatedPositioned(
                 child: PaymentWidget(widget.model, parentState, true),
@@ -142,7 +143,7 @@ class _Screen2State extends State<Screen2>
                 duration: const Duration(milliseconds: 300))
           ],
           if (widget.model.appState.appState == AppState.asSearchTaxi) ...[
-            _dimWidget(context)
+            _dimWidget(context, CancelOrderButton(widget.model, parentState))
           ],
           if (widget.model.appState.appState == AppState.asDriverOnWay ||
               widget.model.appState.appState == AppState.asDriverAccept ||
@@ -179,7 +180,7 @@ class _Screen2State extends State<Screen2>
     }
   }
 
-  Widget _dimWidget(BuildContext context) {
+  Widget _dimWidget(BuildContext context, Widget? bottom) {
     return Visibility(
         visible: widget.model.appState.dimVisible,
         child: AnimatedBuilder(
@@ -200,6 +201,9 @@ class _Screen2State extends State<Screen2>
                     ),
                     Text(widget.model.appState.dimText),
                     Expanded(child: Container()),
+                    if (bottom != null)
+                      bottom,
+                    Container(height: 10,),
                   ],
                 ),
               ),

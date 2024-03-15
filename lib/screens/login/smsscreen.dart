@@ -6,6 +6,7 @@ import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/model/tr.dart';
+import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/web/web_entersms.dart';
 
 class SmsScreen extends StatefulWidget {
@@ -270,7 +271,7 @@ class _SmsScreen extends State<SmsScreen> with SingleTickerProviderStateMixin {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => WMainWindow(),
+          builder: (BuildContext context) => Screen2(),
         ),
         (route) => false,
       );

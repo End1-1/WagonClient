@@ -9,6 +9,7 @@ import 'package:wagon_client/screens/payment/card_info.dart';
 import 'package:wagon_client/screens/payment/cashback_info.dart';
 import 'package:wagon_client/screens/payment/company_info.dart';
 import 'package:wagon_client/web/web_canceloptions.dart';
+import 'package:wagon_client/web/web_cancelsearchtaxi.dart';
 import 'package:wagon_client/web/web_initcoin.dart';
 import 'package:wagon_client/web/web_initorder.dart';
 
@@ -242,5 +243,14 @@ class Requests {
     }, (c, s) {
       //Dlg.show(n, s);
     });
+  }
+
+  void cancelSearchTaxi(Function parentState) {
+    model.appState.dimVisible = true;
+    model.appState.dimText = '';
+    parentState();
+    WebCancelSearchTaxi().request((d){
+      model.appState.getState(parentState);
+    }, (c,s){});
   }
 }
