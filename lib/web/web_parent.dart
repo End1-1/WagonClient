@@ -23,6 +23,7 @@ class WebParent {
   }
 
   Future<void> request(Function done, Function? fail) async {
+    final sw = Stopwatch()..start();
     var client = HttpClient()
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
@@ -51,7 +52,8 @@ class WebParent {
               headers: getHeader());
           break;
       }
-      print("Response " +
+      sw.stop();
+      print("Response time: ${sw.elapsed} length: ${response.body.length} " +
               response.statusCode.toString() +
               ": " +
               Consts.host() +
