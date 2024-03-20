@@ -50,7 +50,7 @@ class Requests {
         for (final c in cc.car_classes) {
           carclasses.add({'class_id': c.class_id,
             'name': c.name,
-            'image': c.image,
+            'image': '',
             'min_price': c.min_price == null ? c.coin : c.min_price
           });
         }
@@ -96,7 +96,7 @@ class Requests {
       ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
           e['class_id'],
           'images/car2.png',
-          e['image'],
+          '',
           e['name'],
           'No comment for now',
           double.tryParse(e['min_price'].toString()) ?? 0));

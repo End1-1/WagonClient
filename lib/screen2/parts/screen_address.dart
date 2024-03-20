@@ -30,9 +30,10 @@ class _ScreenAddress extends State<ScreenAddress> {
             Row(
               children: [
                 Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                   child: Image.asset(
                     'images/frompoint.png',
-                    height: 20,
+                    height: 15,
                   ),
                 ),
                 Expanded(
@@ -65,9 +66,10 @@ class _ScreenAddress extends State<ScreenAddress> {
             Row(
               children: [
                 Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                   child: Image.asset(
                     'images/frompoint.png',
-                    height: 20,
+                    height: 15,
                   ),
                 ),
                 Expanded(

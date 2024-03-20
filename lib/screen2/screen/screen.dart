@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
@@ -17,6 +18,8 @@ import 'package:wagon_client/screen2/parts/screen_status7.dart';
 import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:wagon_client/screens/payment/screen.dart';
+import 'package:wagon_client/web/web_parent.dart';
+import 'package:wagon_client/web/web_yandexkey.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Screen2 extends StatefulWidget {
@@ -41,6 +44,8 @@ class _Screen2State extends State<Screen2>
   @override
   void initState() {
     super.initState();
+    WebYandexKey().request(() {}, null);
+
     WidgetsBinding.instance.addObserver(this);
 
     _backgrounController = AnimationController(
@@ -114,6 +119,10 @@ class _Screen2State extends State<Screen2>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: Container()),
+                Row(children: [
+                  Expanded(child: Container()),
+                  InkWell(onTap:widget.model.centerme, child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 10, 10), child: Image.asset('images/gps.png', height: 20,)))
+                ],),
                 if (widget.model.appState.acType == 0)
                   ScreenAC(widget.model, parentState),
                 if (widget.model.appState.acType > 0)
@@ -196,7 +205,7 @@ class _Screen2State extends State<Screen2>
                   children: [
                     Expanded(child: Container()),
                     Image.asset(
-                      'images/login/wp1.png',
+                      'images/loading.gif',
                       height: 60,
                     ),
                     Text(widget.model.appState.dimText),

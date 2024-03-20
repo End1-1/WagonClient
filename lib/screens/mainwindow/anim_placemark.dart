@@ -14,7 +14,7 @@ class AnimPlaceMark extends StatefulWidget {
 class _AnimPlaceMark extends State<AnimPlaceMark> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Visibility(visible: !widget.model.appState.dimVisible, child: Container(
       decoration: BoxDecoration(
         //border: Border.fromBorderSide(BorderSide(color: Colors.indigo, width: 2))
       ),
@@ -28,7 +28,7 @@ class _AnimPlaceMark extends State<AnimPlaceMark> {
           Positioned(top: 65, left: 18, child: Image.asset('images/ellipse.png', width: 20, height: 20,))
         ],
       ),
-    );
+    ));
   }
 
 }

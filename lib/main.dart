@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,6 +9,7 @@ import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/screens/login/screen.dart';
+import 'package:wagon_client/web/web_parent.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -45,6 +48,17 @@ Future<void> main() async {
   //     });
   //   }
   //});
+
+  await WebParent('/app/mobile/get_resources', HttpMethod.GET).request((d) {
+    for (final e in d) {
+      Consts.car_class_images[e['class_id']] = Image.memory(
+        base64Decode(e['image']),
+        height: 30,
+      );
+    }
+  }, (c,s ) {
+
+  });
 
   runApp(TaxoApp());
 }

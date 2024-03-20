@@ -4,6 +4,7 @@ import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screens/payment/card_info.dart';
 import 'package:wagon_client/screens/payment/cashback_info.dart';
 import 'package:wagon_client/screens/payment/company_info.dart';
+import 'package:wagon_client/web/web_parent.dart';
 import 'package:wagon_client/web/web_realstate.dart';
 
 import 'model.dart';

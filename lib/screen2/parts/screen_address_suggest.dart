@@ -108,7 +108,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                         margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                         child: Image.asset(
                           'images/frompoint.png',
-                          height: 20,
+                          height: 15,
                         ),
                       ),
                       Expanded(
@@ -130,7 +130,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                         },
                         child: Image.asset(
                           'images/close.png',
-                          height: 30,
+                          height: 20,
                         ),
                       ),
                       InkWell(
@@ -138,6 +138,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                           exit(0);
                         },
                         child: Container(
+                          margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
                           child: Image.asset(
                             'images/mappin.png',
                             height: 20,
@@ -154,7 +155,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                         margin: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                         child: Image.asset(
                           'images/frompoint.png',
-                          height: 20,
+                          height: 15,
                         ),
                       ),
                       Expanded(
@@ -176,7 +177,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                         },
                         child: Image.asset(
                           'images/close.png',
-                          height: 30,
+                          height: 20,
                         ),
                       ),
                       InkWell(
@@ -184,6 +185,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                           exit(0);
                         },
                         child: Container(
+                          margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
                           child: Image.asset(
                             'images/mappin.png',
                             height: 20,
@@ -223,7 +225,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                       .addressFrom
                                                       .text = i.displayText;
                                                   widget.model.appState
-                                                      .structAddressFrom = i;
+                                                      .structAddressFrom = AddressStruct(address: i.displayText, title: i.title, point: i.center) ;
                                                 } else {
                                                   widget
                                                       .model

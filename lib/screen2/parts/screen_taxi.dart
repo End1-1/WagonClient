@@ -58,10 +58,7 @@ class _ScreenTaxi extends State<ScreenTaxi> {
                       : Consts.colorOrange))),
           child: Column(
             children: [
-              Image.memory(
-                base64Decode(c['image']),
-                height: 30,
-              ),
+                Consts.car_class_images[c['class_id']]!,
               Container(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: Text(

@@ -53,6 +53,7 @@ class Consts {
   static List<String> hosts = [
     "wagon.am",
     "192.168.0.25",
+    "192.168.0.5",
   ];
 
 
@@ -63,6 +64,10 @@ class Consts {
     }
     return r;
   }
+
+  static final car_class_images = <int, Image> {
+
+  };
 
   static final String webHost = "https://" + host();
   static String yandexAPIkey = "06495363-2976-4cbb-a0b7-f09387554b9d";

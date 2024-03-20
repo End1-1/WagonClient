@@ -36,7 +36,7 @@ class Car extends Object {
   String name;
   double? min_price;
   double? coin;
-  String image;
+  //String? image;
 
   @JsonKey(defaultValue: 0)
   int selected;
@@ -49,7 +49,7 @@ class Car extends Object {
       this.name,
       this.min_price,
       this.coin,
-      this.image,
+      //this.image,
       this.selected,
       this.car_options,
       this.rent_times) {
@@ -59,13 +59,13 @@ class Car extends Object {
     selected = 0;
   }
 
-  Image? getImage() {
-    if (_image == null) {
-      Uint8List raw = Base64Decoder().convert(image);
-      _image = new Image.memory(raw);
-    }
-    return _image;
-  }
+  // Image? getImage() {
+  //   if (_image == null) {
+  //     Uint8List raw = Base64Decoder().convert(image);
+  //     _image = new Image.memory(raw);
+  //   }
+  //   return _image;
+  // }
 
   double? getPrice() {
     return coin;

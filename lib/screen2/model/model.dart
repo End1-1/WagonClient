@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_websocket.dart';
@@ -9,6 +10,7 @@ import 'package:wagon_client/screen2/model/requests.dart';
 import 'package:wagon_client/screen2/model/suggestions.dart';
 import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_parent.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'app_state.dart';
 import 'map_controller.dart';
@@ -77,5 +79,14 @@ class Screen2Model {
 
   void appPaused() {
     socket.closeSocket();
+  }
+
+  void centerme() async {
+    Position p = await Geolocator.getCurrentPosition();
+    mapController.mapController.moveCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(
+            target: Point(latitude: p.latitude, longitude: p.longitude),
+            zoom: 18)),
+        animation: MapAnimation(duration: 1));
   }
 }
