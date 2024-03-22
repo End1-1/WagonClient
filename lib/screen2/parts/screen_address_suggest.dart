@@ -33,34 +33,32 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
       focusTo.unfocus();
     }
 
-    return  AnimatedPositioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            top: widget.model.appState.showFullAddressWidget
-                ? 50 + x > 50 ? 50 + x : 50
-                : MediaQuery.sizeOf(context).height,
-            child: GestureDetector(
-              onPanUpdate: (d) {
-                print(d);
-                x += d.delta.dy;
-                if (x + 50 < 50) {
-                  x = 0;
-                }
-                setState(() {
-
-                });
-              },
-                onPanEnd: (d) {
-                  if (x > 150) {
-                    widget.model.appState.showFullAddressWidget = false;
-                  }
-                  x = 0;
-                  setState(() {
-
-                  });
-                },
-                child: Container(
+    return AnimatedPositioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        top: widget.model.appState.showFullAddressWidget
+            ? 50 + x > 50
+                ? 50 + x
+                : 50
+            : MediaQuery.sizeOf(context).height,
+        child: GestureDetector(
+            onPanUpdate: (d) {
+              print(d);
+              x += d.delta.dy;
+              if (x + 50 < 50) {
+                x = 0;
+              }
+              setState(() {});
+            },
+            onPanEnd: (d) {
+              if (x > 150) {
+                widget.model.appState.showFullAddressWidget = false;
+              }
+              x = 0;
+              setState(() {});
+            },
+            child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -88,6 +86,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                               widget.model.appState.structAddressTod.clear();
                             }
                           }
+
                           widget.parentState();
                         },
                         child: Container(
@@ -225,7 +224,12 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                       .addressFrom
                                                       .text = i.displayText;
                                                   widget.model.appState
-                                                      .structAddressFrom = AddressStruct(address: i.displayText, title: i.title, point: i.center) ;
+                                                          .structAddressFrom =
+                                                      AddressStruct(
+                                                          address:
+                                                              i.displayText,
+                                                          title: i.title,
+                                                          point: i.center);
                                                 } else {
                                                   widget
                                                       .model
@@ -261,6 +265,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                   widget.model.appState
                                                           .showFullAddressWidget =
                                                       false;
+
                                                   widget.parentState();
                                                 }
                                               },
@@ -277,6 +282,6 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                 ],
               ),
             )),
-            duration: Duration(milliseconds: 300));
+        duration: Duration(milliseconds: 300));
   }
 }

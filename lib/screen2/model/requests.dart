@@ -55,6 +55,7 @@ class Requests {
           });
         }
         model.taxiCarsStream.add(carclasses);
+        model.mapController.paintRoute();
 
       }, (c, s) {
         Dlg.show(s);

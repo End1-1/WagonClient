@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
@@ -38,6 +37,7 @@ class _Screen2State extends State<Screen2>
   late StreamSubscription<dynamic> events;
 
   void parentState() {
+    widget.model.mapController.paintRoute();
     setState(() {});
   }
 
@@ -58,7 +58,7 @@ class _Screen2State extends State<Screen2>
             //begin: Colors.transparent,
             begin: Colors.black12,
             //begin: Colors.yellow,
-            end: Colors.black54,
+            end: Color(0xbf0e0b0b),
           ),
         ),
       ],
@@ -121,7 +121,7 @@ class _Screen2State extends State<Screen2>
                 Expanded(child: Container()),
                 Row(children: [
                   Expanded(child: Container()),
-                  InkWell(onTap:widget.model.centerme, child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 10, 10), child: Image.asset('images/gps.png', height: 20,)))
+                  InkWell(onTap:widget.model.centerme, child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 10, 10), child: Image.asset('images/gps.png', height: 30,)))
                 ],),
                 if (widget.model.appState.acType == 0)
                   ScreenAC(widget.model, parentState),
@@ -206,7 +206,7 @@ class _Screen2State extends State<Screen2>
                     Expanded(child: Container()),
                     Image.asset(
                       'images/loading.gif',
-                      height: 60,
+                      height: 200,
                     ),
                     Text(widget.model.appState.dimText),
                     Expanded(child: Container()),

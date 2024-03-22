@@ -106,25 +106,8 @@
 //     // mapObjects.add(myPlace!);
 //   }
 //
-//   Future<void> centerMeOnMap() async {
-//     Position p = await Geolocator.getCurrentPosition();
-//     mapController!.moveCamera(
-//         CameraUpdate.newCameraPosition(CameraPosition(
-//             target: Point(
-//                 latitude: p.latitude,
-//                 longitude: p.longitude),
-//             zoom: rideZoom)),
-//         animation: MapAnimation(duration: 1));
-//   }
-//
-//   void setAddressFromTo(AddressStruct as) {
-//     RouteHandler.routeHandler.directionStruct.from = as;
-//     switch (currentPage) {
-//       case pageSelectShortAddress:
-//         addressFrom.text = RouteHandler.routeHandler.addressFrom();
-//         break;
-//     }
-//   }
+
+
 //
 //   void initCoin(BuildContext context, Function? f, Function? fail) {
 //     if (!init) {
@@ -181,13 +164,7 @@
 //     return text;
 //   }
 //
-//   void setCarClasses(CarClasses cc) {
-//     carClasses = cc;
-//     if (carClasses.car_classes.length > 0 && currentCar == 0) {
-//       currentCar = carClasses.car_classes[0].class_id;
-//       carClasses.car_classes[0].selected = 1;
-//     }
-//   }
+
 //
 //   void animateWindow(int newWindow, Function? done) {
 //     currentPage = newWindow;

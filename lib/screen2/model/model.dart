@@ -81,7 +81,7 @@ class Screen2Model {
     socket.closeSocket();
   }
 
-  void centerme() async {
+  Future<void> centerme() async {
     Position p = await Geolocator.getCurrentPosition();
     mapController.mapController.moveCamera(
         CameraUpdate.newCameraPosition(CameraPosition(

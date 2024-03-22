@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wagon_client/consts.dart';
+import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 
 class ScreenTaxi extends StatefulWidget {
@@ -70,7 +71,7 @@ class _ScreenTaxi extends State<ScreenTaxi> {
               Container(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: Text(
-                    '${c['min_price']}',
+                    '${c['min_price']} ${tr(trDramSymbol)}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         color: Consts.colorRed, fontWeight: FontWeight.bold),

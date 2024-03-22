@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
 
@@ -27,7 +28,9 @@ class _ScreenAddress extends State<ScreenAddress> {
 
 
             //ADDRESS FROM
-            Row(
+            Visibility(
+              visible: widget.model.appState.acType > 0,
+                child:  Row(
               children: [
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
@@ -45,6 +48,9 @@ class _ScreenAddress extends State<ScreenAddress> {
                     widget.parentState();
                   },
                   readOnly: true,
+                      decoration: InputDecoration(
+                          hintText: tr(trFrom)
+                      ),
                 )),
                 InkWell(
                   onTap: () {
@@ -59,11 +65,13 @@ class _ScreenAddress extends State<ScreenAddress> {
                   ),
                 )
               ],
-            ),
+            )),
 
 
             //ADDRESS TO
-            Row(
+            Visibility(
+              visible: widget.model.appState.acType > 0,
+                child:  Row(
               children: [
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
@@ -81,6 +89,9 @@ class _ScreenAddress extends State<ScreenAddress> {
                       },
                   controller: widget.model.appState.addressTo,
                   readOnly: true,
+                      decoration: InputDecoration(
+                        hintText: tr(trTo)
+                      ),
                 )),
                 InkWell(
                   onTap: () {
@@ -95,7 +106,7 @@ class _ScreenAddress extends State<ScreenAddress> {
                   ),
                 )
               ],
-            ),
+            )),
             //TO
           ],
         ));

@@ -13,13 +13,19 @@ import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import 'package:wagon_client/consts.dart';
 
 class MapController {
   final mapBroadcast = StreamController.broadcast();
   late YandexMapController mapController;
   final Screen2Model model;
   final List<MapObject> mapObjects = [];
+
+  final List<MapObjectId> routePolylineId = [
+    MapObjectId("_routePolylineId1"),
+    MapObjectId("_routePolylineId2"),
+    MapObjectId("_routePolylineId3"),
+    MapObjectId("_routePolylineId4")
+  ];
 
   MapController(this.model);
 
@@ -62,7 +68,7 @@ class MapController {
             zoom: 16)),
         animation: MapAnimation(duration: 1));
 
-      RouteHandler.routeHandler.setPointFrom(p);
+      //RouteHandler.routeHandler.setPointFrom(p);
       model.mapController.mapController.moveCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
               target: Point(latitude: p.latitude, longitude: p.longitude),
@@ -113,9 +119,11 @@ class MapController {
         model.appState.structAddressFrom = d;
         model.appState.addressTemp.text = d.title;
         model.appState.structAddressTemp = d;
-        model.requests.initCoin((){
-
-        }, (c,e){});
+        if (finished) {
+          model.requests.initCoin(() {
+            model.mapController.paintRoute();
+          }, (c, e) {});
+        }
       }
       if (model.appState.appState == AppState.asSearchOnMapFrom
       || model.appState.appState == AppState.asSearchOnMapTo) {
@@ -141,5 +149,94 @@ class MapController {
     //     setState(() {});
     //   });
     //}
+  }
+
+  Future<void> removePolyline({required bool centerMe}) async {
+    if (centerMe) {
+      await model.centerme();
+    }
+    while (mapObjects.isNotEmpty) {
+      mapObjects.removeLast();
+    }
+  }
+
+  Future<void> paintRoute() async {
+    await removePolyline(centerMe: false);
+    if (model.appState.structAddressTod.isEmpty) {
+      return;
+    }
+    var resultWithSession = YandexDriving.requestRoutes(
+        points: [
+          RequestPoint(point: model.appState.structAddressFrom!.point!, requestPointType: RequestPointType.wayPoint),
+          for (int i = 0; i < model.appState.structAddressTod.length - 1; i++) ... [
+            RequestPoint(point: model.appState.structAddressTod[i].point!, requestPointType: RequestPointType.viaPoint),
+          ],
+          RequestPoint(point: model.appState.structAddressTod.last.point!, requestPointType: RequestPointType.wayPoint),
+        ],
+        drivingOptions: const DrivingOptions(
+            initialAzimuth: 0,
+            routesCount: 1,
+            avoidTolls: true
+        )
+    );
+
+    if (model.appState.structAddressFrom != null && model.appState.structAddressTod.isNotEmpty) {
+
+      final value = await resultWithSession.result;
+      if (value.routes != null) {
+        if (value.routes!.isNotEmpty) {
+          DrivingRoute r = value.routes!.first;
+
+          //Route
+          mapObjects.add(PolylineMapObject(
+            mapId: routePolylineId[0],
+            polyline: Polyline(points: r.geometry),
+            strokeColor: Colors.blue[700]!,
+            strokeWidth: 5,
+            // <- default value 5.0, this will be a little bold
+            outlineColor: Colors.yellow[200]!,
+            outlineWidth: 1.0,
+          ));
+
+          //Start point
+          PlacemarkMapObject point1 = PlacemarkMapObject(
+              mapId: MapObjectId('startpoint'),
+              direction: 0,
+              point: model.appState.structAddressFrom!.point!,
+              icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                      'images/circle_bold_black.png'),
+                  rotationType: RotationType.rotate)));
+          mapObjects.add(point1);
+
+          //Via point
+          for (int i = 0; i < model.appState.structAddressTod.length - 1; i++) {
+            PlacemarkMapObject point = PlacemarkMapObject(
+                mapId: MapObjectId('via${i}'),
+                direction: 0,
+                point: model.appState.structAddressTod[i].point!,
+                icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                    image: BitmapDescriptor.fromAssetImage(
+                        'images/circle_bold_red.png'),
+                    rotationType: RotationType.rotate)));
+            mapObjects.add(point);
+          }
+
+          //End point
+          PlacemarkMapObject point = PlacemarkMapObject(
+              mapId: MapObjectId('endpoint'),
+              direction: 0,
+              point: model.appState.structAddressTod.last.point!,
+              icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                      'images/circle_bold_black.png'),
+                  rotationType: RotationType.rotate)));
+          mapObjects.add(point);
+
+
+        }
+      }
+
+    }
   }
 }
