@@ -19,7 +19,7 @@ class Requests {
 
   Requests(this.model);
 
-  void initCoin(Function? f, Function? fail) {
+  void initCoin(Function? f, Function? fail) async {
     if (Consts
         .getString("bearer")
         .isEmpty) {
@@ -27,7 +27,7 @@ class Requests {
       return;
     }
     //TODO THERE IS PREIVIOUSLY WAS USED CAR CLASS
-    if (RouteHandler.routeHandler.sourceDefined()) {
+    if (model.appState.structAddressFrom != null) {
       WebInitCoin initCoin = WebInitCoin(
           model.appState.structAddressFrom!,
           model.appState.structAddressTod,
@@ -41,7 +41,7 @@ class Requests {
           model.appState.isRent,
           int.tryParse(model.appState.rentTime) == null ? 0 : int.parse(
               model.appState.rentTime));
-      initCoin.request((CarClasses cc) {
+      initCoin.request((CarClasses cc) async {
         if (f != null) {
           f();
         }
@@ -55,18 +55,18 @@ class Requests {
           });
         }
         model.taxiCarsStream.add(carclasses);
-        model.mapController.paintRoute();
+        await model.mapController.paintRoute();
 
       }, (c, s) {
         Dlg.show(s);
         if (fail != null) {
-          fail();
+          fail(c, s);
         }
       });
     } else {
       //Dlg.show("Точка отправления не определена");
       if (fail != null) {
-        fail();
+        fail(0, "Точка отправления не определена");
       }
     }
   }

@@ -37,8 +37,10 @@ class _Screen2State extends State<Screen2>
   late StreamSubscription<dynamic> events;
 
   void parentState() {
-    widget.model.mapController.paintRoute();
-    setState(() {});
+    widget.model.mapController.paintRoute().then((value) {
+      setState(() {});
+    });
+
   }
 
   @override

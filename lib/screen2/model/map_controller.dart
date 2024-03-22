@@ -120,9 +120,11 @@ class MapController {
         model.appState.addressTemp.text = d.title;
         model.appState.structAddressTemp = d;
         if (finished) {
-          model.requests.initCoin(() {
-            model.mapController.paintRoute();
-          }, (c, e) {});
+          if (model.appState.acType > 0) {
+            model.requests.initCoin(() async {
+              await model.mapController.paintRoute();
+            }, (c, e) {});
+          }
         }
       }
       if (model.appState.appState == AppState.asSearchOnMapFrom
@@ -165,6 +167,13 @@ class MapController {
     if (model.appState.structAddressTod.isEmpty) {
       return;
     }
+    routePolylineId.clear();
+    routePolylineId.addAll([
+      MapObjectId("_routePolylineId1"),
+      MapObjectId("_routePolylineId2"),
+      MapObjectId("_routePolylineId3"),
+      MapObjectId("_routePolylineId4")
+    ]);
     var resultWithSession = YandexDriving.requestRoutes(
         points: [
           RequestPoint(point: model.appState.structAddressFrom!.point!, requestPointType: RequestPointType.wayPoint),
@@ -183,8 +192,10 @@ class MapController {
     if (model.appState.structAddressFrom != null && model.appState.structAddressTod.isNotEmpty) {
 
       final value = await resultWithSession.result;
+      print(value);
       if (value.routes != null) {
         if (value.routes!.isNotEmpty) {
+          print("DRAW ROUTE");
           DrivingRoute r = value.routes!.first;
 
           //Route

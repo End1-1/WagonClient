@@ -267,6 +267,14 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                       false;
 
                                                   widget.parentState();
+                                                } else {
+                                                  if (focusFrom.hasFocus) {
+                                                    widget.model.appState.addressFrom.text += ', ';
+                                                    widget.model.suggest.suggest(widget.model.appState.addressFrom.text + '1');
+                                                  } else {
+                                                    widget.model.appState.addressTo.text += ', ';
+                                                    widget.model.suggest.suggest(widget.model.appState.addressTo.text + '1');
+                                                  }
                                                 }
                                               },
                                               child: Text(i.displayText,
