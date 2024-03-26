@@ -99,6 +99,36 @@ class MapController {
 
   }
 
+  void addTaxiOnMap(List<dynamic> list) {
+    //clear old list
+    List<MapObject> mm = [];
+      for (MapObject mo in mapObjects) {
+        if (mo.mapId.toString().contains("taxionmap")) {
+          mm.add(mo);
+        }
+      }
+      for (MapObject mo in mm) {
+        mapObjects.remove(mo);
+      }
+
+      //add new list
+    for (final t in list) {
+      int azimuth = t['azimuth'];
+      PlacemarkMapObject pm = PlacemarkMapObject(
+                opacity: 1,
+                mapId:
+                MapObjectId('taxionmap ${mapObjects.length.toString()}'),
+                point: Point(
+                    latitude: t['current_coordinate']['lat'],
+                    longitude: t['current_coordinate']['lut']),
+                icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                    image: BitmapDescriptor.fromAssetImage('images/car.png'),
+                    rotationType: RotationType.rotate)),
+                direction: azimuth.toDouble() );
+            mapObjects.add(pm);
+    }
+  }
+
   void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
     model.appState.addressFrom.text = tr(trGettingAddress);
     model.appState.addressTemp.text = tr(trGettingAddress);
@@ -157,8 +187,12 @@ class MapController {
     if (centerMe) {
       await model.centerme();
     }
-    while (mapObjects.isNotEmpty) {
-      mapObjects.removeLast();
+
+    for (MapObject mo in mapObjects) {
+     if (mo.mapId.toString().contains('taxionmap')) {
+       continue;
+     }
+      mapObjects.remove(mo);
     }
   }
 

@@ -17,7 +17,6 @@ import 'package:wagon_client/screen2/parts/screen_status7.dart';
 import 'package:wagon_client/screen2/parts/screen_taxi.dart';
 import 'package:wagon_client/screens/mainwindow/anim_placemark.dart';
 import 'package:wagon_client/screens/payment/screen.dart';
-import 'package:wagon_client/web/web_parent.dart';
 import 'package:wagon_client/web/web_yandexkey.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -30,6 +29,7 @@ class Screen2 extends StatefulWidget {
 
 class _Screen2State extends State<Screen2>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+
   late AnimationController _backgrounController;
   late Animation<Color?> background;
   Animation<double?>? langPos;
@@ -40,7 +40,6 @@ class _Screen2State extends State<Screen2>
     widget.model.mapController.paintRoute().then((value) {
       setState(() {});
     });
-
   }
 
   @override
@@ -75,6 +74,15 @@ class _Screen2State extends State<Screen2>
           event['event'] == 'DriverOnAcceptOrderEvent' ||
           event['event'] == 'AdminOrderCancel') {
         widget.model.appState.getState(parentState);
+        return;
+      }
+      if (event['event'] == 'ListenRadiusTaxiEvent') {
+        List<dynamic> taxis = event['data']['taxis'];
+        widget.model.mapController.addTaxiOnMap(taxis);
+        setState(() {
+
+        });
+        return;
       }
     });
 
@@ -116,15 +124,29 @@ class _Screen2State extends State<Screen2>
                 visible: widget.model.appState.addressFrom.text.isEmpty ||
                     widget.model.appState.addressTo.text.isEmpty,
                 child: Align(
-                    alignment: Alignment.center, child: StreamBuilder(stream: widget.model.markerStream.stream, builder: (builder, snapshot) {return AnimPlaceMark(widget.model);}))),
+                    alignment: Alignment.center,
+                    child: StreamBuilder(
+                        stream: widget.model.markerStream.stream,
+                        builder: (builder, snapshot) {
+                          return AnimPlaceMark(widget.model);
+                        }))),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: Container()),
-                Row(children: [
-                  Expanded(child: Container()),
-                  InkWell(onTap:widget.model.centerme, child: Container(margin: const EdgeInsets.fromLTRB(0, 0, 10, 10), child: Image.asset('images/gps.png', height: 30,)))
-                ],),
+                Row(
+                  children: [
+                    Expanded(child: Container()),
+                    InkWell(
+                        onTap: widget.model.centerme,
+                        child: Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                            child: Image.asset(
+                              'images/gps.png',
+                              height: 30,
+                            )))
+                  ],
+                ),
                 if (widget.model.appState.acType == 0)
                   ScreenAC(widget.model, parentState),
                 if (widget.model.appState.acType > 0)
@@ -134,13 +156,15 @@ class _Screen2State extends State<Screen2>
                       stream: widget.model.taxiCarsStream.stream,
                       builder: (builder, snapshot) {
                         if (snapshot.data == null) {
-                          return Container();
+                          return Container(
+                            height: 1,
+                          );
                         }
                         return ScreenTaxi(
                             widget.model, snapshot.data, parentState);
                       }),
-                ScreenAddress(widget.model, parentState),
-                ScreenRideOptions(widget.model, parentState),
+                 ScreenAddress(widget.model, parentState),
+                 ScreenRideOptions(widget.model, parentState),
                 ScreenBottom(widget.model, parentState),
               ],
             ),
@@ -149,8 +173,8 @@ class _Screen2State extends State<Screen2>
             AnimatedPositioned(
                 child: PaymentWidget(widget.model, parentState, true),
                 top: widget.model.appState.showChangePayment
-                    ? 0
-                    : MediaQuery.sizeOf(context).height,
+                    ? 0 + (MediaQuery.sizeOf(context).height - (MediaQuery.sizeOf(context).height * 0.8))
+                    : MediaQuery.sizeOf(context).height ,
                 duration: const Duration(milliseconds: 300))
           ],
           if (widget.model.appState.appState == AppState.asSearchTaxi) ...[
@@ -212,9 +236,10 @@ class _Screen2State extends State<Screen2>
                     ),
                     Text(widget.model.appState.dimText),
                     Expanded(child: Container()),
-                    if (bottom != null)
-                      bottom,
-                    Container(height: 10,),
+                    if (bottom != null) bottom,
+                    Container(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),

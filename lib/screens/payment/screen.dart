@@ -49,7 +49,7 @@ class _PaymentWidget extends State<PaymentWidget> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40), topRight: Radius.circular(40))),
         height: widget.widgetMode
-            ? MediaQuery.sizeOf(context).height
+            ? MediaQuery.sizeOf(context).height * 0.8
             : double.infinity,
         width: MediaQuery.sizeOf(context).width,
         child: Column(

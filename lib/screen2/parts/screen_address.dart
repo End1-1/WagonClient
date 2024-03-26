@@ -18,6 +18,9 @@ class ScreenAddress extends StatefulWidget {
 class _ScreenAddress extends State<ScreenAddress> {
   @override
   Widget build(BuildContext context) {
+    if (widget.model.appState.acType == 0) {
+      return Container();
+    }
     return Container(
         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
         decoration: BoxDecoration(
