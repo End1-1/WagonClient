@@ -40,10 +40,18 @@ class Screen2Model {
       case ACType.act_taxi:
         appState.dimVisible = true;
         state();
-        WebInitOpen wr = WebInitOpen(latitude:  Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'));
-        wr.request(parseWebInitOpen, parseError).then((value) {
+        requests.initCoin((){
+          appState.dimVisible = false;
           state();
-        });
+        }, (c,s){});
+
+
+        // WebInitOpen wr = WebInitOpen(latitude:  Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'));
+        // wr.request(parseWebInitOpen, parseError).then((value) {
+        //   state();
+        // });
+
+
         // WebParent w = new WebParent('/app/mobile/init_open', HttpMethod.POST);
         // w.body = <dynamic, dynamic>{
         //   'lat': Consts.getDouble('last_lat'),

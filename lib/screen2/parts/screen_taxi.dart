@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/model/tr.dart';
@@ -59,7 +57,16 @@ class _ScreenTaxi extends State<ScreenTaxi> {
                       : Consts.colorOrange))),
           child: Column(
             children: [
-                Consts.car_class_images[c['class_id']]!,
+              Row(children: [
+                Consts.car_class_images[widget.model.appState.acType]![c['class_id']]!,
+                Container(
+                    child: Text(
+                      '${c['time']} ${tr(trMinOneSymbole)}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Consts.colorRed, fontWeight: FontWeight.bold),
+                    ))
+              ]),
               Container(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: Text(
@@ -76,14 +83,6 @@ class _ScreenTaxi extends State<ScreenTaxi> {
                     style: const TextStyle(
                         color: Consts.colorRed, fontWeight: FontWeight.bold),
                   )),
-              Container(
-                  constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
-                  child: Text(
-                    '5 Ռապե',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Consts.colorRed, fontWeight: FontWeight.bold),
-                  ))
             ],
           ),
         ));

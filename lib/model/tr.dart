@@ -91,6 +91,7 @@ const trLimuzin = 88;
 const trStapVarord = 89;
 const trVulkanacum = 90;
 const trForOrderChooseService = 91;
+const trMinOneSymbole = 92;
 
 const Map<int, String> ru = {
   trMissingInternet: "Отсутствует интернет подключение",
@@ -183,6 +184,7 @@ const Map<int, String> ru = {
    trStapVarord: "Трезвый водитель",
    trVulkanacum: "Вулканизация",
   trForOrderChooseService: 'Для заказа выбирите тип услуги',
+  trMinOneSymbole: 'м'
 };
 
 String tr(int key) {

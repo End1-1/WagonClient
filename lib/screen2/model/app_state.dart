@@ -184,4 +184,8 @@ class AppState {
       }
     }
   }
+
+  bool isFromToDefined() {
+    return structAddressFrom != null && structAddressTod.isNotEmpty;
+  }
 }

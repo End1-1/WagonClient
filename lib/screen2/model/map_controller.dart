@@ -130,6 +130,9 @@ class MapController {
   }
 
   void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
+    if (model.appState.isFromToDefined()) {
+      return;
+    }
     model.appState.addressFrom.text = tr(trGettingAddress);
     model.appState.addressTemp.text = tr(trGettingAddress);
     if (!model.appState.mapPressed && !finished) {

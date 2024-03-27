@@ -51,10 +51,15 @@ Future<void> main() async {
 
   await WebParent('/app/mobile/get_resources', HttpMethod.GET).request((d) {
     for (final e in d) {
-      Consts.car_class_images[e['class_id']] = Image.memory(
-        base64Decode(e['image']),
-        height: 30,
-      );
+      if (!Consts.car_class_images.containsKey(e['transport_type_id'])) {
+        Consts.car_class_images[e['transport_type_id']] = <int, Image>{};
+      }
+      for (final c in e['car_classes']) {
+        Consts.car_class_images[e['transport_type_id']]![c['class_id']] = Image.memory(
+          base64Decode(c['image']),
+          height: 30,
+        );
+      }
     }
   }, (c,s ) {
 

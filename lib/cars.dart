@@ -36,6 +36,7 @@ class Car extends Object {
   String name;
   double? min_price;
   double? coin;
+  int closest_driver_duration;
   //String? image;
 
   @JsonKey(defaultValue: 0)
@@ -49,6 +50,7 @@ class Car extends Object {
       this.name,
       this.min_price,
       this.coin,
+      this.closest_driver_duration,
       //this.image,
       this.selected,
       this.car_options,

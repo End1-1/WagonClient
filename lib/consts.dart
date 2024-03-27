@@ -65,7 +65,7 @@ class Consts {
     return r;
   }
 
-  static final car_class_images = <int, Image> {
+  static final car_class_images = <int, Map<int, Image> > {
 
   };
 

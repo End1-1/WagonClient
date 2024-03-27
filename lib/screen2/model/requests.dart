@@ -51,7 +51,8 @@ class Requests {
           carclasses.add({'class_id': c.class_id,
             'name': c.name,
             'image': '',
-            'min_price': c.min_price == null ? c.coin : c.min_price
+            'min_price': c.min_price == null ? c.coin : c.min_price,
+            'time': c.closest_driver_duration
           });
         }
         model.taxiCarsStream.add(carclasses);
@@ -94,15 +95,15 @@ class Requests {
 
     var first = true;
     for (final e in mp['data']['car_classes']) {
-      ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
-          e['class_id'],
-          'images/car2.png',
-          '',
-          e['name'],
-          'No comment for now',
-          double.tryParse(e['min_price'].toString()) ?? 0));
-
-      first = false;
+      // ResourceCarTypes.res.first!.types.add(CarSubtypeStruct(
+      //     e['class_id'],
+      //     'images/car2.png',
+      //     '',
+      //     e['name'],
+      //     'No comment for now',
+      //     double.tryParse(e['min_price'].toString()) ?? 0));
+      //
+      // first = false;
     }
 
     model.appState.companies.clear();
