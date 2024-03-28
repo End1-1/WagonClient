@@ -13,7 +13,6 @@ import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-
 class MapController {
   final mapBroadcast = StreamController.broadcast();
   late YandexMapController mapController;
@@ -31,11 +30,10 @@ class MapController {
 
   void mapReady(YandexMapController controller) async {
     mapController = controller;
-    mapController.moveCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: Point(
-                latitude: Consts.getDouble('last_lat'),
-                longitude: Consts.getDouble('last_lon')))));
+    mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: Point(
+            latitude: Consts.getDouble('last_lat'),
+            longitude: Consts.getDouble('last_lon')))));
     await _getLocation();
     model.socket.authSocket();
   }
@@ -68,68 +66,67 @@ class MapController {
             zoom: 16)),
         animation: MapAnimation(duration: 1));
 
-      //RouteHandler.routeHandler.setPointFrom(p);
-      model.mapController.mapController.moveCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-              target: Point(latitude: p.latitude, longitude: p.longitude),
-              zoom: 16)));
+    //RouteHandler.routeHandler.setPointFrom(p);
+    model.mapController.mapController.moveCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: Point(latitude: p.latitude, longitude: p.longitude),
+            zoom: 16)));
 
-      WebInitOpen webInitOpen =
-      WebInitOpen(latitude: p.latitude!, longitude: p.longitude!);
-      webInitOpen.request((mp) {
-        model.requests.parseInitOpenData(mp);
-        model.requests.initCoin(() {}, (c, s) {
-          if (c == 401) {
-            Consts.setString("bearer", "");
-            Navigator.pushReplacement(Consts.navigatorKey.currentContext!,
-                MaterialPageRoute(builder: (context) => LoginScreen()));
-          } else {
-            Dlg.show("initCoin()\r\n" + s);
-          }
-        });
-      }, (c, s) {
+    WebInitOpen webInitOpen =
+        WebInitOpen(latitude: p.latitude!, longitude: p.longitude!);
+    webInitOpen.request((mp) {
+      model.requests.parseInitOpenData(mp);
+      model.requests.initCoin(() {}, (c, s) {
         if (c == 401) {
           Consts.setString("bearer", "");
-          Navigator.pushReplacement(
-              Consts.navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => LoginScreen()));
+          Navigator.pushReplacement(Consts.navigatorKey.currentContext!,
+              MaterialPageRoute(builder: (context) => LoginScreen()));
         } else {
-          Dlg.show("initOpen()\r\n");
+          Dlg.show("initCoin()\r\n" + s);
         }
       });
-
+    }, (c, s) {
+      if (c == 401) {
+        Consts.setString("bearer", "");
+        Navigator.pushReplacement(Consts.navigatorKey.currentContext!,
+            MaterialPageRoute(builder: (context) => LoginScreen()));
+      } else {
+        Dlg.show("initOpen()\r\n");
+      }
+    });
   }
 
   void addTaxiOnMap(List<dynamic> list) {
     //clear old list
     List<MapObject> mm = [];
-      for (MapObject mo in mapObjects) {
-        if (mo.mapId.toString().contains("taxionmap")) {
-          mm.add(mo);
-        }
+    for (MapObject mo in mapObjects) {
+      if (mo.mapId.toString().contains("taxionmap")) {
+        mm.add(mo);
       }
-      for (MapObject mo in mm) {
-        mapObjects.remove(mo);
-      }
+    }
+    for (MapObject mo in mm) {
+      mapObjects.remove(mo);
+    }
 
-      //add new list
+    //add new list
     for (final t in list) {
       int azimuth = t['azimuth'];
       PlacemarkMapObject pm = PlacemarkMapObject(
-                opacity: 1,
-                mapId:
-                MapObjectId('taxionmap ${mapObjects.length.toString()}'),
-                point: Point(
-                    latitude: t['current_coordinate']['lat'],
-                    longitude: t['current_coordinate']['lut']),
-                icon: PlacemarkIcon.single(PlacemarkIconStyle(
-                    image: BitmapDescriptor.fromAssetImage('images/car.png'),
-                    rotationType: RotationType.rotate)),
-                direction: azimuth.toDouble() );
-            mapObjects.add(pm);
+          opacity: 1,
+          mapId: MapObjectId('taxionmap ${mapObjects.length.toString()}'),
+          point: Point(
+              latitude: t['current_coordinate']['lat'],
+              longitude: t['current_coordinate']['lut']),
+          icon: PlacemarkIcon.single(PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('images/car.png'),
+              rotationType: RotationType.rotate)),
+          direction: azimuth.toDouble());
+      mapObjects.add(pm);
     }
   }
 
-  void cameraPosition(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
+  void cameraPosition(
+      CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
     if (model.appState.isFromToDefined()) {
       return;
     }
@@ -143,7 +140,8 @@ class MapController {
       model.appState.mapPressed = false;
       model.markerStream.add(null);
     }
-    YandexGeocodeHandler().geocode(cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
+    YandexGeocodeHandler().geocode(
+        cameraPosition.target.latitude, cameraPosition.target.longitude, (d) {
       print(d);
       Consts.setDouble('last_lat', cameraPosition.target.latitude);
       Consts.setDouble('last_lon', cameraPosition.target.longitude);
@@ -160,10 +158,10 @@ class MapController {
           }
         }
       }
-      if (model.appState.appState == AppState.asSearchOnMapFrom
-      || model.appState.appState == AppState.asSearchOnMapTo) {
-          model.appState.addressTemp.text = d.title;
-          model.appState.structAddressTemp = d;
+      if (model.appState.appState == AppState.asSearchOnMapFrom ||
+          model.appState.appState == AppState.asSearchOnMapTo) {
+        model.appState.addressTemp.text = d.title;
+        model.appState.structAddressTemp = d;
       }
     });
   }
@@ -191,10 +189,10 @@ class MapController {
       await model.centerme();
     }
 
-    for (MapObject mo in mapObjects) {
-     if (mo.mapId.toString().contains('taxionmap')) {
-       continue;
-     }
+    for (MapObject mo in mapObjects.toList()) {
+      if (mo.mapId.toString().contains('taxionmap')) {
+        continue;
+      }
       mapObjects.remove(mo);
     }
   }
@@ -213,21 +211,25 @@ class MapController {
     ]);
     var resultWithSession = YandexDriving.requestRoutes(
         points: [
-          RequestPoint(point: model.appState.structAddressFrom!.point!, requestPointType: RequestPointType.wayPoint),
-          for (int i = 0; i < model.appState.structAddressTod.length - 1; i++) ... [
-            RequestPoint(point: model.appState.structAddressTod[i].point!, requestPointType: RequestPointType.viaPoint),
+          RequestPoint(
+              point: model.appState.structAddressFrom!.point!,
+              requestPointType: RequestPointType.wayPoint),
+          for (int i = 0;
+              i < model.appState.structAddressTod.length - 1;
+              i++) ...[
+            RequestPoint(
+                point: model.appState.structAddressTod[i].point!,
+                requestPointType: RequestPointType.viaPoint),
           ],
-          RequestPoint(point: model.appState.structAddressTod.last.point!, requestPointType: RequestPointType.wayPoint),
+          RequestPoint(
+              point: model.appState.structAddressTod.last.point!,
+              requestPointType: RequestPointType.wayPoint),
         ],
         drivingOptions: const DrivingOptions(
-            initialAzimuth: 0,
-            routesCount: 1,
-            avoidTolls: true
-        )
-    );
+            initialAzimuth: 0, routesCount: 1, avoidTolls: true));
 
-    if (model.appState.structAddressFrom != null && model.appState.structAddressTod.isNotEmpty) {
-
+    if (model.appState.structAddressFrom != null &&
+        model.appState.structAddressTod.isNotEmpty) {
       final value = await resultWithSession.result;
       print(value);
       if (value.routes != null) {
@@ -280,11 +282,8 @@ class MapController {
                       'images/circle_bold_black.png'),
                   rotationType: RotationType.rotate)));
           mapObjects.add(point);
-
-
         }
       }
-
     }
   }
 }

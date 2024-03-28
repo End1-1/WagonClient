@@ -54,9 +54,14 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
             onPanEnd: (d) {
               if (x > 150) {
                 widget.model.appState.showFullAddressWidget = false;
+                widget.model.requests.initCoin((){
+                  setState(() {});
+                }, (c,s){});
               }
               x = 0;
-              setState(() {});
+              setState(() {
+
+              });
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -265,8 +270,14 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                   widget.model.appState
                                                           .showFullAddressWidget =
                                                       false;
-
-                                                  widget.parentState();
+                                                  if (widget.model.appState.isFromToDefined()) {
+                                                    widget.model.requests.initCoin((){
+                                                      widget.parentState();
+                                                    }
+                                                        , (c,s){});
+                                                  } else {
+                                                    widget.parentState();
+                                                  }
                                                 } else {
                                                   if (focusFrom.hasFocus) {
                                                     widget.model.appState.addressFrom.text += ', ';
