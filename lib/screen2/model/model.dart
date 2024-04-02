@@ -4,12 +4,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/consts.dart';
+import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_websocket.dart';
 import 'package:wagon_client/screen2/model/requests.dart';
 import 'package:wagon_client/screen2/model/suggestions.dart';
 import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_parent.dart';
+import 'package:wagon_client/web/yandex_geocode.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'app_state.dart';
@@ -32,6 +34,15 @@ class Screen2Model {
     requests = Requests(this);
     suggest = Suggestions(this);
     appState = AppState(this);
+
+    if (Consts.getDouble('last_lat') > 0.01) {
+      YandexGeocodeHandler().geocode(
+          Consts.getDouble('last_lat'), Consts.getDouble('last_lon'), (d) {
+        appState.addressFrom.text = d.title;
+        appState.structAddressFrom = d;
+        appState.addressTemp.text = d.title;
+        appState.structAddressTemp = d;
+      });}
   }
 
   void setAcType(int t, Function state) {
@@ -43,7 +54,9 @@ class Screen2Model {
         requests.initCoin((){
           appState.dimVisible = false;
           state();
-        }, (c,s){});
+        }, (c,s){
+          Dlg.show(s);
+        });
 
 
         // WebInitOpen wr = WebInitOpen(latitude:  Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'));

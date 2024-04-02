@@ -34,11 +34,11 @@ class MapController {
         target: Point(
             latitude: Consts.getDouble('last_lat'),
             longitude: Consts.getDouble('last_lon')))));
-    await _getLocation();
+    await getLocation();
     model.socket.authSocket();
   }
 
-  Future<void> _getLocation() async {
+  Future<void> getLocation() async {
     bool _serviceEnabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
 
@@ -76,15 +76,15 @@ class MapController {
         WebInitOpen(latitude: p.latitude!, longitude: p.longitude!);
     webInitOpen.request((mp) {
       model.requests.parseInitOpenData(mp);
-      model.requests.initCoin(() {}, (c, s) {
-        if (c == 401) {
-          Consts.setString("bearer", "");
-          Navigator.pushReplacement(Consts.navigatorKey.currentContext!,
-              MaterialPageRoute(builder: (context) => LoginScreen()));
-        } else {
-          Dlg.show("initCoin()\r\n" + s);
-        }
-      });
+      // model.requests.initCoin(() {}, (c, s) {
+      //   if (c == 401) {
+      //     Consts.setString("bearer", "");
+      //     Navigator.pushReplacement(Consts.navigatorKey.currentContext!,
+      //         MaterialPageRoute(builder: (context) => LoginScreen()));
+      //   } else {
+      //     Dlg.show("initCoin()\r\n" + s);
+      //   }
+      // });
     }, (c, s) {
       if (c == 401) {
         Consts.setString("bearer", "");
@@ -199,10 +199,10 @@ class MapController {
 
   Future<void> paintRoute() async {
     await removePolyline(centerMe: false);
-    if (model.appState.structAddressTod.isEmpty) {
+    routePolylineId.clear();
+    if (model.appState.structAddressTod.isEmpty || model.appState.structAddressFrom == null) {
       return;
     }
-    routePolylineId.clear();
     routePolylineId.addAll([
       MapObjectId("_routePolylineId1"),
       MapObjectId("_routePolylineId2"),

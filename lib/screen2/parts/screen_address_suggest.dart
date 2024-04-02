@@ -51,17 +51,20 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
               }
               setState(() {});
             },
-            onPanEnd: (d) {
+            onPanEnd: (d) async {
               if (x > 150) {
                 widget.model.appState.showFullAddressWidget = false;
-                widget.model.requests.initCoin((){
+                await widget.model.requests.initCoin(() async {
+                  await widget.model.mapController.paintRoute();
                   setState(() {});
-                }, (c,s){});
+                }, (c, s) async {
+                  await widget.model.mapController
+                      .removePolyline(centerMe: false);
+                  setState(() {});
+                });
               }
               x = 0;
-              setState(() {
-
-              });
+              setState(() {});
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -130,6 +133,9 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       InkWell(
                         onTap: () {
                           widget.model.appState.addressFrom.clear();
+                          if (widget.model.appState.structAddressFrom != null) {
+                            widget.model.appState.structAddressFrom = null;
+                          }
                           focusFrom.requestFocus();
                         },
                         child: Image.asset(
@@ -139,7 +145,6 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       ),
                       InkWell(
                         onTap: () {
-                          exit(0);
                         },
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
@@ -177,6 +182,10 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       InkWell(
                         onTap: () {
                           widget.model.appState.addressTo.clear();
+                          if (widget
+                              .model.appState.structAddressTod.isNotEmpty) {
+                            widget.model.appState.structAddressTod.removeLast();
+                          }
                           focusTo.requestFocus();
                         },
                         child: Image.asset(
@@ -186,7 +195,6 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       ),
                       InkWell(
                         onTap: () {
-                          exit(0);
                         },
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
@@ -270,21 +278,39 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                   widget.model.appState
                                                           .showFullAddressWidget =
                                                       false;
-                                                  if (widget.model.appState.isFromToDefined()) {
-                                                    widget.model.requests.initCoin((){
+                                                  if (widget.model.appState
+                                                      .isFromToDefined()) {
+                                                    widget.model.requests
+                                                        .initCoin(() {
                                                       widget.parentState();
-                                                    }
-                                                        , (c,s){});
+                                                    }, (c, s) {});
                                                   } else {
                                                     widget.parentState();
                                                   }
                                                 } else {
                                                   if (focusFrom.hasFocus) {
-                                                    widget.model.appState.addressFrom.text += ', ';
-                                                    widget.model.suggest.suggest(widget.model.appState.addressFrom.text + '1');
+                                                    widget
+                                                        .model
+                                                        .appState
+                                                        .addressFrom
+                                                        .text += ', ';
+                                                    widget.model.suggest
+                                                        .suggest(widget
+                                                                .model
+                                                                .appState
+                                                                .addressFrom
+                                                                .text +
+                                                            '1');
                                                   } else {
-                                                    widget.model.appState.addressTo.text += ', ';
-                                                    widget.model.suggest.suggest(widget.model.appState.addressTo.text + '1');
+                                                    widget.model.appState
+                                                        .addressTo.text += ', ';
+                                                    widget.model.suggest
+                                                        .suggest(widget
+                                                                .model
+                                                                .appState
+                                                                .addressTo
+                                                                .text +
+                                                            '1');
                                                   }
                                                 }
                                               },

@@ -46,7 +46,6 @@ class _ScreenAC extends State<ScreenAC> {
     return InkWell(
         onTap: () {
           widget.model.setAcType(act, widget.parentState);
-          widget.parentState();
         },
         child: Container(
           padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),

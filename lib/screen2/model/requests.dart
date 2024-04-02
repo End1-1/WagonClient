@@ -19,7 +19,7 @@ class Requests {
 
   Requests(this.model);
 
-  void initCoin(Function? f, Function? fail) async {
+  Future<void> initCoin(Function? f, Function? fail) async {
     if (Consts
         .getString("bearer")
         .isEmpty) {
