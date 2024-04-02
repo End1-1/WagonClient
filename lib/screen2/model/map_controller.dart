@@ -127,7 +127,9 @@ class MapController {
 
   void cameraPosition(
       CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
-    if (model.appState.isFromToDefined()) {
+    if (model.appState.isFromToDefined()
+      && model.appState.appState != AppState.asSearchOnMapFrom
+      && model.appState.appState != AppState.asSearchOnMapTo) {
       return;
     }
     model.appState.addressFrom.text = tr(trGettingAddress);
@@ -189,6 +191,7 @@ class MapController {
       await model.centerme();
     }
 
+    routePolylineId.clear();
     for (MapObject mo in mapObjects.toList()) {
       if (mo.mapId.toString().contains('taxionmap')) {
         continue;
@@ -199,7 +202,6 @@ class MapController {
 
   Future<void> paintRoute() async {
     await removePolyline(centerMe: false);
-    routePolylineId.clear();
     if (model.appState.structAddressTod.isEmpty || model.appState.structAddressFrom == null) {
       return;
     }
@@ -279,7 +281,7 @@ class MapController {
               point: model.appState.structAddressTod.last.point!,
               icon: PlacemarkIcon.single(PlacemarkIconStyle(
                   image: BitmapDescriptor.fromAssetImage(
-                      'images/circle_bold_black.png'),
+                      'images/circle_bold_red.png'),
                   rotationType: RotationType.rotate)));
           mapObjects.add(point);
         }

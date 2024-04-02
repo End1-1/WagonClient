@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:wagon_client/model/address_model.dart';
 import 'package:wagon_client/model/tr.dart';
+import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class ScreenAddressSuggest extends StatefulWidget {
   final Screen2Model model;
@@ -145,6 +147,8 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       ),
                       InkWell(
                         onTap: () {
+                          widget.model.appState.appState = AppState.asSearchOnMapFrom;
+                          widget.parentState();
                         },
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
@@ -195,6 +199,8 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       ),
                       InkWell(
                         onTap: () {
+                          widget.model.appState.appState = AppState.asSearchOnMapTo;
+                          widget.parentState();
                         },
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(5, 0, 15, 0),
@@ -235,12 +241,12 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                       .model
                                                       .appState
                                                       .addressFrom
-                                                      .text = i.displayText;
+                                                      .text = i.type == SuggestItemType.toponym ? i.displayText : '${i.title} ${i.subtitle}';
                                                   widget.model.appState
                                                           .structAddressFrom =
                                                       AddressStruct(
                                                           address:
-                                                              i.displayText,
+                                                          i.type == SuggestItemType.toponym ? i.displayText : '${i.title} ${i.subtitle}',
                                                           title: i.title,
                                                           point: i.center);
                                                 } else {
@@ -248,7 +254,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                       .model
                                                       .appState
                                                       .addressTo
-                                                      .text = i.displayText;
+                                                      .text = i.type == SuggestItemType.toponym ? i.displayText : '${i.title} ${i.subtitle}';
                                                   if (widget
                                                       .model
                                                       .appState
@@ -258,7 +264,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                         .structAddressTod
                                                         .add(AddressStruct(
                                                             address:
-                                                                i.searchText,
+                                                            i.type == SuggestItemType.toponym ? i.displayText : '${i.title} ${i.subtitle}',
                                                             title: i.title,
                                                             point: i.center));
                                                   } else {
@@ -274,7 +280,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                 widget.model.suggestStream
                                                     .add(null);
                                                 print(i.tags);
-                                                if (i.tags.contains('house')) {
+                                                if (i.tags.contains('house') || i.type == SuggestItemType.business ) {
                                                   widget.model.appState
                                                           .showFullAddressWidget =
                                                       false;
@@ -314,7 +320,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                                                   }
                                                 }
                                               },
-                                              child: Text(i.displayText,
+                                              child: Text(i.type == SuggestItemType.toponym ? i.displayText : '${i.title} ${i.subtitle}',
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis))),

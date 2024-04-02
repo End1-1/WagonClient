@@ -96,7 +96,18 @@ class _Screen2State extends State<Screen2>
     if (widget.model.appState.appState == AppState.asNone) {
       widget.model.appState.getState(parentState);
     }
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+        onPopInvoked: (didPop) async {
+        widget.model.appState.acType = 0;
+        widget.model.appState.structAddressTod.clear();
+        widget.model.appState.addressTo.clear();
+        await widget.model.mapController.removePolyline(centerMe: false);
+        setState(() {
+
+        });
+      },
+        child:  Scaffold(
       // appBar: AppBar(
       //   backgroundColor: Colors.transparent,
       // ),
@@ -191,7 +202,7 @@ class _Screen2State extends State<Screen2>
           ],
         ],
       )),
-    );
+    ));
   }
 
   @override
