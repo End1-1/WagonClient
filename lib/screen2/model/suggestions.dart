@@ -36,6 +36,9 @@ class Suggestions {
         if (i.tags.contains('province')) {
           continue;
         }
+        if (i.center == null) {
+          continue;
+        }
         var distance = CalcGPSDistance(Consts.getDouble('last_lat'), Consts.getDouble('last_lon'), i.center.latitude, i.center.longitude);
         if (distance > 50000 ){
           continue;

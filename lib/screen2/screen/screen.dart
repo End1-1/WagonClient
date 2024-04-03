@@ -115,12 +115,13 @@ class _Screen2State extends State<Screen2>
           child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          YandexMap(
+          Column(children:[
+          Expanded(child: YandexMap(
             rotateGesturesEnabled: false,
             onMapCreated: widget.model.mapController.mapReady,
             onCameraPositionChanged: widget.model.mapController.cameraPosition,
             mapObjects: widget.model.mapController.mapObjects,
-          ),
+          )), Container(height: 50)]),
           if (widget.model.appState.appState == AppState.asSearchOnMapFrom ||
               widget.model.appState.appState == AppState.asSearchOnMapTo) ...[
             ScreenOnMap(widget.model, parentState),

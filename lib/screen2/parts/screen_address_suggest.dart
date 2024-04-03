@@ -199,6 +199,7 @@ class _ScreenAddressSuggest extends State<ScreenAddressSuggest> {
                       ),
                       InkWell(
                         onTap: () {
+                          focusTo.requestFocus();
                           widget.model.appState.appState = AppState.asSearchOnMapTo;
                           widget.parentState();
                         },
