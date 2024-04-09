@@ -134,7 +134,7 @@ class MapController {
         model.appState.appState != AppState.asSearchOnMapTo) {
       return;
     }
-    model.appState.addressFrom.text = tr(trGettingAddress);
+    //model.appState.addressFrom.text = tr(trGettingAddress);
     model.appState.addressTemp.text = tr(trGettingAddress);
     if (!model.appState.mapPressed && !finished) {
       model.appState.mapPressed = true;
