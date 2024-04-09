@@ -71,9 +71,18 @@ class _ScreenOnMap extends State<ScreenOnMap> {
                             margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             child: InkWell(
                                 onTap: () {
-                                  widget.model.appState.copyTempAddress();
-                                  widget.model.appState.appState = AppState.asIdle;
+                                  widget.model.appState.dimVisible = true;
                                   widget.parentState();
+                                  widget.model.appState.copyTempAddress();
+                                  widget.model.requests.initCoin((){
+                                    widget.model.appState.appState = AppState.asIdle;
+                                    widget.model.appState.dimVisible = false;
+                                    widget.parentState();
+                                  }, (c, s){
+                                    widget.model.appState.dimVisible = false;
+                                    widget.model.appState.appState = AppState.asIdle;
+                                    widget.parentState();
+                                  });
                                 },
                                 child: Container(
                                     alignment: Alignment.center,
