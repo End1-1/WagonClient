@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:vector_math/vector_math.dart' hide Colors;
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
 import 'package:wagon_client/model/address_model.dart';
@@ -15,7 +17,7 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class MapController {
   final mapBroadcast = StreamController.broadcast();
-  late YandexMapController mapController;
+  YandexMapController? mapController;
   final Screen2Model model;
   final List<MapObject> mapObjects = [];
 
@@ -30,7 +32,7 @@ class MapController {
 
   void mapReady(YandexMapController controller) async {
     mapController = controller;
-    mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+    mapController!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: Point(
             latitude: Consts.getDouble('last_lat'),
             longitude: Consts.getDouble('last_lon')))));
@@ -60,14 +62,14 @@ class MapController {
     );
 
     Position p = await Geolocator.getCurrentPosition();
-    mapController.moveCamera(
+    mapController!.moveCamera(
         CameraUpdate.newCameraPosition(CameraPosition(
             target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: 16)),
         animation: MapAnimation(duration: 1));
 
     //RouteHandler.routeHandler.setPointFrom(p);
-    model.mapController.mapController.moveCamera(CameraUpdate.newCameraPosition(
+    model.mapController.mapController!.moveCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: 16)));
@@ -127,10 +129,12 @@ class MapController {
 
   void cameraPosition(
       CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
-    if (model.appState.isFromToDefined()) {
+    if (model.appState.isFromToDefined() &&
+        model.appState.appState != AppState.asSearchOnMapFrom &&
+        model.appState.appState != AppState.asSearchOnMapTo) {
       return;
     }
-    model.appState.addressFrom.text = tr(trGettingAddress);
+    //model.appState.addressFrom.text = tr(trGettingAddress);
     model.appState.addressTemp.text = tr(trGettingAddress);
     if (!model.appState.mapPressed && !finished) {
       model.appState.mapPressed = true;
@@ -189,6 +193,7 @@ class MapController {
       await model.centerme();
     }
 
+    routePolylineId.clear();
     for (MapObject mo in mapObjects.toList()) {
       if (mo.mapId.toString().contains('taxionmap')) {
         continue;
@@ -199,8 +204,8 @@ class MapController {
 
   Future<void> paintRoute() async {
     await removePolyline(centerMe: false);
-    routePolylineId.clear();
-    if (model.appState.structAddressTod.isEmpty || model.appState.structAddressFrom == null) {
+    if (model.appState.structAddressTod.isEmpty ||
+        model.appState.structAddressFrom == null) {
       return;
     }
     routePolylineId.addAll([
@@ -279,11 +284,41 @@ class MapController {
               point: model.appState.structAddressTod.last.point!,
               icon: PlacemarkIcon.single(PlacemarkIconStyle(
                   image: BitmapDescriptor.fromAssetImage(
-                      'images/circle_bold_black.png'),
+                      'images/circle_bold_red.png'),
                   rotationType: RotationType.rotate)));
           mapObjects.add(point);
+
+          double zoom = 13;
+          mapController?.moveCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: midPoint(
+                      model.appState.structAddressFrom!.point!.latitude,
+                      model.appState.structAddressFrom!.point!.longitude,
+                      model.appState.structAddressTod.last.point!.latitude,
+                      model.appState.structAddressTod.last.point!.longitude),
+                  zoom: zoom)));
         }
       }
     }
+  }
+
+  Point midPoint(double lat1, double lon1, double lat2, double lon2) {
+    double dLon = radians(lon2 - lon1);
+
+    //convert to radians
+    lat1 = radians(lat1);
+    lat2 = radians(lat2);
+    lon1 = radians(lon1);
+
+    double Bx = cos(lat2) * cos(dLon);
+    double By = cos(lat2) * sin(dLon);
+    double lat3 = atan2(sin(lat1) + sin(lat2),
+        sqrt((cos(lat1) + Bx) * (cos(lat1) + Bx) + By * By));
+    double lon3 = lon1 + atan2(By, cos(lat1) + Bx);
+
+    lat3 = degrees(lat3);
+    lon3 = degrees(lon3);
+
+    return Point(latitude: lat3, longitude: lon3);
   }
 }

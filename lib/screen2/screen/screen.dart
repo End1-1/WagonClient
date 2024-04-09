@@ -96,7 +96,18 @@ class _Screen2State extends State<Screen2>
     if (widget.model.appState.appState == AppState.asNone) {
       widget.model.appState.getState(parentState);
     }
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+        onPopInvoked: (didPop) async {
+        widget.model.appState.acType = 0;
+        widget.model.appState.structAddressTod.clear();
+        widget.model.appState.addressTo.clear();
+        await widget.model.mapController.removePolyline(centerMe: false);
+        setState(() {
+
+        });
+      },
+        child:  Scaffold(
       // appBar: AppBar(
       //   backgroundColor: Colors.transparent,
       // ),
@@ -104,12 +115,13 @@ class _Screen2State extends State<Screen2>
           child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          YandexMap(
+          Column(children:[
+          Expanded(child: YandexMap(
             rotateGesturesEnabled: false,
             onMapCreated: widget.model.mapController.mapReady,
             onCameraPositionChanged: widget.model.mapController.cameraPosition,
             mapObjects: widget.model.mapController.mapObjects,
-          ),
+          )), Container(height: 50)]),
           if (widget.model.appState.appState == AppState.asSearchOnMapFrom ||
               widget.model.appState.appState == AppState.asSearchOnMapTo) ...[
             ScreenOnMap(widget.model, parentState),
@@ -191,7 +203,7 @@ class _Screen2State extends State<Screen2>
           ],
         ],
       )),
-    );
+    ));
   }
 
   @override

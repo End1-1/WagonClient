@@ -29,8 +29,11 @@ class _ScreenAcSelected extends State<ScreenAcSelected> {
       ),
         child: Row(
       children: [
-        InkWell(onTap: (){
+        InkWell(onTap: () async {
           widget.model.appState.acType = 0;
+          await widget.model.mapController.removePolyline(centerMe: false);
+          widget.model.appState.structAddressTod.clear();
+          widget.model.appState.addressTo.clear();
           widget.parentState();
         }, child: Image.asset('images/arrowbackward.png',  height:  50,)),
         SvgPicture.asset(

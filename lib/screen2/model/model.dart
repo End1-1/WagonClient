@@ -104,7 +104,7 @@ class Screen2Model {
 
   Future<void> centerme() async {
     Position p = await Geolocator.getCurrentPosition();
-    mapController.mapController.moveCamera(
+    mapController.mapController!.moveCamera(
         CameraUpdate.newCameraPosition(CameraPosition(
             target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: 18)),
