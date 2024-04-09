@@ -217,7 +217,7 @@ class _Screen2State extends State<Screen2>
 
   Widget _dimWidget(BuildContext context, Widget? bottom) {
     return Visibility(
-        visible: widget.model.appState.dimVisible,
+        visible: widget.model.appState.dimVisible ,
         child: AnimatedBuilder(
           animation: _backgrounController,
           builder: (BuildContext context, Widget? child) {
