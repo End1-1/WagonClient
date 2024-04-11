@@ -37,6 +37,7 @@ class AppState {
   AddressStruct? structAddressTemp;
 
   var showFullAddressWidget = false;
+  var showFullAddressWidgetTo = false;
   var focusFrom = true;
   var showRideOptions = false;
   var showChangePayment = false;

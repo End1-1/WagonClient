@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
@@ -9,6 +10,7 @@ import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_websocket.dart';
 import 'package:wagon_client/screen2/model/requests.dart';
 import 'package:wagon_client/screen2/model/suggestions.dart';
+import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/web/web_initopen.dart';
 import 'package:wagon_client/web/web_parent.dart';
 import 'package:wagon_client/web/yandex_geocode.dart';
@@ -26,8 +28,8 @@ class Screen2Model {
   late final Requests requests;
   late final MapController mapController;
   final suggestStream = StreamController.broadcast();
-  final taxiCarsStream = StreamController.broadcast();
   final markerStream = StreamController.broadcast();
+  final List<dynamic> cars = [];
 
   Screen2Model() {
     mapController = MapController(this);
@@ -76,12 +78,12 @@ class Screen2Model {
   }
 
   void parseWebInitOpen(dynamic d) {
-    List<dynamic> cars = d['data']['car_classes'];
+    cars.clear();
+    cars.addAll(d['data']['car_classes']);
     if (cars.isNotEmpty) {
       appState.currentCar = cars[0]['class_id'];
     }
     appState.dimVisible = false;
-    taxiCarsStream.add(cars);
   }
 
   void parseError(int code, String err) {
@@ -109,5 +111,15 @@ class Screen2Model {
             target: Point(latitude: p.latitude, longitude: p.longitude),
             zoom: 18)),
         animation: MapAnimation(duration: 1));
+  }
+
+  void logout() {
+    Consts.setInt("client_id", 0);
+    Consts.setString("phone", "");
+    Consts.setString("bearer", "");
+    Navigator.pushReplacement(
+        Consts.navigatorKey.currentContext!,
+        MaterialPageRoute(
+            builder: (context) => LoginScreen()));
   }
 }

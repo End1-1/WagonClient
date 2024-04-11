@@ -9,6 +9,7 @@ import 'package:wagon_client/screen2/parts/screen_ac.dart';
 import 'package:wagon_client/screen2/parts/screen_ac_selected.dart';
 import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
+import 'package:wagon_client/screen2/parts/screen_address_suggest_to.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
 import 'package:wagon_client/screen2/parts/screen_ride_options.dart';
 import 'package:wagon_client/screen2/parts/screen_search_onmap.dart';
@@ -79,9 +80,9 @@ class _Screen2State extends State<Screen2>
       if (event['event'] == 'ListenRadiusTaxiEvent') {
         List<dynamic> taxis = event['data']['taxis'];
         widget.model.mapController.addTaxiOnMap(taxis);
-        setState(() {
-
-        });
+        // setState(() {
+        //
+        // });
         return;
       }
     });
@@ -164,17 +165,8 @@ class _Screen2State extends State<Screen2>
                 if (widget.model.appState.acType > 0)
                   ScreenAcSelected(widget.model, parentState),
                 if (widget.model.appState.acType == ACType.act_taxi)
-                  StreamBuilder(
-                      stream: widget.model.taxiCarsStream.stream,
-                      builder: (builder, snapshot) {
-                        if (snapshot.data == null) {
-                          return Container(
-                            height: 1,
-                          );
-                        }
-                        return ScreenTaxi(
-                            widget.model, snapshot.data, parentState);
-                      }),
+                   ScreenTaxi(
+                            widget.model, widget.model.cars, parentState),
                  ScreenAddress(widget.model, parentState),
                  ScreenRideOptions(widget.model, parentState),
                 ScreenBottom(widget.model, parentState),
@@ -182,6 +174,7 @@ class _Screen2State extends State<Screen2>
             ),
             _dimWidget(context, null),
             ScreenAddressSuggest(widget.model, parentState),
+            ScreenAddressSuggestTo(widget.model, parentState),
             AnimatedPositioned(
                 child: PaymentWidget(widget.model, parentState, true),
                 top: widget.model.appState.showChangePayment
@@ -201,6 +194,10 @@ class _Screen2State extends State<Screen2>
           if (widget.model.appState.appState == AppState.asOrderEnd) ...[
             ScreenStatus7(widget.model, parentState)
           ],
+          //MENU
+          Align(child: IconButton(icon: Icon(Icons.menu), onPressed: (){
+            widget.model.logout();
+          },), alignment: Alignment.topLeft,)
         ],
       )),
     ));

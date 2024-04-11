@@ -46,16 +46,16 @@ class Requests {
           f();
         }
 
-        final carclasses = <dynamic>[];
+        model.cars.clear();
         for (final c in cc.car_classes) {
-          carclasses.add({'class_id': c.class_id,
+          model.cars.add({'class_id': c.class_id,
             'name': c.name,
             'image': '',
             'min_price': c.min_price == null ? c.coin : c.min_price,
             'time': c.closest_driver_duration
           });
         }
-        model.taxiCarsStream.add(carclasses);
+
         await model.mapController.paintRoute();
 
       }, (c, s) {

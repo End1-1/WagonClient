@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:wagon_client/enter_phone.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/web/web_parent.dart';
 import 'package:wagon_client/web/web_settings.dart';
