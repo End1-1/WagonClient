@@ -36,7 +36,7 @@ dependencies:
   #otp_autofill: ^1.0.0
   masked_text: ^1.1.2
   freezed: ^2.3.2
-  flutter_bloc: ^8.1.2
+  flutter_bloc: ^8.1.5
   audioplayers: ^5.0.0
   soundpool: ^2.3.0
   fluttertoast: ^8.2.1
@@ -50,6 +50,7 @@ dependencies:
   carousel_slider: ^4.2.1
   webview_flutter_plus: ^0.3.0+2
   flutter_svg: ^2.0.9
+  equatable: ^2.0.5
 
 
 dev_dependencies:

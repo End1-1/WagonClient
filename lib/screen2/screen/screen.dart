@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wagon_client/consts.dart';
+import 'package:wagon_client/screen2/bloc/screen_menu_bloc.dart';
 import 'package:wagon_client/screen2/model/ac_type.dart';
 import 'package:wagon_client/screen2/model/app_state.dart';
 import 'package:wagon_client/screen2/model/model.dart';
@@ -11,6 +14,8 @@ import 'package:wagon_client/screen2/parts/screen_address.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest.dart';
 import 'package:wagon_client/screen2/parts/screen_address_suggest_to.dart';
 import 'package:wagon_client/screen2/parts/screen_bottom.dart';
+import 'package:wagon_client/screen2/parts/screen_menu.dart';
+import 'package:wagon_client/screen2/parts/screen_multiaddress.dart';
 import 'package:wagon_client/screen2/parts/screen_ride_options.dart';
 import 'package:wagon_client/screen2/parts/screen_search_onmap.dart';
 import 'package:wagon_client/screen2/parts/screen_status4.dart';
@@ -194,10 +199,13 @@ class _Screen2State extends State<Screen2>
           if (widget.model.appState.appState == AppState.asOrderEnd) ...[
             ScreenStatus7(widget.model, parentState)
           ],
+          if (widget.model.appState.showMultiAddress)
+            MultiaddressToScreen(widget.model, parentState),
           //MENU
           Align(child: IconButton(icon: Icon(Icons.menu), onPressed: (){
-            widget.model.logout();
-          },), alignment: Alignment.topLeft,)
+            BlocProvider.of<AppAnimateBloc>(Consts.navigatorKey.currentContext!).add(AppAnimateEventRaise());
+          },), alignment: Alignment.topLeft,),
+          ScreenMenu(widget.model)
         ],
       )),
     ));

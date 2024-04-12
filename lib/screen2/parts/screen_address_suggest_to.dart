@@ -18,10 +18,13 @@ class ScreenAddressSuggestTo extends StatefulWidget {
 class _ScreenAddressSuggestTo extends State<ScreenAddressSuggestTo> {
   var x = 0.0;
   final _focus = FocusNode();
+  var tempAddress = AddressStruct(address: '', title: '' , point: Point(longitude: 0, latitude: 0));
 
   @override
   Widget build(BuildContext context) {
-    _focus.requestFocus();
+    if (widget.model.appState.showFullAddressWidgetTo) {
+      _focus.requestFocus();
+    }
     return AnimatedPositioned(
         bottom: 0,
         left: 0,
@@ -110,10 +113,7 @@ class _ScreenAddressSuggestTo extends State<ScreenAddressSuggestTo> {
                       InkWell(
                         onTap: () {
                           widget.model.appState.addressTemp.clear();
-                          if (widget
-                              .model.appState.structAddressTod.isNotEmpty) {
-                            widget.model.appState.structAddressTod.removeLast();
-                          }
+                          tempAddress = AddressStruct(address: '', title: '', point: Point(longitude: 0, latitude: 0));
                         },
                         child: Image.asset(
                           'images/close.png',
@@ -123,7 +123,7 @@ class _ScreenAddressSuggestTo extends State<ScreenAddressSuggestTo> {
                       InkWell(
                         onTap: () {
                           widget.model.appState.appState =
-                              AppState.asSearchOnMapTo;
+                              AppState.asSearchOnMapToMulti;
                           widget.parentState();
                         },
                         child: Container(
@@ -137,104 +137,82 @@ class _ScreenAddressSuggestTo extends State<ScreenAddressSuggestTo> {
                     ],
                   ),
 
-                  StreamBuilder(
-                      stream: widget.model.suggestStream.stream,
-                      builder: (builder, snapshot) {
-                        if (snapshot.data == null) {
-                          return Container();
-                        }
-                        if (snapshot.data is bool) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        return Expanded(
-                            child: SingleChildScrollView(
-                                child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            for (final i in snapshot.data) ...[
-                              Container(
-                                  height: 40,
-                                  decoration: const BoxDecoration(),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: InkWell(
-                                              onTap: () {
-                                                widget
-                                                    .model
-                                                    .appState
-                                                    .addressTemp
-                                                    .text = i.type ==
-                                                        SuggestItemType.toponym
-                                                    ? i.displayText
-                                                    : '${i.title} ${i.subtitle}';
-                                                if (widget.model.appState
-                                                    .structAddressTod.isEmpty) {
-                                                  widget.model.appState
-                                                      .structAddressTod
-                                                      .add(AddressStruct(
-                                                          address: i.type ==
-                                                                  SuggestItemType
-                                                                      .toponym
-                                                              ? i.displayText
-                                                              : '${i.title} ${i.subtitle}',
-                                                          title: i.title,
-                                                          point: i.center));
-                                                } else {
-                                                  widget.model.appState
-                                                          .structAddressTod[0] =
-                                                      AddressStruct(
-                                                          address: i.searchText,
-                                                          title: i.title,
-                                                          point: i.center);
-                                                }
-
-                                                widget.model.suggestStream
-                                                    .add(null);
-                                                print(i.tags);
-                                                if (i.tags.contains('house') ||
-                                                    i.type ==
-                                                        SuggestItemType
-                                                            .business) {
-                                                  widget.model.appState
-                                                          .showFullAddressWidget =
-                                                      false;
-                                                  if (widget.model.appState
-                                                      .isFromToDefined()) {
-                                                    widget.model.requests
-                                                        .initCoin(() {
-                                                      widget.parentState();
-                                                    }, (c, s) {});
-                                                  } else {
-                                                    widget.parentState();
-                                                  }
-                                                } else {
-                                                  widget.model.appState
-                                                      .addressTemp.text += ', ';
-                                                  widget.model.suggest.suggest(
-                                                      widget.model.appState
-                                                              .addressTemp.text +
-                                                          '1');
-                                                }
-                                              },
-                                              child: Text(
-                                                  i.type ==
-                                                          SuggestItemType
-                                                              .toponym
-                                                      ? i.displayText
-                                                      : '${i.title} ${i.subtitle}',
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis))),
-                                    ],
-                                  ))
-                            ]
-                          ],
-                        )));
-                      }),
+                  suggestRows(),
                 ],
               ),
             )),
         duration: Duration(milliseconds: 300));
+  }
+
+  Widget suggestRows() {
+    return StreamBuilder(
+        stream: widget.model.suggestStream.stream,
+        builder: (builder, snapshot) {
+          if (snapshot.data == null) {
+            return Container();
+          }
+          if (snapshot.data is bool) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return Expanded(
+              child: SingleChildScrollView(
+                  child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final i in snapshot.data) ...[
+                Container(
+                    height: 40,
+                    decoration: const BoxDecoration(),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: InkWell(
+                                onTap: () {
+                                  suggestOnTap(i);
+                                },
+                                child: Text(
+                                    i.type == SuggestItemType.toponym
+                                        ? i.displayText
+                                        : '${i.title} ${i.subtitle}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis))),
+                      ],
+                    ))
+              ]
+            ],
+          )));
+        });
+  }
+
+  void suggestOnTap(SuggestItem i) {
+    widget.model.appState.addressTemp.text = i.type == SuggestItemType.toponym
+        ? i.displayText
+        : '${i.title} ${i.subtitle}';
+
+    widget.model.suggestStream.add(null);
+    print(i.tags);
+    if (i.tags.contains('house') || i.type == SuggestItemType.business) {
+      _focus.unfocus();
+      widget.model.appState.showFullAddressWidgetTo = false;
+      widget.model.appState.structAddressTod.add(AddressStruct(address: i.searchText, title: i.title, point: i.center));
+      var first = true;
+      var s = '';
+      for (final e in widget.model.appState.structAddressTod) {
+        if (first) {
+          first = false;
+        } else {
+          s += '→';
+        }
+        s += e.title;
+      }
+      widget.model.appState.addressTo.text = s;
+      widget.model.requests.initCoin(() {
+        widget.parentState();
+      }, (c, s) {});
+    } else {
+      widget.model.appState.addressTemp.text += ', ';
+      widget.model.suggest
+          .suggest(widget.model.appState.addressTemp.text + '1');
+    }
   }
 }

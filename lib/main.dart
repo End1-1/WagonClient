@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/main_window.dart';
+import 'package:wagon_client/screen2/bloc/screen_menu_bloc.dart';
 import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/screens/login/screen.dart';
 import 'package:wagon_client/web/web_parent.dart';
@@ -65,7 +67,12 @@ Future<void> main() async {
 
   });
 
-  runApp(TaxoApp());
+  runApp(
+    MultiBlocProvider(providers: [
+      BlocProvider<AppAnimateBloc>(create: (context) => AppAnimateBloc())
+    ], child:
+      TaxoApp()
+  ));
 }
 
 class TaxoApp extends StatelessWidget {

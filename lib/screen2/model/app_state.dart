@@ -24,6 +24,7 @@ class AppState {
   static const int asOrderEnd = 7;
   static const int asSearchOnMapFrom = 11;
   static const int asSearchOnMapTo = 12;
+  static const int asSearchOnMapToMulti = 13;
 
   final commentFrom = TextEditingController();
   final addressFrom = TextEditingController();
@@ -38,6 +39,7 @@ class AppState {
 
   var showFullAddressWidget = false;
   var showFullAddressWidgetTo = false;
+  var showMultiAddress = false;
   var focusFrom = true;
   var showRideOptions = false;
   var showChangePayment = false;

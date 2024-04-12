@@ -80,16 +80,26 @@ class _ScreenAddress extends State<ScreenAddress> {
                     Expanded(
                         child: TextFormField(
                       onTap: () {
-                        widget.model.appState.showFullAddressWidget = true;
-                        widget.model.appState.focusFrom = false;
-                        widget.parentState();
+                        if (widget.model.appState.structAddressTod.length < 2) {
+                          widget.model.appState.showFullAddressWidget = true;
+                          widget.model.appState.focusFrom = false;
+                          widget.parentState();
+                        } else {
+                          widget.model.appState.showMultiAddress = true;
+                          widget.parentState();
+                        }
                       },
                       controller: widget.model.appState.addressTo,
                       readOnly: true,
+                          minLines: 1,
+                          maxLines: 4,
                       decoration: InputDecoration(hintText: tr(trTo)),
+                          style: widget.model.appState.structAddressTod.length > 1 ?
+                          const TextStyle(fontSize: 14 ) :
+                              const TextStyle(fontSize: 16),
                     )),
                     if (widget.model.appState.structAddressTod.isNotEmpty &&
-                        widget.model.appState.structAddressTod.length < 3) ...[
+                        widget.model.appState.structAddressTod.length < 4) ...[
                       InkWell(
                         onTap: () {
                           widget.model.appState.showFullAddressWidgetTo = true;
