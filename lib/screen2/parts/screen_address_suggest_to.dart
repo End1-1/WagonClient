@@ -195,17 +195,7 @@ class _ScreenAddressSuggestTo extends State<ScreenAddressSuggestTo> {
       _focus.unfocus();
       widget.model.appState.showFullAddressWidgetTo = false;
       widget.model.appState.structAddressTod.add(AddressStruct(address: i.searchText, title: i.title, point: i.center));
-      var first = true;
-      var s = '';
-      for (final e in widget.model.appState.structAddressTod) {
-        if (first) {
-          first = false;
-        } else {
-          s += '→';
-        }
-        s += e.title;
-      }
-      widget.model.appState.addressTo.text = s;
+      widget.model.setAddressToText();
       widget.model.requests.initCoin(() {
         widget.parentState();
       }, (c, s) {});

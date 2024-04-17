@@ -42,9 +42,6 @@ class Requests {
           int.tryParse(model.appState.rentTime) == null ? 0 : int.parse(
               model.appState.rentTime));
       initCoin.request((CarClasses cc) async {
-        if (f != null) {
-          f();
-        }
 
         model.cars.clear();
         for (final c in cc.car_classes) {
@@ -54,6 +51,11 @@ class Requests {
             'min_price': c.min_price == null ? c.coin : c.min_price,
             'time': c.closest_driver_duration
           });
+        };
+
+        model.initCoinStream.add(null);
+        if (f != null) {
+          f();
         }
 
         await model.mapController.paintRoute();

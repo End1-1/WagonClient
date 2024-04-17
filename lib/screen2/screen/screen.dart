@@ -35,7 +35,6 @@ class Screen2 extends StatefulWidget {
 
 class _Screen2State extends State<Screen2>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
-
   late AnimationController _backgrounController;
   late Animation<Color?> background;
   Animation<double?>? langPos;
@@ -103,112 +102,131 @@ class _Screen2State extends State<Screen2>
       widget.model.appState.getState(parentState);
     }
     return PopScope(
-      canPop: false,
+        canPop: false,
         onPopInvoked: (didPop) async {
-        widget.model.appState.acType = 0;
-        widget.model.appState.structAddressTod.clear();
-        widget.model.appState.addressTo.clear();
-        await widget.model.mapController.removePolyline(centerMe: false);
-        setState(() {
-
-        });
-      },
-        child:  Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      // ),
-      body: SafeArea(
-          child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Column(children:[
-          Expanded(child: YandexMap(
-            rotateGesturesEnabled: false,
-            onMapCreated: widget.model.mapController.mapReady,
-            onCameraPositionChanged: widget.model.mapController.cameraPosition,
-            mapObjects: widget.model.mapController.mapObjects,
-          )), Container(height: 50)]),
-          if (widget.model.appState.appState == AppState.asSearchOnMapFrom ||
-              widget.model.appState.appState == AppState.asSearchOnMapTo) ...[
-            ScreenOnMap(widget.model, parentState),
-            Align(
-                alignment: Alignment.center, child: AnimPlaceMark(widget.model))
-          ],
-          if (widget.model.appState.appState == AppState.asNone) ...[
-            _dimWidget(context, null)
-          ],
-          if (widget.model.appState.appState == AppState.asIdle) ...[
-            Visibility(
-                visible: widget.model.appState.addressFrom.text.isEmpty ||
-                    widget.model.appState.addressTo.text.isEmpty,
-                child: Align(
+          widget.model.appState.acType = 0;
+          widget.model.appState.structAddressTod.clear();
+          widget.model.appState.addressTo.clear();
+          await widget.model.mapController.removePolyline(centerMe: false);
+          setState(() {});
+        },
+        child: Scaffold(
+          // appBar: AppBar(
+          //   backgroundColor: Colors.transparent,
+          // ),
+          body: SafeArea(
+              child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Column(children: [
+                Expanded(
+                    child: YandexMap(
+                  rotateGesturesEnabled: false,
+                  onMapCreated: widget.model.mapController.mapReady,
+                  onCameraPositionChanged:
+                      widget.model.mapController.cameraPosition,
+                  mapObjects: widget.model.mapController.mapObjects,
+                )),
+                Container(height: 50)
+              ]),
+              if (widget.model.appState.appState ==
+                      AppState.asSearchOnMapFrom ||
+                  widget.model.appState.appState ==
+                      AppState.asSearchOnMapTo) ...[
+                ScreenOnMap(widget.model, parentState),
+                Align(
                     alignment: Alignment.center,
-                    child: StreamBuilder(
-                        stream: widget.model.markerStream.stream,
-                        builder: (builder, snapshot) {
-                          return AnimPlaceMark(widget.model);
-                        }))),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: Container()),
-                Row(
+                    child: AnimPlaceMark(widget.model))
+              ],
+              if (widget.model.appState.appState == AppState.asNone) ...[
+                _dimWidget(context, null)
+              ],
+              if (widget.model.appState.appState == AppState.asIdle) ...[
+                Visibility(
+                    visible: widget.model.appState.addressFrom.text.isEmpty ||
+                        widget.model.appState.addressTo.text.isEmpty,
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: StreamBuilder(
+                            stream: widget.model.markerStream.stream,
+                            builder: (builder, snapshot) {
+                              return AnimPlaceMark(widget.model);
+                            }))),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: Container()),
-                    InkWell(
-                        onTap: widget.model.centerme,
-                        child: Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                            child: Image.asset(
-                              'images/gps.png',
-                              height: 30,
-                            )))
+                    Row(
+                      children: [
+                        Expanded(child: Container()),
+                        InkWell(
+                            onTap: widget.model.centerme,
+                            child: Container(
+                                margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
+                                child: Image.asset(
+                                  'images/gps.png',
+                                  height: 30,
+                                )))
+                      ],
+                    ),
+                    if (widget.model.appState.acType == 0)
+                      ScreenAC(widget.model, parentState),
+                    if (widget.model.appState.acType > 0)
+                      ScreenAcSelected(widget.model, parentState),
+                    if (widget.model.appState.acType == ACType.act_taxi)
+                      StreamBuilder(
+                          stream: widget.model.initCoinStream.stream,
+                          builder: (builder, snapshot) => ScreenTaxi(
+                              widget.model, widget.model.cars, parentState)),
+                    ScreenAddress(widget.model, parentState),
+                    ScreenRideOptions(widget.model, parentState),
+                    ScreenBottom(widget.model, parentState),
                   ],
                 ),
-                if (widget.model.appState.acType == 0)
-                  ScreenAC(widget.model, parentState),
-                if (widget.model.appState.acType > 0)
-                  ScreenAcSelected(widget.model, parentState),
-                if (widget.model.appState.acType == ACType.act_taxi)
-                   ScreenTaxi(
-                            widget.model, widget.model.cars, parentState),
-                 ScreenAddress(widget.model, parentState),
-                 ScreenRideOptions(widget.model, parentState),
-                ScreenBottom(widget.model, parentState),
+                _dimWidget(context, null),
+                ScreenAddressSuggest(widget.model, parentState),
+                ScreenAddressSuggestTo(widget.model, parentState),
+                AnimatedPositioned(
+                    child: PaymentWidget(widget.model, parentState, true),
+                    top: widget.model.appState.showChangePayment
+                        ? 0 +
+                            (MediaQuery.sizeOf(context).height -
+                                (MediaQuery.sizeOf(context).height * 0.8))
+                        : MediaQuery.sizeOf(context).height,
+                    duration: const Duration(milliseconds: 300))
               ],
-            ),
-            _dimWidget(context, null),
-            ScreenAddressSuggest(widget.model, parentState),
-            ScreenAddressSuggestTo(widget.model, parentState),
-            AnimatedPositioned(
-                child: PaymentWidget(widget.model, parentState, true),
-                top: widget.model.appState.showChangePayment
-                    ? 0 + (MediaQuery.sizeOf(context).height - (MediaQuery.sizeOf(context).height * 0.8))
-                    : MediaQuery.sizeOf(context).height ,
-                duration: const Duration(milliseconds: 300))
-          ],
-          if (widget.model.appState.appState == AppState.asSearchTaxi) ...[
-            _dimWidget(context, CancelOrderButton(widget.model, parentState))
-          ],
-          if (widget.model.appState.appState == AppState.asDriverOnWay ||
-              widget.model.appState.appState == AppState.asDriverAccept ||
-              widget.model.appState.appState == AppState.asOnPlace ||
-              widget.model.appState.appState == AppState.asOrderStarted) ...[
-            ScreenStatus4(widget.model, parentState)
-          ],
-          if (widget.model.appState.appState == AppState.asOrderEnd) ...[
-            ScreenStatus7(widget.model, parentState)
-          ],
-          if (widget.model.appState.showMultiAddress)
-            MultiaddressToScreen(widget.model, parentState),
-          //MENU
-          Align(child: IconButton(icon: Icon(Icons.menu), onPressed: (){
-            BlocProvider.of<AppAnimateBloc>(Consts.navigatorKey.currentContext!).add(AppAnimateEventRaise());
-          },), alignment: Alignment.topLeft,),
-          ScreenMenu(widget.model)
-        ],
-      )),
-    ));
+              if (widget.model.appState.appState == AppState.asSearchTaxi) ...[
+                _dimWidget(
+                    context, CancelOrderButton(widget.model, parentState))
+              ],
+              if (widget.model.appState.appState == AppState.asDriverOnWay ||
+                  widget.model.appState.appState == AppState.asDriverAccept ||
+                  widget.model.appState.appState == AppState.asOnPlace ||
+                  widget.model.appState.appState ==
+                      AppState.asOrderStarted) ...[
+                ScreenStatus4(widget.model, parentState)
+              ],
+              if (widget.model.appState.appState == AppState.asOrderEnd) ...[
+                ScreenStatus7(widget.model, parentState)
+              ],
+              if (widget.model.appState.showMultiAddress)
+                MultiaddressToScreen(widget.model, parentState),
+              //MENU
+              Align(
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    BlocProvider.of<AppAnimateBloc>(
+                            Consts.navigatorKey.currentContext!)
+                        .add(AppAnimateEventRaise());
+                  },
+                ),
+                alignment: Alignment.topLeft,
+              ),
+              ScreenMenu(widget.model)
+            ],
+          )),
+        ));
   }
 
   @override
@@ -234,7 +252,7 @@ class _Screen2State extends State<Screen2>
 
   Widget _dimWidget(BuildContext context, Widget? bottom) {
     return Visibility(
-        visible: widget.model.appState.dimVisible ,
+        visible: widget.model.appState.dimVisible,
         child: AnimatedBuilder(
           animation: _backgrounController,
           builder: (BuildContext context, Widget? child) {

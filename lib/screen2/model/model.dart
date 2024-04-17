@@ -29,6 +29,7 @@ class Screen2Model {
   late final MapController mapController;
   final suggestStream = StreamController.broadcast();
   final markerStream = StreamController.broadcast();
+  final initCoinStream = StreamController.broadcast();
   final List<dynamic> cars = [];
 
   Screen2Model() {
@@ -102,6 +103,20 @@ class Screen2Model {
 
   void appPaused() {
     socket.closeSocket();
+  }
+
+  void setAddressToText() {
+    var first = true;
+    var s = '';
+    for (final e in appState.structAddressTod) {
+      if (first) {
+        first = false;
+      } else {
+        s += '→';
+      }
+      s += e.title;
+    }
+    appState.addressTo.text = s;
   }
 
   Future<void> centerme() async {

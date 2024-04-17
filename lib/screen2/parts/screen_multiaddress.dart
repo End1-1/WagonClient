@@ -97,7 +97,15 @@ class _MultiaddressToScreen extends State<MultiaddressToScreen> {
               child: OutlinedButton(
                   onPressed: () async {
                     widget.model.appState.showMultiAddress = false;
-                    await widget.model.mapController.paintRoute();
+                    await widget.model.requests.initCoin(() async {
+                      await widget.model.mapController.paintRoute();
+                      widget.model.setAddressToText();
+                      setState(() {});
+                    }, (c, s) async {
+                      await widget.model.mapController
+                          .removePolyline(centerMe: false);
+                      setState(() {});
+                    });
                     widget.callback();
                   },
                   style: OutlinedButton.styleFrom(
