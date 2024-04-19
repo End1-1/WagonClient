@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sprintf/sprintf.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class Consts {

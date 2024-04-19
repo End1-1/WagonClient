@@ -1,9 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="WagonClient"
-        android:allowBackup="false"
-        android:fullBackupContent="false"
+        android:label="wagon_client"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
