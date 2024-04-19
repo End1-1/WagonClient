@@ -6,59 +6,55 @@ version: 1.1.33+45
 
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.3
-  http: ^0.13.5
+  cupertino_icons: ^1.0.8
+  http: ^1.2.1
   #location: ^4.4.0
 
-  sprintf: ^7.0.0
   json_annotation: ^4.8.1
   get: ^4.3.0
   crypto: ^3.0.1
   timezone: ^0.9.0
-  url_launcher: ^6.1.11
+  url_launcher: ^6.2.6
   #flutter_gifimage: 1.0.1
   vector_math: ^2.1.2
-  package_info_plus: ^4.0.2
+  package_info_plus: ^7.0.0
 
-  shared_preferences: ^2.0.6
-  yandex_mapkit: ^3.3.3
-  sms_otp_auto_verify: ^2.1.0
-  sms_autofill: ^2.0.1
+  yandex_mapkit: ^4.0.2
+  sms_autofill: ^2.3.1
 
-  mask_text_input_formatter: ^2.4.0
-
-  #otp_autofill: ^1.0.0
-  masked_text: ^1.1.2
-  freezed: ^2.3.2
+  mask_text_input_formatter: ^2.9.0
+  freezed: ^2.5.2
   flutter_bloc: ^8.1.5
-  audioplayers: ^5.0.0
-  soundpool: ^2.3.0
-  fluttertoast: ^8.2.1
-  yandex_geocoder: ^2.1.0
+  audioplayers: ^6.0.0
+  soundpool: ^2.4.1
+  fluttertoast: ^8.2.5
+  yandex_geocoder: ^2.3.1
 
 
   flutter_localizations:
     sdk: flutter
   flutter_datetime_picker_plus: ^2.0.1
-  geolocator: ^10.1.0
+  geolocator: ^11.0.0
   carousel_slider: ^4.2.1
-  webview_flutter_plus: ^0.3.0+2
-  flutter_svg: ^2.0.9
+  webview_flutter_plus: ^0.4.4
+  flutter_svg: ^2.0.10+1
   equatable: ^2.0.5
+  shared_preferences: ^2.2.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
-  build_runner: ^2.0.6
-  json_serializable: ^6.1.5
+  build_runner: ^2.4.9
+  json_serializable: ^6.7.1
 
 flutter_launcher_icons:
   ios: true
@@ -74,13 +70,10 @@ flutter:
     - images/ac/
     - images/login/
     - assets/
-#  plugin:
-#    platforms:
-#      android:
-#        package: com.unact.yandexmapkit
-#        pluginClass: YandexMapkitPlugin
-#      ios:
-#        pluginClass: YandexMapkitPlugin
-
-
-
+  plugin:
+    platforms:
+      android:
+        package: com.unact.yandexmapkit
+        pluginClass: YandexMapkitPlugin
+      ios:
+        pluginClass: YandexMapkitPlugin

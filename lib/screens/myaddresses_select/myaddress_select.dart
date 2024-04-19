@@ -152,7 +152,7 @@ class MyAddressSelect extends StatelessWidget {
     if (s.length < 2) {
       _model.suggestList.clear();
     } else {
-      var suggestResultWithSession = YandexSuggest.getSuggestions(
+      var suggestResultWithSession = await YandexSuggest.getSuggestions(
           text: s.trim(),
           boundingBox: BoundingBox(
               northEast: Point(
@@ -167,8 +167,9 @@ class MyAddressSelect extends StatelessWidget {
               userPosition: Point(
                   latitude: _model.lat + 0.06,
                   longitude: _model.lon + 0.06)));
-      var result = await suggestResultWithSession.result;
-      _model.suggestList = result.items ?? [];
+      _model.suggestList.clear();
+      final v = await suggestResultWithSession.$2;
+      _model.suggestList = v.items ?? [];
     }
   }
 

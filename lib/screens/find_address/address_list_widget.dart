@@ -104,13 +104,13 @@ class _AddressListWidget extends State<AddressListWidget> {
     //   lang: Lang.enEn,
     // ));
 
-    final GeocodeResponse geocodeFromAddress = await geocoder.getGeocode(GeocodeRequest(
-      geocode: AddressGeocode(address: searchText)
-    ));
+    final GeocodeResponse geocodeFromAddress = await geocoder.getGeocode(DirectGeocodeRequest(
+      addressGeocode: searchText)
+    );
 
     ym.Point p = ym.Point(
-        latitude: geocodeFromAddress.firstPoint?.latitude ?? 0,
-        longitude: geocodeFromAddress.firstPoint?.longitude ?? 0);
+        latitude: geocodeFromAddress.firstPoint?.lat ?? 0,
+        longitude: geocodeFromAddress.firstPoint?.lon ?? 0);
 
       if (widget.model.selectFrom) {
         RouteHandler.routeHandler.directionStruct.from =

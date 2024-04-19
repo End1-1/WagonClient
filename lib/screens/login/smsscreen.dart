@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:wagon_client/consts.dart';
 import 'package:wagon_client/dlg.dart';
-import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/model/tr.dart';
 import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/web/web_entersms.dart';

@@ -7,7 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wagon_client/consts.dart';
-import 'package:wagon_client/main_window.dart';
 import 'package:wagon_client/screen2/bloc/screen_menu_bloc.dart';
 import 'package:wagon_client/screen2/screen/screen.dart';
 import 'package:wagon_client/screens/login/screen.dart';

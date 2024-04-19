@@ -38,6 +38,7 @@ class _Screen2State extends State<Screen2>
   late AnimationController _backgrounController;
   late Animation<Color?> background;
   Animation<double?>? langPos;
+  late Timer mTimer;
 
   late StreamSubscription<dynamic> events;
 
@@ -94,7 +95,19 @@ class _Screen2State extends State<Screen2>
     widget.model.socket.eventBroadcast.onListen = () {
       print('Active');
     };
+
+    mTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      if (widget.model.appState.acType == ACType.act_taxi) {
+        widget.model.requests.initCoin((){setState(() {
+
+        });}, (c,s){
+          print('$c ::: $s');
+        });
+      }
+    });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +246,7 @@ class _Screen2State extends State<Screen2>
   void dispose() {
     widget.model.socket.closeSocket();
     WidgetsBinding.instance.removeObserver(this);
+    mTimer.cancel();
     super.dispose();
   }
 
@@ -246,6 +260,8 @@ class _Screen2State extends State<Screen2>
       case AppLifecycleState.detached:
       case AppLifecycleState.paused:
         widget.model.appPaused();
+        break;
+      default:
         break;
     }
   }

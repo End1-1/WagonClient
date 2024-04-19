@@ -23,6 +23,9 @@ class SuggestAddressWidget extends StatelessWidget {
       case TP.TP_AIRPORT:
         imagename = "images/airport.png";
         break;
+      default:
+        imagename = "images/placeholderlight.png";
+        break;
     }
     _image = Image.asset(imagename, width: 20, height: 20,);
   }

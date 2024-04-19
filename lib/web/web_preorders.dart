@@ -16,6 +16,8 @@ class WebPreorders extends WebParent {
         return super.getBody();
       case HttpMethod.DELE:
         return super.getBody();
+      default:
+        return "";
     }
   }
 }

@@ -51,6 +51,8 @@ class WebParent {
           response = await ioClient.delete(Uri.https(Consts.host(), getUrl()!),
               headers: getHeader());
           break;
+        default:
+          break;
       }
       sw.stop();
       print("Response time: ${sw.elapsed} length: ${response.body.length} " +

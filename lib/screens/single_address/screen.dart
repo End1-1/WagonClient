@@ -219,7 +219,7 @@ class _SingleAddressSelect extends State<SingleAddressSelect> {
             suggestType: SuggestType.geo,
             suggestWords: true,
             userPosition: RouteHandler.routeHandler.lastPoint));
-    suggestResultWithSession.result
-        .then((value) => suggestStream.add(value.items));
+    final v = await suggestResultWithSession.$2;
+    suggestStream.add(v.items ?? []);
   }
 }

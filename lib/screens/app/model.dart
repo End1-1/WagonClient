@@ -188,7 +188,7 @@ class MainWindowModel {
     if (RouteHandler.routeHandler.directionStruct.to.isEmpty) {
       return;
     }
-    var resultWithSession = YandexDriving.requestRoutes(
+    var resultWithSession = await YandexDriving.requestRoutes(
         points: [
           RequestPoint(
               point: RouteHandler.routeHandler.directionStruct.from.point!,
@@ -211,7 +211,7 @@ class MainWindowModel {
         RouteHandler.routeHandler.destinationDefined()) {
       tracking = false;
 
-      final value = await resultWithSession.result;
+      final value = await resultWithSession.$2;
       if (value.routes != null) {
         if (value.routes!.isNotEmpty) {
           DrivingRoute r = value.routes!.first;
@@ -219,7 +219,7 @@ class MainWindowModel {
           //Route
           mapObjects.add(PolylineMapObject(
             mapId: routePolylineId[0],
-            polyline: Polyline(points: r.geometry),
+            polyline: Polyline(points: r.geometry.points),
             strokeColor: Colors.blue[700]!,
             strokeWidth: 5,
             // <- default value 5.0, this will be a little bold

@@ -29,14 +29,17 @@ class YandexGeocodeHandler {
     }
     _busy = true;
 
+
+
     try {
+      PointRecord aaaa = (lat: latitude, lon: longitude);
       YandexGeocoder yg = YandexGeocoder(apiKey: Consts.yandexGeocodeKey);
-      GeocodeRequest geocodeRequest = GeocodeRequest(
+      GeocodeRequest geocodeRequest = ReverseGeocodeRequest(
           results: 10,
           kind: KindRequest.house ,
           // spn: SearchAreaSPN(differenceLatitude: 3.552069, differenceLongitude: 2.400552),
           // ll: SearchAreaLL(latitude: _lastLat, longitude: _lastLon),
-          geocode: PointGeocode(latitude: latitude, longitude: longitude));
+          pointGeocode: aaaa);
       GeocodeResponse geocodeResponse = await yg.getGeocode(geocodeRequest);
 
       if (_last) {
@@ -101,15 +104,15 @@ class YandexGeocodeHandler {
     try {
       YandexGeocoder yg = YandexGeocoder(apiKey: Consts.yandexGeocodeKey);
       GeocodeRequest geocodeRequest =
-          GeocodeRequest(geocode: AddressGeocode(address: address));
+          DirectGeocodeRequest(addressGeocode:  address);
       GeocodeResponse geocodeResponse = await yg.getGeocode(geocodeRequest);
 
       AddressStruct addressStruct = AddressStruct(
           address: geocodeResponse.firstAddress?.formatted ?? '',
           title: '',
           point: ym.Point(
-              latitude: geocodeResponse.firstPoint?.latitude ?? 0,
-              longitude: geocodeResponse.firstPoint?.longitude ?? 0));
+              latitude: geocodeResponse.firstPoint?.lat ?? 0,
+              longitude: geocodeResponse.firstPoint?.lon ?? 0));
 
       f(addressStruct);
     } catch (e) {

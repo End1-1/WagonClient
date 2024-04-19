@@ -185,7 +185,7 @@ class AddressInputs extends StatelessWidget {
     } else {
       BlocProvider.of<FullAddressBloc>(context)
           .actionToState(BlocActionReady(ready: false));
-      var suggestResultWithSession = YandexSuggest.getSuggestions(
+      var suggestResultWithSession = await YandexSuggest.getSuggestions(
           text: s.trim(),
           boundingBox: BoundingBox(
               northEast: Point(
@@ -198,10 +198,10 @@ class AddressInputs extends StatelessWidget {
               suggestType: SuggestType.geo,
               suggestWords: true,
               userPosition: RouteHandler.routeHandler.lastPoint));
-      suggestResultWithSession.result.then((value) =>
-          BlocProvider.of<FullAddressBloc>(context)
-              .actionToState(BlocActionSetList(list: value.items, mode: AddressListMode.suggestItem)));
-
+      suggestResultWithSession.$2.then((value) {
+        BlocProvider.of<FullAddressBloc>(context)
+            .actionToState(BlocActionSetList(list: value.items, mode: AddressListMode.suggestItem));
+      });
     }
   }
 

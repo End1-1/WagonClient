@@ -12,12 +12,12 @@ class Suggestions {
 
   Suggestions(this.model);
 
-  void suggest(String template) {
+  void suggest(String template) async {
     if (template.length < 3) {
       return;
     }
     model.suggestStream.add(true);
-    var suggestResultWithSession = YandexSuggest.getSuggestions(
+    var suggestResultWithSession = await YandexSuggest.getSuggestions(
         text: template.trim(),
         boundingBox: BoundingBox(
             northEast: Point(
@@ -30,7 +30,7 @@ class Suggestions {
             suggestType: SuggestType.unspecified,
             suggestWords: true,
             userPosition: Point(latitude: Consts.getDouble('last_lat'), longitude:  Consts.getDouble('last_lon'))));
-    suggestResultWithSession.result.then((value) {
+    suggestResultWithSession.$2.then((value) {
       final items = [];
       for (final i in value.items ?? []) {
         if (i.tags.contains('province')) {

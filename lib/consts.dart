@@ -132,7 +132,7 @@ class Consts {
   }
 
   static String channelName() {
-    return sprintf("private-client-api-base.%d.%s", [Consts.getInt("client_id"),  Consts.getString("phone").replaceAll("+", "")]);
+    return "private-client-api-base.${Consts.getInt("client_id")}.${Consts.getString("phone").replaceAll("+", "")}";
   }
 
   static String socketId() {

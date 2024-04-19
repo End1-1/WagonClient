@@ -13,7 +13,10 @@ class BankWebView extends StatefulWidget {
 }
 
 class _BankWebView extends State<BankWebView> {
+  /*
+
   WebViewPlusController? _webController;
+   */
 
   @override
   void initState() {
@@ -26,21 +29,26 @@ class _BankWebView extends State<BankWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: Container(
-      color: Colors.green,
-      child: WebViewPlus(
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (c)  {_webController = c;
-          _webController!.loadUrl(widget.url);
-          },
-        onPageFinished: (s) {
-          _webController!.webViewController.runJavascriptReturningResult("window.document.getElementsByTagName('html')[0].outerHTML;").then((value) {
-            if (value.contains('Payment success')) {
-              Navigator.pop(context, true);
-            }
-          });
-        },
-      ),
-    )));
+    return Container();
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(body: SafeArea(child: Container(
+  //     color: Colors.green,
+  //     child: WebViewPlus(
+  //       javascriptMode: JavascriptMode.unrestricted,
+  //       onWebViewCreated: (c)  {_webController = c;
+  //         _webController!.loadUrl(widget.url);
+  //         },
+  //       onPageFinished: (s) {
+  //         _webController!.webViewController.runJavascriptReturningResult("window.document.getElementsByTagName('html')[0].outerHTML;").then((value) {
+  //           if (value.contains('Payment success')) {
+  //             Navigator.pop(context, true);
+  //           }
+  //         });
+  //       },
+  //     ),
+  //   )));
+  // }
 }

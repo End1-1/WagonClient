@@ -214,7 +214,7 @@ class MapController {
       MapObjectId("_routePolylineId3"),
       MapObjectId("_routePolylineId4")
     ]);
-    var resultWithSession = YandexDriving.requestRoutes(
+    var resultWithSession = await YandexDriving.requestRoutes(
         points: [
           RequestPoint(
               point: model.appState.structAddressFrom!.point!,
@@ -235,7 +235,7 @@ class MapController {
 
     if (model.appState.structAddressFrom != null &&
         model.appState.structAddressTod.isNotEmpty) {
-      final value = await resultWithSession.result;
+      final value = await resultWithSession.$2;
       print(value);
       if (value.routes != null) {
         if (value.routes!.isNotEmpty) {
@@ -245,7 +245,7 @@ class MapController {
           //Route
           mapObjects.add(PolylineMapObject(
             mapId: routePolylineId[0],
-            polyline: Polyline(points: r.geometry),
+            polyline: Polyline(points: r.geometry.points),
             strokeColor: Colors.blue[700]!,
             strokeWidth: 5,
             // <- default value 5.0, this will be a little bold
